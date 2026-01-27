@@ -128,16 +128,25 @@ public class TileGrid : MonoBehaviour
 
     public Vector3 GetNearestTileCenter(Vector3 worldPos)
     {
-        int x = Mathf.RoundToInt(worldPos.x / tileSpacing);
-        int z = Mathf.RoundToInt(worldPos.z / tileSpacing);
+        Vector3 local = tileParent.InverseTransformPoint(worldPos);
+        int x = Mathf.RoundToInt(local.x / tileSpacing);
+        int z = Mathf.RoundToInt(local.z / tileSpacing);
 
         if (!IsValidTile(x, z))
-            return Vector3.zero;
+            return transform.position;
 
         return GetTileCenter(x, z, 0.6f);
     }
 
+    public bool TryGetTileIndex(Vector3 worldPos, out int x, out int z)
+    {
+        Vector3 local = tileParent.InverseTransformPoint(worldPos);
 
+        x = Mathf.RoundToInt(local.x / tileSpacing);
+        z = Mathf.RoundToInt(local.z / tileSpacing);
+
+        return IsValidTile(x, z);
+    }
     // SAFETY CHECK
     public bool IsValidTile(int x, int z)
     {

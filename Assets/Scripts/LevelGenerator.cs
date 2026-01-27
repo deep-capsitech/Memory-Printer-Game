@@ -120,26 +120,6 @@ public class LevelGenerator : MonoBehaviour
 
     JsonLayout currentLayout;
 
-    //public void GenerateFromLayout(ObstacleLayout layout)
-    //{
-    //    ClearObstacles();
-
-    //    foreach (var ob in layout.obstacles)
-    //    {
-    //        Vector3 worldPos =
-    //           tileGrid.GetTileCenter(ob.tileX, ob.tileZ, obstacleYOffset);
-
-    //        Instantiate(
-    //            obstaclePrefab,
-    //            worldPos,
-    //            ob.rotation,
-    //            obstaclesParent
-    //        );
-
-    //    }
-    //}
-
-
     public void GenerateFromJson(int levelNumber, int layoutIndex)
     {
         if (JsonLevelLoader.Instance == null)
@@ -225,22 +205,16 @@ public class LevelGenerator : MonoBehaviour
             Destroy(t.gameObject);
     }
 
-    //void ClearObstacles()
-    //    {
-    //        foreach (Transform t in obstaclesParent)
-    //            Destroy(t.gameObject);
-    //    }
 
     public void EnableDragMode(bool enable)
     {
-        foreach (Transform t in obstaclesParent)
+        foreach (Transform ob in obstaclesParent)
         {
-            var drag = t.GetComponent<DraggableObstacle>();
-            if (drag != null)
-                drag.enabled = enable;
+            DraggableObstacle d = ob.GetComponent<DraggableObstacle>();
+            if (d != null)
+                d.EnableDrag(enable);
         }
     }
-
 
 }
 

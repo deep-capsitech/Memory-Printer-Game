@@ -20,13 +20,19 @@ public class CameraManager : MonoBehaviour
     {
         Debug.Log("Top Camera Enable");
         mainCamera.enabled = false;
+        mainCamera.tag = "Untagged";
+
         topDownCamera.enabled = true;
+        topDownCamera.tag = "MainCamera";
     }
 
     public void EnableMainCamera()
     {
         Debug.Log("Main Camera Enable");
-        mainCamera.enabled = true;
         topDownCamera.enabled = false;
+        topDownCamera.tag = "Untagged";
+
+        mainCamera.enabled = true;
+        mainCamera.tag = "MainCamera";
     }
 }

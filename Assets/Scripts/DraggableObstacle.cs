@@ -2,24 +2,29 @@ using UnityEngine;
 
 public class DraggableObstacle : MonoBehaviour
 {
-    private Camera cam;
-    private TileGrid grid;
-    private Vector3 startPos;
+    private bool canDrag;
     private bool dragging;
+
+    private Vector3 startPos;
+    private float yOffset;
+
+    private TileGrid grid;
 
     void Start()
     {
-        cam = Camera.main;
         grid = FindAnyObjectByType<TileGrid>();
+        yOffset = transform.position.y;
+    }
+
+    public void EnableDrag(bool enable)
+    {
+        canDrag = enable;
+        dragging = false;
     }
 
     void OnMouseDown()
     {
-        if (!GameManagerCycle.Instance) return;
-        if (!GameManagerCycle.Instance.enabled) return;
-
-        if (!GameManagerCycle.Instance) return;
-        if (!GameManagerCycle.Instance.enabled) return;
+        if (!canDrag) return;
 
         dragging = true;
         startPos = transform.position;
@@ -29,33 +34,58 @@ public class DraggableObstacle : MonoBehaviour
     {
         if (!dragging) return;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, Vector3.zero);
+
+        if (plane.Raycast(ray, out float d))
         {
-            Vector3 snapPos = grid.GetNearestTileCenter(hit.point);
-            if (snapPos != Vector3.zero)
-                transform.position = snapPos;
+            Vector3 hit = ray.GetPoint(d);
+            Vector3 snap = grid.GetNearestTileCenter(hit);
+
+            transform.position = new Vector3(
+                snap.x,
+                yOffset,
+                snap.z
+            );
         }
     }
 
     void OnMouseUp()
     {
+        if (!dragging) return;
         dragging = false;
 
-        // Check if tile already has obstacle
-        Collider[] hits = Physics.OverlapSphere(
-            transform.position,
-            0.2f
-        );
+        // Snap to nearest tile
+        Vector3 snappedPos = grid.GetNearestTileCenter(transform.position);
 
-        foreach (var h in hits)
+        // Convert snapped world position tile index
+        if (!grid.TryGetTileIndex(snappedPos, out int x, out int z))
         {
-            if (h != null && h.gameObject != gameObject &&
-                h.CompareTag("Obstacle"))
+            // Outside grid
+            transform.position = startPos;
+            return;
+        }
+
+        // Check if another obstacle already exists on this tile
+        Collider[] hits = Physics.OverlapSphere(snappedPos, 0.2f);
+
+        foreach (var hit in hits)
+        {
+            if (hit != null &&
+                hit.gameObject != gameObject &&
+                hit.CompareTag("Obstacle"))
             {
-                transform.position = startPos; // revert
+                // Tile occupied
+                transform.position = startPos;
                 return;
             }
         }
+
+        //  VALID DROP
+        transform.position = new Vector3(
+            snappedPos.x,
+            yOffset,
+            snappedPos.z
+        );
     }
 }
