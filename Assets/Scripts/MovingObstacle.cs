@@ -69,7 +69,9 @@ public class MovingObstacle : MonoBehaviour
     public void ForceStopMovement()
     {
         canMove = false;
+
         if (rend != null && defaultMat != null)
             rend.material = defaultMat;
+
     }
 }
