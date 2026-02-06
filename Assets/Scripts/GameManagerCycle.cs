@@ -318,6 +318,7 @@ public class GameManagerCycle : MonoBehaviour
         player.freezeMode = false;
         player.EnableUnscaledAnimation(false);
 
+
         //DecideMovementForCurrentLayout();
         ApplyStoredMovementRules();
     }
