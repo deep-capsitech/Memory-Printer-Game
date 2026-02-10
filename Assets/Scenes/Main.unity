@@ -2714,7 +2714,7 @@ MonoBehaviour:
   gameOverPanel: {fileID: 82509337}
   levelCompletePanel: {fileID: 1431752350}
   worldPanel: {fileID: 1389555849}
-  LevelPanel: {fileID: 1491049239}
+  levelPanel: {fileID: 1491049239}
   snapshot: {fileID: 2086586503}
   generator: {fileID: 211100146}
   player: {fileID: 959374380}
