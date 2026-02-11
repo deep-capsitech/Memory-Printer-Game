@@ -28,14 +28,6 @@ public class PlayerController : MonoBehaviour
 
     private Quaternion startRotation;
 
-    [System.Serializable]
-    public struct CheckpointData
-    {
-        public Vector3 position;
-    }
-
-    public CheckpointData lastCheckpoint;
-
     void Start()
     {
         startPos = transform.position;
@@ -89,8 +81,6 @@ public class PlayerController : MonoBehaviour
         {
             isMoving = false;
             anim.SetBool("isWalking", false);
-
-            SaveCheckpoint();
         }
     }
 
@@ -210,24 +200,4 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstacle"))
             GameManagerCycle.Instance.PlayerHitObstacle();
     }
-
-    public void SaveCheckpoint()
-    {
-        lastCheckpoint.position = transform.position;
-    }
-    public void RestoreCheckpoint()
-    {
-        transform.position = lastCheckpoint.position;
-
-        isMoving = false;
-        canMove = true;
-
-        if (anim != null)
-        {
-            anim.SetBool("isWalking", false);
-            anim.ResetTrigger("Hit");
-            anim.Play("Idle", 0, 0f);
-        }
-    }
-
 }
