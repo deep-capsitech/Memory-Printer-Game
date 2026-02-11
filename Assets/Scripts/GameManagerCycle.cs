@@ -85,6 +85,8 @@ public class GameManagerCycle : MonoBehaviour
 
     private HashSet<MovingObstacle> movingObstaclesForLayout = new HashSet<MovingObstacle>();
 
+    private bool isDying = false;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -223,6 +225,14 @@ public class GameManagerCycle : MonoBehaviour
 
     public void OnLevelSelected(int levelNumber)
     {
+        if (!BatteryManager.Instance.HasBattery())
+        {
+            Debug.Log("No battery left!");
+            return; // later show popup
+        }
+
+        BatteryManager.Instance.ConsumeBattery();
+
         Debug.Log("Level Selected: " + levelNumber);
         Time.timeScale = 1f;
         StopAllCoroutines();
@@ -270,6 +280,7 @@ public class GameManagerCycle : MonoBehaviour
 
         snapshot.ClearSnapshot();
         player.ResetPosition();
+        player.SaveCheckpoint();
 
         snapshotActive = false;
         isGameRunning = true;
@@ -502,6 +513,7 @@ public class GameManagerCycle : MonoBehaviour
         player.canMove = false;
 
         CalculateStars();
+        GiveCoinsForStars();
 
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
 
@@ -534,17 +546,32 @@ public class GameManagerCycle : MonoBehaviour
 
         LoadLevel();
     }
-
     public void PlayerHitObstacle()
     {
-        StartCoroutine(GameOverDelay());
-    }
+        if (isDying || !isGameRunning) return;
 
-    IEnumerator GameOverDelay()
+        isDying = true;
+        isGameRunning = false;
+
+        StartCoroutine(DeathSequence());
+    }
+    IEnumerator DeathSequence()
     {
+        // HARD STOP INPUT & PHYSICS
+        player.canMove = false;
+        StopAllObstacleMovement();
+
+        // PLAY HIT ANIMATION
         player.PlayHitAnimation();
-        yield return new WaitForSeconds(0.8f);
-        ShowGameOver();
+
+        // WAIT FULL ANIMATION (REAL TIME)
+        yield return new WaitForSecondsRealtime(0.7f);
+
+        // FREEZE GAME
+        Time.timeScale = 0f;
+
+        // SHOW CONTINUE
+        ContinueManager.Instance.ShowContinue();
     }
 
     public void ShowGameOver()
@@ -591,6 +618,13 @@ public class GameManagerCycle : MonoBehaviour
 
     public void Retry()
     {
+        if (!BatteryManager.Instance.HasBattery())
+        {
+            Debug.Log("No battery left for retry");
+            return;
+        }
+
+        BatteryManager.Instance.ConsumeBattery();
         Time.timeScale = 1f;
 
         snapshot.ClearSnapshot();
@@ -719,4 +753,45 @@ public class GameManagerCycle : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void GiveCoinsForStars()
+    {
+        int coins = 0;
+
+        switch (earnedStars)
+        {
+            case 3:
+                coins = 15;
+                break;
+            case 2:
+                coins = 10;
+                break;
+            case 1:
+                coins = 5;
+                break;
+        }
+
+        GameEconomyManager.Instance.AddCoins(coins);
+    }
+    public void ResumeAfterContinue()
+    {
+        // RESET DEATH STATE
+        isDying = false;
+
+        // FULLY RESET ANIMATOR
+        Animator anim = player.GetComponent<Animator>();
+        anim.ResetTrigger("Hit");
+        anim.Play("Idle", 0, 0f);   // force idle
+
+        // RESTORE PLAYER
+        player.RestoreCheckpoint();
+
+        // RESUME GAME
+        Time.timeScale = 1f;
+        isGameRunning = true;
+        player.canMove = true;
+
+        ApplyStoredMovementRules();
+    }
+
 }
