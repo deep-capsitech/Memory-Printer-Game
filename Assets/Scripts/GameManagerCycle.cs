@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManagerCycle : MonoBehaviour
 {
@@ -15,7 +16,9 @@ public class GameManagerCycle : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject levelCompletePanel;
     public GameObject worldPanel;
-    public GameObject levelPanel;
+
+    [Header("World Level Panels")]
+    public List<GameObject> worldLevelPanels;
 
     [Header("Gameplay References")]
     public SnapshotManager snapshot;
@@ -48,10 +51,19 @@ public class GameManagerCycle : MonoBehaviour
     private int earnedStars;
     private int totalStars;
 
+    [Header("World Unlock Settings")]
+    public int[] worldUnlockStars = new int[5] { 0, 20, 45, 75, 110 };
 
-    //[Header("Levels (ScriptableObjects)")]
-    ////public List<LevelData> levels;
-   
+    [Header("World Lock Images")]
+    public GameObject[] worlds;
+
+    [Header("Lock & Unlock Sprites")]
+    public Sprite[] lockedSprites;
+    public Sprite[] unlockedSprites;
+
+    [Header("Level Unlock System")]
+    public int totalLevels = 50;
+
     [Header("Power Ups")]
     public float powerUpDuration = 2f;
     public float freezeTimeDuration = 2f;
@@ -84,8 +96,14 @@ public class GameManagerCycle : MonoBehaviour
         Time.timeScale = 1f;
         LoadHighestLevel();
         ShowMenu();
-        totalStars = PlayerPrefs.GetInt("TotalStars", 0);
+        totalStars = PlayerPrefs.GetInt("TotalStar", 0);
         UpdateTotalStarsUI();
+        UpdateWorldVisuals();
+        if (!PlayerPrefs.HasKey("UnlockedLevel"))
+        {
+            PlayerPrefs.SetInt("UnlockedLevel", 1);
+        }
+
     }
 
     void Update()
@@ -111,7 +129,9 @@ public class GameManagerCycle : MonoBehaviour
         gameOverPanel.SetActive(false);
         levelCompletePanel.SetActive(false);
         worldPanel.SetActive(false);
-       // levelPanel.SetActive(false);
+
+        foreach (GameObject panel in worldLevelPanels)
+            panel.SetActive(false);
     }
 
     void UpdatePlayerMovement()
@@ -120,6 +140,11 @@ public class GameManagerCycle : MonoBehaviour
     }
     public void ShowMenu()
     {
+        Time.timeScale = 1f;
+
+        snapshot.ClearSnapshot();
+        StopAllCoroutines();
+
         DisableAllPanels();
         menuPanel.SetActive(true);
 
@@ -132,11 +157,68 @@ public class GameManagerCycle : MonoBehaviour
 
     public void OnStartGameClicked()
     {
+        Time.timeScale = 1f; 
+        StopAllCoroutines();
+
+        snapshot.ClearSnapshot();
+        player.ResetPosition();
+
         DisableAllPanels();
         worldPanel.SetActive(true);
         isGameRunning = false;
         player.canMove = false;
-        //StartGame();
+        
+        UpdateWorldVisuals();
+    }
+
+    public bool IsWorldUnlocked(int worldIndex)
+    {
+        int totalStars = PlayerPrefs.GetInt("TotalStar", 0);
+
+        return totalStars >= worldUnlockStars[worldIndex];
+    }
+
+    public void UpdateWorldVisuals()
+    {
+        int totalStars = PlayerPrefs.GetInt("TotalStar", 0);
+
+        for (int i = 0; i < worlds.Length; i++)
+        {
+            Image img = worlds[i].GetComponent<Image>();
+
+            if (img == null)
+            {
+                Debug.LogWarning("No Image component found on " + worlds[i].name);
+                continue;
+            }
+
+            if (totalStars >= worldUnlockStars[i])
+            {
+                img.sprite = unlockedSprites[i];
+            }
+            else
+            {
+                img.sprite = lockedSprites[i];
+            }
+        }
+    }
+
+    public void OpenWorldLevels(int worldIndex)
+    {
+        int totalStars = PlayerPrefs.GetInt("TotalStar", 0);
+        if (totalStars < worldUnlockStars[worldIndex])
+        {
+            Debug.Log("World Locked! Need " + worldUnlockStars[worldIndex] + " stars.");
+            return;
+        }
+        DisableAllPanels();
+        worldLevelPanels[worldIndex].SetActive(true);
+    }
+
+    public void BackToWorldPanel()
+    {
+        DisableAllPanels();
+        worldPanel.SetActive(true);
     }
 
     public void OnLevelSelected(int levelNumber)
@@ -152,7 +234,6 @@ public class GameManagerCycle : MonoBehaviour
         player.ResetPosition();
 
         DisableAllPanels();
-        levelPanel.SetActive(false);
         gameplayPanel.SetActive(true);
 
 
@@ -236,16 +317,6 @@ public class GameManagerCycle : MonoBehaviour
                 obstacles[i].ForceStopMovement();
         }
     }
-
-    //void SetObstacleMovement(bool active)
-    //{
-    //    foreach (Transform ob in generator.obstaclesParent)
-    //    {
-    //        MovingObstacle mo = ob.GetComponent<MovingObstacle>();
-    //        if (mo != null)
-    //            mo.canMove = active;
-    //    }
-    //}
 
     void ApplyStoredMovementRules()
     {
@@ -396,7 +467,7 @@ public class GameManagerCycle : MonoBehaviour
             totalStars += difference;
 
             PlayerPrefs.SetInt(levelKey, earnedStars);
-            PlayerPrefs.SetInt("TotalStars", totalStars);
+            PlayerPrefs.SetInt("TotalStar", totalStars);
             PlayerPrefs.Save();
 
             UpdateTotalStarsUI();
@@ -423,28 +494,7 @@ public class GameManagerCycle : MonoBehaviour
         OnLevelCompleted();
     }
 
-    //IEnumerator LevelCompleteSequence()
-    //{
-    //    isGameRunning = false;
-    //    player.canMove = false;
-
-    //    CalculateStars();
-
-    //    DisableAllPanels();
-    //    levelCompletePanel.SetActive(true);
-
-    //    yield return new WaitForSeconds(3f);
-
-    //    levelIndex++;
-    //    layoutIndex = 0;
-
-    //    UpdateHighestLevel();
-
-    //    DisableAllPanels();
-    //    gameplayPanel.SetActive(true);
-
-    //    LoadLevel();
-    //}
+   
 
     void OnLevelCompleted()
     {
@@ -452,6 +502,14 @@ public class GameManagerCycle : MonoBehaviour
         player.canMove = false;
 
         CalculateStars();
+
+        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+
+        if (levelIndex >= unlockedLevel && levelIndex < totalLevels)
+        {
+            PlayerPrefs.SetInt("UnlockedLevel", levelIndex + 1);
+            PlayerPrefs.Save();
+        }
 
         DisableAllPanels();
         levelCompletePanel.SetActive(true);
