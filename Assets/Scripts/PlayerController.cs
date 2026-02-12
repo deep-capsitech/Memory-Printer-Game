@@ -28,9 +28,12 @@ public class PlayerController : MonoBehaviour
 
     private Quaternion startRotation;
 
+    private Vector3 lastSafePosition;
+
     void Start()
     {
         startPos = transform.position;
+        lastSafePosition=startPos;
         startRotation = transform.rotation;
         anim = GetComponent<Animator>();
 
@@ -79,6 +82,9 @@ public class PlayerController : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetPos) < 0.01f)
         {
+            transform.position = targetPos;
+            lastSafePosition = transform.position;
+
             isMoving = false;
             anim.SetBool("isWalking", false);
         }
@@ -200,4 +206,14 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstacle"))
             GameManagerCycle.Instance.PlayerHitObstacle();
     }
+
+    public void ReviveToLastSafeTile()
+    {
+        transform.position = lastSafePosition;
+        isMoving = false;
+        canMove = false;
+
+        anim.SetBool("isWalking", false);
+    }
+
 }

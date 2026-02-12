@@ -83,6 +83,10 @@ public class GameManagerCycle : MonoBehaviour
     private bool snapshotActive;
     private bool isGameRunning;
 
+    [Header("Revive Panel")]
+    public GameObject revivePanel;
+
+
     private HashSet<MovingObstacle> movingObstaclesForLayout = new HashSet<MovingObstacle>();
 
     void Awake()
@@ -129,6 +133,7 @@ public class GameManagerCycle : MonoBehaviour
         gameOverPanel.SetActive(false);
         levelCompletePanel.SetActive(false);
         worldPanel.SetActive(false);
+        revivePanel.SetActive(false);
 
         foreach (GameObject panel in worldLevelPanels)
             panel.SetActive(false);
@@ -544,16 +549,34 @@ public class GameManagerCycle : MonoBehaviour
         LoadLevel();
     }
 
+    //public void PlayerHitObstacle()
+    //{
+    //    StartCoroutine(GameOverDelay());
+    //}
+
+    //IEnumerator GameOverDelay()
+    //{
+    //    player.PlayHitAnimation();
+    //    yield return new WaitForSeconds(0.8f);
+    //    ShowGameOver();
+    //}
+
     public void PlayerHitObstacle()
     {
-        StartCoroutine(GameOverDelay());
+        if (!isGameRunning) return;
+
+        isGameRunning = false;
+        player.PlayHitAnimation();
+
+        StartCoroutine(ShowReviveOrGameOver());
     }
 
-    IEnumerator GameOverDelay()
+    IEnumerator ShowReviveOrGameOver()
     {
-        player.PlayHitAnimation();
         yield return new WaitForSeconds(0.8f);
-        ShowGameOver();
+
+        DisableAllPanels();
+        revivePanel.SetActive(true);   // your existing UI
     }
 
     public void ShowGameOver()
@@ -755,6 +778,35 @@ public class GameManagerCycle : MonoBehaviour
         }
 
         GameEconomyManager.Instance.AddCoins(coins);
+    }
+
+    public void RevivePlayer()
+    {
+        StopAllCoroutines();
+
+        Time.timeScale = 1f;
+
+        snapshot.ClearSnapshot();
+        freezeTimeActive = false;
+        powerUpActive = false;
+        snapshotActive = false;
+
+        player.ReviveToLastSafeTile();
+
+        DisableAllPanels();
+        gameplayPanel.SetActive(true);
+
+        levelText.text = "LEVEL " + levelIndex; // ✅ FIX
+
+        isGameRunning = true;
+        player.canMove = true;
+
+        ApplyStoredMovementRules();
+    }
+
+    public int CurrentLevelNumber
+    {
+        get { return levelIndex; }
     }
 
 }

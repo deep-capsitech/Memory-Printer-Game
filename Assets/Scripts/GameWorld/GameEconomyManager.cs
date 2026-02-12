@@ -50,4 +50,16 @@ public class GameEconomyManager : MonoBehaviour
         PlayerPrefs.SetInt(COINS_KEY, totalCoins);
         PlayerPrefs.Save();
     }
+
+    public bool SpendCoins(int amount)
+    {
+        if (totalCoins < amount)
+            return false;
+
+        totalCoins -= amount;
+        PlayerPrefs.SetInt("TOTAL_COINS", totalCoins);
+        PlayerPrefs.Save();
+        return true;
+    }
+
 }
