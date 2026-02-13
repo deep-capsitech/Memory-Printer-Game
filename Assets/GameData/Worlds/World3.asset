@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d478a00485ca804394b32ebab997f45, type: 3}
   m_Name: World3
   m_EditorClassIdentifier: 
-  worldId: 3
+  worldId: 2
   worldName: World 3
   starsRequired: 45

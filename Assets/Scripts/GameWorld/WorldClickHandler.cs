@@ -17,6 +17,10 @@ public class WorldClickHandler : MonoBehaviour
 
     public void OnWorldSelected(int worldId)
     {
-        GameManagerCycle.Instance.OpenWorldLevels(worldId - 1);
+        PlayerPrefs.SetInt("SelectedWorld", worldId);
+        PlayerPrefs.Save();
+
+        GameManagerCycle.Instance.OpenLevelPanel();
     }
+
 }

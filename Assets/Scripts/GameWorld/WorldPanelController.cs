@@ -20,4 +20,9 @@ public class WorldPanelController : MonoBehaviour
             worldCards[i].Setup(worlds[i], totalStars);
         }
     }
+
+    public void OnBackButtonClicked()
+    {
+        GameManagerCycle.Instance.ShowMenu();
+    }
 }

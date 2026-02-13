@@ -1,46 +1,46 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class LevelSelector : MonoBehaviour
 {
-    [Header("Level Info")]
+    [Header("Runtime Data")]
     public int levelNumber;
 
-    [Header("Sprites")]
-    public Sprite lockedSprite;
-    public Sprite unlockedSprite;
+    [Header("UI References")]
+    public Image lockIcon;
+    public Image[] stars;
+    public TextMeshProUGUI levelText;
+
+    [Header("Star Sprites")]
+    public Sprite filledStar;
+    public Sprite emptyStar;
 
     private Button button;
-    private Image buttonImage;
 
     void Awake()
     {
         button = GetComponent<Button>();
-        buttonImage = GetComponent<Image>();
-        button.onClick.AddListener(OnLevelClicked);
+        button.onClick.AddListener(OnClicked);
     }
 
-    void OnEnable()
+    public void Setup(int level, bool unlocked, int starCount)
     {
-        UpdateLevelState();
-    }
+        levelNumber = level;
+        levelText.text = level.ToString();
 
-    void UpdateLevelState()
-    {
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+        button.interactable = unlocked;
+        lockIcon.gameObject.SetActive(!unlocked);
 
-        if (levelNumber <= unlockedLevel)
+        // ⭐ ALWAYS SHOW 3 STARS
+        for (int i = 0; i < stars.Length; i++)
         {
-            buttonImage.sprite = unlockedSprite;
-            button.interactable = true;
-        }
-        else
-        {
-            buttonImage.sprite = lockedSprite;
-            button.interactable = false;
+            stars[i].enabled = true;
+            stars[i].sprite = (i < starCount) ? filledStar : emptyStar;
         }
     }
-    void OnLevelClicked()
+
+    void OnClicked()
     {
         GameManagerCycle.Instance.OnLevelSelected(levelNumber);
     }

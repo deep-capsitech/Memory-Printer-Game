@@ -17,8 +17,8 @@ public class GameManagerCycle : MonoBehaviour
     public GameObject levelCompletePanel;
     public GameObject worldPanel;
 
-    [Header("World Level Panels")]
-    public List<GameObject> worldLevelPanels;
+    //[Header("World Level Panels")]
+    //public List<GameObject> worldLevelPanels;
 
     [Header("Gameplay References")]
     public SnapshotManager snapshot;
@@ -86,6 +86,12 @@ public class GameManagerCycle : MonoBehaviour
     [Header("Revive Panel")]
     public GameObject revivePanel;
 
+    [Header("HUD")]
+    public HUDVisibilityController hud;
+    [Header("UI Background")]
+    public GameObject backgroundPanel;
+    [Header("New Dynamic Level Panel")]
+    public GameObject levelPanel;
 
     private HashSet<MovingObstacle> movingObstaclesForLayout = new HashSet<MovingObstacle>();
 
@@ -97,17 +103,20 @@ public class GameManagerCycle : MonoBehaviour
 
     void Start()
     {
+        if (!PlayerPrefs.HasKey("GameInitialized"))
+        {
+            PlayerPrefs.SetInt("UnlockedLevel", 1);
+            PlayerPrefs.SetInt("TotalStar", 0);
+            PlayerPrefs.SetInt("SelectedWorld", 0);
+            PlayerPrefs.SetInt("GameInitialized", 1);
+            PlayerPrefs.Save();
+        }
+
         Time.timeScale = 1f;
         LoadHighestLevel();
         ShowMenu();
         totalStars = PlayerPrefs.GetInt("TotalStar", 0);
         UpdateTotalStarsUI();
-       // UpdateWorldVisuals();
-        if (!PlayerPrefs.HasKey("UnlockedLevel"))
-        {
-            PlayerPrefs.SetInt("UnlockedLevel", 1);
-        }
-
     }
 
     void Update()
@@ -135,8 +144,17 @@ public class GameManagerCycle : MonoBehaviour
         worldPanel.SetActive(false);
         revivePanel.SetActive(false);
 
-        foreach (GameObject panel in worldLevelPanels)
-            panel.SetActive(false);
+        //foreach (GameObject panel in worldLevelPanels)
+        //    panel.SetActive(false);
+        if (levelPanel != null)
+            levelPanel.SetActive(false);
+
+        backgroundPanel.SetActive(true);
+    }
+    void UpdateHUD(HUDVisibilityController.UIState state)
+    {
+        if (hud != null)
+            hud.UpdateHUD(state);
     }
 
     void UpdatePlayerMovement()
@@ -152,7 +170,7 @@ public class GameManagerCycle : MonoBehaviour
 
         DisableAllPanels();
         menuPanel.SetActive(true);
-
+        UpdateHUD(HUDVisibilityController.UIState.Menu);
         bestLevelMenuText.text =
             "BEST LEVEL : " + PlayerPrefs.GetInt("HighestLevel", 1);
 
@@ -170,6 +188,7 @@ public class GameManagerCycle : MonoBehaviour
 
         DisableAllPanels();
         worldPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.World);
         isGameRunning = false;
         player.canMove = false;
         
@@ -211,7 +230,9 @@ public class GameManagerCycle : MonoBehaviour
     public void OpenWorldLevels(int worldIndex)
     {
         DisableAllPanels();
-        worldLevelPanels[worldIndex].SetActive(true);
+        //worldLevelPanels[worldIndex].SetActive(true);
+        levelPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Level);
     }
 
     public void BackToWorldPanel()
@@ -219,7 +240,7 @@ public class GameManagerCycle : MonoBehaviour
         DisableAllPanels();
         worldPanel.SetActive(true);
     }
-
+    
     public void OnLevelSelected(int levelNumber)
     {
         Debug.Log("Level Selected: " + levelNumber);
@@ -233,7 +254,9 @@ public class GameManagerCycle : MonoBehaviour
         player.ResetPosition();
 
         DisableAllPanels();
+        backgroundPanel.SetActive(false);
         gameplayPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Gameplay);
 
 
         LoadLevel();
@@ -363,7 +386,7 @@ public class GameManagerCycle : MonoBehaviour
         //player.canMove = false;
         Time.timeScale = 0f;
         DisableAllPanels();
-
+        backgroundPanel.SetActive(false);
         CameraManager.Instance.EnableTopCamera();
         generator.EnableDragMode(true); // allow dragging
 
@@ -521,6 +544,7 @@ public class GameManagerCycle : MonoBehaviour
 
         DisableAllPanels();
         levelCompletePanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.LevelComplete);
     }
 
     public void OnNextLevelButton()
@@ -538,6 +562,7 @@ public class GameManagerCycle : MonoBehaviour
         UpdateHighestLevel();
 
         DisableAllPanels();
+        backgroundPanel.SetActive(false);
         gameplayPanel.SetActive(true);
 
         LoadLevel();
@@ -571,13 +596,14 @@ public class GameManagerCycle : MonoBehaviour
 
         DisableAllPanels();
         revivePanel.SetActive(true);   // your existing UI
+        UpdateHUD(HUDVisibilityController.UIState.Revive);
     }
 
     public void ShowGameOver()
     {
         DisableAllPanels();
         gameOverPanel.SetActive(true);
-
+        UpdateHUD(HUDVisibilityController.UIState.GameOver);
         //SetObstacleMovement(false);
         StopAllObstacleMovement();
 
@@ -633,6 +659,7 @@ public class GameManagerCycle : MonoBehaviour
         layoutIndex = 0;
 
         DisableAllPanels();
+        backgroundPanel.SetActive(false);
         gameplayPanel.SetActive(true);
 
         LoadLevel(); 
@@ -647,6 +674,7 @@ public class GameManagerCycle : MonoBehaviour
     {
         DisableAllPanels();
         pausePanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Pause);
         //SetObstacleMovement(false);
         StopAllObstacleMovement();
 
@@ -658,7 +686,9 @@ public class GameManagerCycle : MonoBehaviour
     public void ResumeGame()
     {
         DisableAllPanels();
+        backgroundPanel.SetActive(false);
         gameplayPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Gameplay);
         Time.timeScale = 1f;
         isGameRunning = true;
         ApplyStoredMovementRules();
@@ -788,6 +818,7 @@ public class GameManagerCycle : MonoBehaviour
         player.ReviveToLastSafeTile();
 
         DisableAllPanels();
+        backgroundPanel.SetActive(false);
         gameplayPanel.SetActive(true);
 
         levelText.text = "LEVEL " + levelIndex; // ✅ FIX
@@ -801,6 +832,13 @@ public class GameManagerCycle : MonoBehaviour
     public int CurrentLevelNumber
     {
         get { return levelIndex; }
+    }
+
+    public void OpenLevelPanel()
+    {
+        DisableAllPanels();
+        levelPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Level);
     }
 
 }
