@@ -1,4 +1,6 @@
+﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelPanelController : MonoBehaviour
 {
@@ -9,6 +11,10 @@ public class LevelPanelController : MonoBehaviour
     [Header("Config")]
     public int totalLevels = 15;
 
+    [Header("Theme UI")]
+    public TextMeshProUGUI worldNameText;
+    public Image panelFrame;
+
     void OnEnable()
     {
         GenerateLevels();
@@ -18,23 +24,22 @@ public class LevelPanelController : MonoBehaviour
     //{
     //    ClearOldButtons();
 
+    //    int worldIndex = PlayerPrefs.GetInt("SelectedWorld", 0);
     //    int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
 
-    //    for (int i = 1; i <= totalLevels; i++)
+    //    int levelsPerWorld = 10;
+    //    int startLevel = worldIndex * levelsPerWorld + 1;
+    //    int endLevel = startLevel + levelsPerWorld - 1;
+
+    //    for (int level = startLevel; level <= endLevel; level++)
     //    {
     //        GameObject btnObj = Instantiate(levelButtonPrefab, contentParent);
-
     //        LevelSelector selector = btnObj.GetComponent<LevelSelector>();
-    //        if (selector == null)
-    //        {
-    //            Debug.LogError("LevelSelector missing on LevelButton prefab");
-    //            continue;
-    //        }
 
-    //        bool unlocked = i <= unlockedLevel;
-    //        int stars = PlayerPrefs.GetInt("LevelStars" + i, 0);
+    //        bool unlocked = level <= unlockedLevel;
+    //        int stars = PlayerPrefs.GetInt("LevelStars" + level, 0);
 
-    //        selector.Setup(i, unlocked, stars);
+    //        selector.Setup(level, unlocked, stars);
     //    }
     //}
     void GenerateLevels()
@@ -42,9 +47,16 @@ public class LevelPanelController : MonoBehaviour
         ClearOldButtons();
 
         int worldIndex = PlayerPrefs.GetInt("SelectedWorld", 0);
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+        WorldData world = WorldDatabase.Instance.GetWorlds()
+                                               .Find(w => w.worldId == worldIndex);
+
+        // 🟢 APPLY WORLD THEME
+        worldNameText.text = world.worldName;
+        panelFrame.color = world.primaryColor;
 
         int levelsPerWorld = 10;
+        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+
         int startLevel = worldIndex * levelsPerWorld + 1;
         int endLevel = startLevel + levelsPerWorld - 1;
 
@@ -56,9 +68,10 @@ public class LevelPanelController : MonoBehaviour
             bool unlocked = level <= unlockedLevel;
             int stars = PlayerPrefs.GetInt("LevelStars" + level, 0);
 
-            selector.Setup(level, unlocked, stars);
+            selector.Setup(level, unlocked, stars, world.secondaryColor);
         }
     }
+
 
     void ClearOldButtons()
     {

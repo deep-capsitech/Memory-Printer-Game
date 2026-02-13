@@ -24,21 +24,23 @@ public class LevelSelector : MonoBehaviour
         button.onClick.AddListener(OnClicked);
     }
 
-    public void Setup(int level, bool unlocked, int starCount)
+    public void Setup(int level, bool unlocked, int starCount, Color themeColor)
     {
         levelNumber = level;
         levelText.text = level.ToString();
 
+        GetComponent<Image>().color = themeColor;
+
         button.interactable = unlocked;
         lockIcon.gameObject.SetActive(!unlocked);
 
-        // ⭐ ALWAYS SHOW 3 STARS
         for (int i = 0; i < stars.Length; i++)
         {
             stars[i].enabled = true;
             stars[i].sprite = (i < starCount) ? filledStar : emptyStar;
         }
     }
+
 
     void OnClicked()
     {

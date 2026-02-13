@@ -15,3 +15,6 @@ MonoBehaviour:
   worldId: 4
   worldName: World 5
   starsRequired: 110
+  primaryColor: {r: 1, g: 0.09019608, b: 0.26666668, a: 1}
+  secondaryColor: {r: 0.8352941, g: 0, b: 0, a: 1}
+  panelBackground: {fileID: 1860626635, guid: dd1d9c24def24c143b06248bee5f8452, type: 3}
