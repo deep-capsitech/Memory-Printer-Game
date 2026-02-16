@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d478a00485ca804394b32ebab997f45, type: 3}
   m_Name: World3
   m_EditorClassIdentifier: 
-  worldId: 2
+  worldId: 3
   worldName: World 3
   starsRequired: 45
-  primaryColor: {r: 0.7019608, g: 0.53333336, b: 1, a: 1}
-  secondaryColor: {r: 0.4862745, g: 0.3019608, b: 1, a: 1}
+  primaryColor: {r: 1, g: 0.5686275, b: 0, a: 1}
+  secondaryColor: {r: 1, g: 0.42745098, b: 0, a: 1}
   panelBackground: {fileID: 386386009, guid: 376548e960911ea43b6ae5fc5a746e66, type: 3}

@@ -240,10 +240,19 @@ public class GameManagerCycle : MonoBehaviour
         DisableAllPanels();
         worldPanel.SetActive(true);
     }
-    
     public void OnLevelSelected(int levelNumber)
     {
-        Debug.Log("Level Selected: " + levelNumber);
+        // 🛑 HARD BLOCK IF NO BATTERY
+        if (!BatteryManager.Instance.HasBattery())
+        {
+            Debug.Log("No battery left! Block level start.");
+            // TODO: show battery empty popup
+            return;
+        }
+
+        // 🔋 CONSUME FIRST
+        BatteryManager.Instance.ConsumeBattery();
+
         Time.timeScale = 1f;
         StopAllCoroutines();
 
@@ -258,16 +267,7 @@ public class GameManagerCycle : MonoBehaviour
         gameplayPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Gameplay);
 
-
         LoadLevel();
-
-        if (!BatteryManager.Instance.HasBattery())
-        {
-            Debug.Log("No battery left!");
-            return; // later show popup
-        }
-
-        BatteryManager.Instance.ConsumeBattery();
     }
 
     void LoadLevel()
@@ -546,15 +546,23 @@ public class GameManagerCycle : MonoBehaviour
         levelCompletePanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.LevelComplete);
     }
-
     public void OnNextLevelButton()
     {
+        if (!BatteryManager.Instance.HasBattery())
+        {
+            Debug.Log("No battery left for next level");
+            ShowMenu(); // or battery popup
+            return;
+        }
+
+        BatteryManager.Instance.ConsumeBattery();
+
         levelIndex++;
 
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
         if (level == null)
         {
-            ShowMenu(); 
+            ShowMenu();
             return;
         }
 
@@ -566,7 +574,9 @@ public class GameManagerCycle : MonoBehaviour
         gameplayPanel.SetActive(true);
 
         LoadLevel();
+        UpdateHUD(HUDVisibilityController.UIState.Gameplay);
     }
+
 
     //public void PlayerHitObstacle()
     //{
@@ -821,12 +831,15 @@ public class GameManagerCycle : MonoBehaviour
         backgroundPanel.SetActive(false);
         gameplayPanel.SetActive(true);
 
-        levelText.text = "LEVEL " + levelIndex; // ✅ FIX
+        levelText.text = "LEVEL " + levelIndex;
 
         isGameRunning = true;
         player.canMove = true;
 
         ApplyStoredMovementRules();
+
+        // ✅ FIX: restore correct HUD (prevents coin/battery UI)
+        UpdateHUD(HUDVisibilityController.UIState.Gameplay);
     }
 
     public int CurrentLevelNumber

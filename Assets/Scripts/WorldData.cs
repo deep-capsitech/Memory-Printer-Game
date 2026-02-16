@@ -4,14 +4,17 @@ using UnityEngine;
 public class WorldData : ScriptableObject
 {
     [Header("Identity")]
-    public int worldId;              // 0–4
+    public int worldId;              // 1–5
     public string worldName;
 
     [Header("Progression")]
     public int starsRequired;
 
     [Header("Theme")]
-    public Color primaryColor;       // glow / borders
-    public Color secondaryColor;     // buttons / accents
-    public Sprite panelBackground;   // optional (frame/bg)
+    public Color primaryColor;       // panel frame, borders
+    public Color secondaryColor;     // text outline, locks, empty stars
+
+    [Header("Sprites")]
+    public Sprite panelBackground;   // optional
+
 }

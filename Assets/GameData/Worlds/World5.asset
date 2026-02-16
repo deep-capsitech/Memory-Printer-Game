@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d478a00485ca804394b32ebab997f45, type: 3}
   m_Name: World5
   m_EditorClassIdentifier: 
-  worldId: 4
+  worldId: 5
   worldName: World 5
   starsRequired: 110
   primaryColor: {r: 1, g: 0.09019608, b: 0.26666668, a: 1}
   secondaryColor: {r: 0.8352941, g: 0, b: 0, a: 1}
   panelBackground: {fileID: 1860626635, guid: dd1d9c24def24c143b06248bee5f8452, type: 3}
+  floorMaterial: {fileID: 2100000, guid: 201e9a224e65f8541bfebd970b0e09e8, type: 2}
+  wallMaterial: {fileID: 2100000, guid: 8c0f55517d19c654aa3b14a821b517b4, type: 2}
+  doorMaterial: {fileID: 2100000, guid: 2650dbe5baa00ab468c214e676a8bccd, type: 2}
+  doorOutlineColor: {r: 0.990566, g: 0.098122105, b: 0.098122105, a: 1}

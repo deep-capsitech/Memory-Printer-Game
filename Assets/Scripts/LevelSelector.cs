@@ -4,19 +4,18 @@ using TMPro;
 
 public class LevelSelector : MonoBehaviour
 {
-    [Header("Runtime Data")]
-    public int levelNumber;
-
-    [Header("UI References")]
+    [Header("UI")]
+    public Image buttonFrame;
     public Image lockIcon;
     public Image[] stars;
     public TextMeshProUGUI levelText;
 
-    [Header("Star Sprites")]
+    [Header("Star Sprites (WHITE ONLY)")]
     public Sprite filledStar;
     public Sprite emptyStar;
 
     private Button button;
+    private Material runtimeTextMaterial;
 
     void Awake()
     {
@@ -24,26 +23,45 @@ public class LevelSelector : MonoBehaviour
         button.onClick.AddListener(OnClicked);
     }
 
-    public void Setup(int level, bool unlocked, int starCount, Color themeColor)
+    public void Setup(int level, bool unlocked, int starCount, WorldData world)
     {
-        levelNumber = level;
         levelText.text = level.ToString();
 
-        GetComponent<Image>().color = themeColor;
+        // 🔹 BUTTON FRAME
+        buttonFrame.color = world.primaryColor;
 
-        button.interactable = unlocked;
+        // 🔹 LEVEL TEXT OUTLINE (IMPORTANT)
+        runtimeTextMaterial = Instantiate(levelText.fontMaterial);
+        runtimeTextMaterial.SetColor("_OutlineColor", world.primaryColor);
+        levelText.fontMaterial = runtimeTextMaterial;
+        levelText.color = Color.white;
+
+        // 🔹 LOCK ICON (WHITE SVG / PNG REQUIRED)
+        lockIcon.color = world.secondaryColor;
         lockIcon.gameObject.SetActive(!unlocked);
 
+        // 🔹 STARS
         for (int i = 0; i < stars.Length; i++)
         {
             stars[i].enabled = true;
-            stars[i].sprite = (i < starCount) ? filledStar : emptyStar;
-        }
-    }
 
+            if (i < starCount)
+            {
+                stars[i].sprite = filledStar;
+                stars[i].color = Color.white;            // filled = normal
+            }
+            else
+            {
+                stars[i].sprite = emptyStar;
+                stars[i].color = world.secondaryColor;  // empty = theme
+            }
+        }
+
+        button.interactable = unlocked;
+    }
 
     void OnClicked()
     {
-        GameManagerCycle.Instance.OnLevelSelected(levelNumber);
+        GameManagerCycle.Instance.OnLevelSelected(int.Parse(levelText.text));
     }
 }
