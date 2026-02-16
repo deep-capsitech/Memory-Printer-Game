@@ -340,7 +340,7 @@ public class GameManagerCycle : MonoBehaviour
                 mo.StartWarningGlow();
         }
     }
-
+    //t
     void StopAllObstacleMovement()
     {
         foreach (Transform ob in generator.obstaclesParent)
