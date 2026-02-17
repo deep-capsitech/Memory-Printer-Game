@@ -1,8 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class MovingObstacle : MonoBehaviour
 {
+    public enum MoveType
+    {
+        None,
+        UpDown,
+        LeftRight,
+        Both
+    }
+
     [Header("Movement")]
     public bool canMove = false;
     public float moveDistance = 1.5f;
@@ -17,6 +26,9 @@ public class MovingObstacle : MonoBehaviour
 
     private MeshRenderer rend;
 
+    private MoveType currentMoveType = MoveType.None;
+
+
     void Start()
     {
         rend = GetComponentInChildren<MeshRenderer>();
@@ -28,7 +40,7 @@ public class MovingObstacle : MonoBehaviour
 
         defaultMat = rend.material;
         startPos = transform.position;
-        moveAxis = (Random.value > 0.5f) ? Vector3.right : Vector3.forward;
+        //moveAxis = (Random.value > 0.5f) ? Vector3.right : Vector3.forward;
     }
 
     void Update()
@@ -55,6 +67,32 @@ public class MovingObstacle : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(GlowRoutine());
+    }
+
+    public void SetMovementType(MoveType type)
+    {
+        currentMoveType = type;
+
+        switch (type)
+        {
+            case MoveType.UpDown:
+                moveAxis = Vector3.forward;
+                break;
+
+            case MoveType.LeftRight:
+                moveAxis = Vector3.right;
+                break;
+
+            case MoveType.Both:
+                moveAxis = (Random.value > 0.5f)
+                    ? Vector3.right
+                    : Vector3.forward;
+                break;
+
+            default:
+                moveAxis = Vector3.zero;
+                break;
+        }
     }
 
     IEnumerator GlowRoutine()

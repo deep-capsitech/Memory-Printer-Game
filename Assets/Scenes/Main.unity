@@ -1605,7 +1605,7 @@ MonoBehaviour:
   tileGrid: {fileID: 657122792}
   obstacleYOffset: 0.6
   boosterYOffset: 0.6
-  boosterSpawnDelay: 5
+  boosterSpawnDelay: 10
   boosterLifeTime: 5
 --- !u!4 &211100147
 Transform:
