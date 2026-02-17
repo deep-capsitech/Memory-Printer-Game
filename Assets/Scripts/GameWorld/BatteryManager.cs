@@ -89,7 +89,7 @@ public class BatteryManager : MonoBehaviour
 
         bool wasFull = currentBatteries == maxBatteries;
 
-        //currentBatteries--;
+        currentBatteries--;
 
         if (wasFull)
         {
