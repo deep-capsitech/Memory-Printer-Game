@@ -115,4 +115,20 @@ public class BatteryManager : MonoBehaviour
             (float)(nextBatteryTime - DateTime.UtcNow).TotalSeconds
         );
     }
+
+    public void AddBatteryInstant(int amount = 1)
+    {
+        RefillIfNeeded();
+
+        currentBatteries = Mathf.Min(maxBatteries, currentBatteries + amount);
+
+        // If now full, clear timer
+        if (currentBatteries >= maxBatteries)
+        {
+            nextBatteryTime = DateTime.MinValue;
+        }
+
+        SaveData();
+    }
+
 }

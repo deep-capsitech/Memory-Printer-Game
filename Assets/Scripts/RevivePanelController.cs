@@ -5,20 +5,19 @@ using UnityEngine.UI;
 public class RevivePanelController : MonoBehaviour
 {
     [Header("UI References")]
-    public TextMeshProUGUI levelText;   
-    public TextMeshProUGUI timerText;     // TimerTxt
-    public Button reviveButton;           // SpendCoins
-    public Button skipButton;             // WatchAd
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI timerText;
+    public Button reviveButton;
+    public Button skipButton;
 
     [Header("Settings")]
     public float reviveDuration = 10f;
 
-    private float timer;
-    private bool reviveUsed;
-
     [Header("Cost")]
     public int reviveCost = 100;
 
+    private float timer;
+    private bool reviveUsed;
 
     void OnEnable()
     {
@@ -28,27 +27,23 @@ public class RevivePanelController : MonoBehaviour
         reviveButton.interactable = true;
         skipButton.interactable = true;
 
-        // ✅ READ level number from GameManager
         if (GameManagerCycle.Instance != null && levelText != null)
         {
-            levelText.text = "LEVEL " + GameManagerCycle.Instance.CurrentLevelNumber;
+            levelText.text =
+                "LEVEL " + GameManagerCycle.Instance.CurrentLevelNumber;
         }
 
         UpdateTimerUI();
+        UpdateReviveButtonState();
     }
-
 
     void Update()
     {
-        // Game is paused → use unscaled time
         timer -= Time.unscaledDeltaTime;
-
         UpdateTimerUI();
 
         if (timer <= 0f)
-        {
             TimeUp();
-        }
     }
 
     void UpdateTimerUI()
@@ -57,43 +52,37 @@ public class RevivePanelController : MonoBehaviour
             timerText.text = Mathf.CeilToInt(timer).ToString();
     }
 
-    // ================= BUTTON CALLBACKS =================
+    // ---------------- BUTTONS ----------------
 
-    // Spend Coins button
     public void OnSpendCoinsClicked()
     {
         if (reviveUsed) return;
 
-        // ❌ Not enough coins → do nothing
         if (!GameEconomyManager.Instance.SpendCoins(reviveCost))
-        {
-            Debug.Log("Not enough coins to revive");
             return;
-        }
 
-        reviveUsed = true;
-        reviveButton.interactable = false;
-        skipButton.interactable = false;
-
-        GameManagerCycle.Instance.RevivePlayer();
-        gameObject.SetActive(false);
+        CompleteRevive();
     }
 
-    // Watch Ad button (acts as Skip for now)
     public void OnWatchAdClicked()
     {
         if (reviveUsed) return;
 
+        // Ad success assumed
+        CompleteRevive();
+    }
+
+    void CompleteRevive()
+    {
         reviveUsed = true;
         reviveButton.interactable = false;
         skipButton.interactable = false;
 
-        // Ad logic will be added later
         GameManagerCycle.Instance.RevivePlayer();
         gameObject.SetActive(false);
     }
 
-    // ================= INTERNAL =================
+    // ---------------- INTERNAL ----------------
 
     void TimeUp()
     {
@@ -104,5 +93,27 @@ public class RevivePanelController : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    // ---------------- API ----------------
 
+    public void SetReviveCost(int cost)
+    {
+        reviveCost = cost;
+
+        if (reviveButton != null)
+        {
+            TextMeshProUGUI txt =
+                reviveButton.GetComponentInChildren<TextMeshProUGUI>();
+
+            if (txt != null)
+                txt.text = cost.ToString();
+        }
+
+        UpdateReviveButtonState();
+    }
+
+    void UpdateReviveButtonState()
+    {
+        reviveButton.interactable =
+            GameEconomyManager.Instance.GetCoins() >= reviveCost;
+    }
 }
