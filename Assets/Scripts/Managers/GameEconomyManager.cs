@@ -8,6 +8,8 @@ public class GameEconomyManager : MonoBehaviour
     private const string FIRST_LAUNCH_KEY = "FIRST_LAUNCH_DONE";
 
     private int totalCoins;
+    private int levelCoinsEarned;
+
 
     void Awake()
     {
@@ -46,6 +48,7 @@ public class GameEconomyManager : MonoBehaviour
 
     public void AddCoins(int amount)
     {
+        levelCoinsEarned += amount;
         totalCoins += amount;
         PlayerPrefs.SetInt(COINS_KEY, totalCoins);
         PlayerPrefs.Save();
@@ -60,6 +63,15 @@ public class GameEconomyManager : MonoBehaviour
         PlayerPrefs.SetInt("TOTAL_COINS", totalCoins);
         PlayerPrefs.Save();
         return true;
+    }
+    public void ResetLevelCoins()
+    {
+        levelCoinsEarned = 0;
+    }
+
+    public int GetLevelCoins()
+    {
+        return levelCoinsEarned;
     }
 
 }

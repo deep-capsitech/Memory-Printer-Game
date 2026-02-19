@@ -46,7 +46,7 @@ public class GameManagerCycle : MonoBehaviour
     public Sprite filledStar;
     public Sprite emptyStar;
 
-    public TextMeshProUGUI totalStarsText;
+    public TextMeshProUGUI coinsEarnedText;
 
     private int earnedStars;
     private int totalStars;
@@ -86,6 +86,8 @@ public class GameManagerCycle : MonoBehaviour
     private int reviveCount = 0;
     [Header("No Battery Panel")]
     public GameObject noBatteryPanel;
+
+    private GameObject previousPanelBeforeNoBattery;
 
     void Awake()
     {
@@ -143,7 +145,7 @@ public class GameManagerCycle : MonoBehaviour
 
         backgroundPanel.SetActive(true);
     }
-    void UpdateHUD(HUDVisibilityController.UIState state)
+    public void UpdateHUD(HUDVisibilityController.UIState state)
     {
         if (hud != null)
             hud.UpdateHUD(state);
@@ -239,6 +241,7 @@ public class GameManagerCycle : MonoBehaviour
 
     void LoadLevel()
     {
+        GameEconomyManager.Instance.ResetLevelCoins();
         reviveCount = 0;
 
         levelTimer = 60f;
@@ -489,25 +492,23 @@ public class GameManagerCycle : MonoBehaviour
 
     void UpdateTotalStarsUI()
     {
-        if (totalStarsText != null)
-            totalStarsText.text = "TOTAL STARS : " + totalStars;
+        //if (totalStarsText != null)
+        //    totalStarsText.text = "TOTAL STARS : " + totalStars;
     }
+
 
     public void PlayerReachedDoor()
     {
         //StartCoroutine(LevelCompleteSequence());
         OnLevelCompleted();
     }
-
-   
-
     void OnLevelCompleted()
     {
         ClearLevelFailed(levelIndex);
 
         isGameRunning = false;
         player.canMove = false;
-        MarkLevelPlayed(levelIndex);   // 🔥 REQUIRED
+        MarkLevelPlayed(levelIndex);
 
         CalculateStars();
         GiveCoinsForStars();
@@ -523,7 +524,13 @@ public class GameManagerCycle : MonoBehaviour
         DisableAllPanels();
         levelCompletePanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.LevelComplete);
+
+        int earnedCoins = GameEconomyManager.Instance.GetLevelCoins();
+        coinsEarnedText.text = "COINS EARNED :    " + earnedCoins;
+
+        Debug.Log("Coins Earned: " + earnedCoins);
     }
+
     public void OnNextLevelButton()
     {
         levelIndex++;
@@ -584,16 +591,47 @@ public class GameManagerCycle : MonoBehaviour
         powerUpActive = false;
         snapshotActive = false;
 
-        Time.timeScale = 0f; // 🔥 freeze game properly
+        Time.timeScale = 0f;
+
+        // 🔥 Store which panel was active
+        if (gameOverPanel.activeSelf)
+            previousPanelBeforeNoBattery = gameOverPanel;
+        else if (levelPanel.activeSelf)
+            previousPanelBeforeNoBattery = levelPanel;
+        else if (worldPanel.activeSelf)
+            previousPanelBeforeNoBattery = worldPanel;
+        else
+            previousPanelBeforeNoBattery = menuPanel;
 
         DisableAllPanels();
         noBatteryPanel.SetActive(true);
 
-        // ✅ Correct HUD state
         UpdateHUD(HUDVisibilityController.UIState.NoBattery);
 
         isGameRunning = false;
         player.canMove = false;
+    }
+
+    public void ReturnFromNoBatteryPanel()
+    {
+        Time.timeScale = 1f;
+
+        DisableAllPanels();
+
+        if (previousPanelBeforeNoBattery != null)
+            previousPanelBeforeNoBattery.SetActive(true);
+        else
+            menuPanel.SetActive(true);
+
+        // Restore correct HUD
+        if (previousPanelBeforeNoBattery == gameOverPanel)
+            UpdateHUD(HUDVisibilityController.UIState.GameOver);
+        else if (previousPanelBeforeNoBattery == levelPanel)
+            UpdateHUD(HUDVisibilityController.UIState.Level);
+        else if (previousPanelBeforeNoBattery == worldPanel)
+            UpdateHUD(HUDVisibilityController.UIState.World);
+        else
+            UpdateHUD(HUDVisibilityController.UIState.Menu);
     }
 
     public void ShowGameOver()
