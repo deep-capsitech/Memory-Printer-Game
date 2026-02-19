@@ -293,8 +293,11 @@ public class GameManagerCycle : MonoBehaviour
         else if (levelIndex >= 21 && levelIndex <= 30)
             moveType = MovingObstacle.MoveType.LeftRight;
 
-        else if (levelIndex >= 31 && levelIndex <= 50)
+        else if (levelIndex >= 31 && levelIndex <= 40)
             moveType = MovingObstacle.MoveType.Both;
+
+        else if (levelIndex >= 41 && levelIndex <= 50)
+            moveType = MovingObstacle.MoveType.Square;
 
         if (moveType == MovingObstacle.MoveType.None)
             return;

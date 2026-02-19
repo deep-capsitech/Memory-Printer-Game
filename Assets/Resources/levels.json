@@ -4349,7 +4349,39 @@
       ]
     }
   ]
-}
+},
+{
+      "level": 41,
+      "layouts": [
+        {
+          "booster": { "tileX": 4, "tileZ": 4 },
+          "obstacles": [
+            { "tileX": 2, "tileZ": 2 },
+            { "tileX": 2, "tileZ": 7 },
+            { "tileX": 7, "tileZ": 2 },
+            { "tileX": 7, "tileZ": 7 }
+          ]
+        },
+        {
+          "booster": { "tileX": 6, "tileZ": 5 },
+          "obstacles": [
+            { "tileX": 2, "tileZ": 2 },
+            { "tileX": 2, "tileZ": 7 },
+            { "tileX": 7, "tileZ": 2 },
+            { "tileX": 7, "tileZ": 7 }
+          ]
+        },
+        {
+          "booster": { "tileX": 2, "tileZ": 6 },
+          "obstacles": [
+            { "tileX": 2, "tileZ": 2 },
+            { "tileX": 2, "tileZ": 7 },
+            { "tileX": 7, "tileZ": 2 },
+            { "tileX": 7, "tileZ": 7 }
+          ]
+        }
+      ]
+    }
 
   ]
 }
