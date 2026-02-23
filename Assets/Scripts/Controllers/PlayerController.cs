@@ -30,6 +30,13 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 lastSafePosition;
 
+    [Header("Raycast Settings")]
+    public float wallCheckDistance = 1.3f;
+    public float doorCheckDistance = 1.2f;
+
+    public LayerMask wallLayer;
+    public LayerMask doorLayer;
+
     void Start()
     {
         startPos = transform.position;
@@ -112,15 +119,42 @@ public class PlayerController : MonoBehaviour
     {
         if (!canMove || isMoving) return;
 
-        if (Physics.Raycast(transform.position, dir, out RaycastHit hit, moveStep, ~0, QueryTriggerInteraction.Ignore))
-        {
-            if (hit.collider.CompareTag("Wall"))
-                return;
+        Vector3 nextPos = transform.position + dir;
 
-            if (hit.collider.CompareTag("Door")) { }
+        if (dir.z < 0 && nextPos.z < startPos.z)
+            return;
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position,
+                            dir.normalized,
+                            out hit,
+                            moveStep,
+                            doorLayer,
+                            QueryTriggerInteraction.Collide))
+        {
+            if (hit.collider.CompareTag("Door"))
+            {
+                // Allow movement to door
+                targetPos = nextPos;
+                isMoving = true;
+
+                anim.SetBool("isWalking", true);
+                transform.forward = dir;
+                return;
+            }
         }
 
-        targetPos = transform.position + dir;
+        if (Physics.Raycast(transform.position,
+                            dir.normalized,
+                            wallCheckDistance,
+                            wallLayer,
+                            QueryTriggerInteraction.Ignore))
+        {
+            return; // blocked by wall
+        }
+
+        targetPos = nextPos;
         isMoving = true;
 
         anim.SetBool("isWalking", true);
