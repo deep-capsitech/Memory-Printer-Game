@@ -20,35 +20,35 @@ public class LevelPanelController : MonoBehaviour
     {
         BuildPanel();
     }
-
     void BuildPanel()
     {
         ClearOldButtons();
 
         int worldId = PlayerPrefs.GetInt("SelectedWorld", 1);
+        int totalStars = PlayerPrefs.GetInt("TotalStar", 0);
+
         WorldData world = WorldDatabase.Instance.GetWorlds()
             .Find(w => w.worldId == worldId);
 
         if (world == null) return;
 
-        // 🔹 WORLD TITLE
+        // WORLD TITLE
         worldNameText.text = world.worldName;
         worldNameText.color = Color.white;
-
-        // IMPORTANT: TMP MATERIAL INSTANCE
         worldNameText.fontMaterial = Instantiate(worldNameText.fontMaterial);
         worldNameText.fontMaterial.SetColor("_OutlineColor", world.primaryColor);
 
-        // 🔹 PANEL FRAME
         panelFrame.color = world.primaryColor;
         if (world.panelBackground != null)
             panelFrame.sprite = world.panelBackground;
 
-        // 🔹 BACK BUTTON (WHITE SPRITE REQUIRED)
         backButtonImage.color = world.primaryColor;
 
-        // 🔹 LEVEL RANGE
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+        // WORLD UNLOCK CHECK
+        bool worldUnlocked =
+            worldId == 1 ||
+            totalStars >= world.starsRequired;
+
         int startLevel = (worldId - 1) * levelsPerWorld + 1;
         int endLevel = startLevel + levelsPerWorld - 1;
 
@@ -57,13 +57,30 @@ public class LevelPanelController : MonoBehaviour
             GameObject btn = Instantiate(levelButtonPrefab, contentParent);
             LevelSelector selector = btn.GetComponent<LevelSelector>();
 
-            bool unlocked = level <= unlockedLevel;
+            bool levelUnlocked = false;
+
+            if (!worldUnlocked)
+            {
+                levelUnlocked = false;
+            }
+            else if (level == startLevel)
+            {
+                // First level of unlocked world
+                levelUnlocked = true;
+            }
+            else
+            {
+                // PROFESSIONAL RULE:
+                // Unlock only if PREVIOUS LEVEL WAS WON
+                int previousStars = PlayerPrefs.GetInt("LevelStars" + (level - 1), 0);
+                levelUnlocked = previousStars > 0;
+            }
+
             int stars = PlayerPrefs.GetInt("LevelStars" + level, 0);
 
-            selector.Setup(level, unlocked, stars, world);
+            selector.Setup(level, levelUnlocked, stars, world);
         }
     }
-
     void ClearOldButtons()
     {
         for (int i = contentParent.childCount - 1; i >= 0; i--)

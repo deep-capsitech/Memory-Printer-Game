@@ -3202,6 +3202,7 @@ MonoBehaviour:
   noBatteryPanel: {fileID: 760917746}
   newWorldPanel: {fileID: 1378615760}
   newWorldNameText: {fileID: 2089633552}
+  newWorldQuestionText: {fileID: 128136889}
   dailyRewardPanel: {fileID: 1632747082}
 --- !u!4 &327556127
 Transform:

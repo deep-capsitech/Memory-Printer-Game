@@ -86,6 +86,7 @@ public class GameManagerCycle : MonoBehaviour
     [Header("New World Unlock Panel")]
     public GameObject newWorldPanel;
     public TextMeshProUGUI newWorldNameText;
+    public TextMeshProUGUI newWorldQuestionText;
 
     private GameObject previousPanelBeforeNoBattery;
     private WorldData pendingUnlockedWorld;
@@ -202,7 +203,6 @@ public class GameManagerCycle : MonoBehaviour
         player.canMove = false;
 
     }
-
     public void OpenWorldLevels(int worldIndex)
     {
         DisableAllPanels();
@@ -221,10 +221,10 @@ public class GameManagerCycle : MonoBehaviour
         levelIndex = levelNumber;
         layoutIndex = 0;
 
-        bool alreadyPlayed = HasLevelBeenPlayed(levelIndex);
+        bool alreadyCompleted =
+      PlayerPrefs.GetInt("LevelStars" + levelIndex, 0) > 0;
 
-        // 🔋 Replaying a level costs battery
-        if (alreadyPlayed)
+        if (alreadyCompleted)
         {
             if (!BatteryManager.Instance.HasBattery())
             {
@@ -557,16 +557,16 @@ public class GameManagerCycle : MonoBehaviour
 
         isGameRunning = false;
         player.canMove = false;
-        MarkLevelPlayed(levelIndex);
+       // MarkLevelPlayed(levelIndex);
 
         CalculateStars();
         GiveCoinsForStars();
-
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
 
-        if (levelIndex >= unlockedLevel && levelIndex < totalLevels)
+        // ✅ unlock NEXT level ONLY after WIN
+        if (levelIndex == unlockedLevel && levelIndex < totalLevels)
         {
-            PlayerPrefs.SetInt("UnlockedLevel", levelIndex + 1);
+            PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel + 1);
             PlayerPrefs.Save();
         }
 
@@ -628,8 +628,6 @@ public class GameManagerCycle : MonoBehaviour
     public void PlayerHitObstacle()
     {
         if (!isGameRunning) return;
-
-        MarkLevelPlayed(levelIndex);   // level now counts as played
 
         isGameRunning = false;
         player.canMove = false;
@@ -954,18 +952,6 @@ public class GameManagerCycle : MonoBehaviour
         PlayerPrefs.DeleteKey($"LevelFailed_{level}");
     }
 
-
-    bool HasLevelBeenPlayed(int level)
-    {
-        return PlayerPrefs.GetInt($"LevelPlayed_{level}", 0) == 1;
-    }
-
-    void MarkLevelPlayed(int level)
-    {
-        PlayerPrefs.SetInt($"LevelPlayed_{level}", 1);
-        PlayerPrefs.Save();
-    }
-
     bool IsWorldUnlocked(int worldId)
     {
         return PlayerPrefs.GetInt($"WorldUnlocked_{worldId}", 0) == 1;
@@ -991,14 +977,15 @@ public class GameManagerCycle : MonoBehaviour
     void ShowNewWorldUnlockedPanel(WorldData world)
     {
         DisableAllPanels();
-
         newWorldPanel.SetActive(true);
 
-        // Store for button actions
         pendingUnlockedWorld = world;
 
-        // Update UI text
-        newWorldNameText.text = world.worldName;
+        // ✅ ONLY world name here
+        newWorldNameText.text = world.worldName.ToUpper();
+
+        // ✅ Question is FIXED text
+        newWorldQuestionText.text = "Do you want to go to this world now?";
     }
 
     void CheckForNewWorldUnlock()
@@ -1021,7 +1008,15 @@ public class GameManagerCycle : MonoBehaviour
 
             // Unlock the world
             UnlockWorld(world.worldId);
+            int levelsPerWorld = 10;
+            int firstLevelOfWorld = (world.worldId - 1) * levelsPerWorld + 1;
 
+            int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+            if (unlockedLevel < firstLevelOfWorld)
+            {
+                PlayerPrefs.SetInt("UnlockedLevel", firstLevelOfWorld);
+                PlayerPrefs.Save();
+            }
             // Show popup ONLY ONCE
             if (!IsWorldUnlockPopupShown(world.worldId))
             {
