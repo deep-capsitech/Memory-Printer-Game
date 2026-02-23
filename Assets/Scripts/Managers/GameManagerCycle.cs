@@ -282,7 +282,9 @@ public class GameManagerCycle : MonoBehaviour
 
         //bool allowMovement = (levelIndex) >= 4;
 
-        List<MovingObstacle> obstacles = new List<MovingObstacle>();
+        //List<MovingObstacle> obstacles = new List<MovingObstacle>();
+        List<MovingObstacle> allObstacles = new List<MovingObstacle>();
+        List<MovingObstacle> eligibleObstacles = new List<MovingObstacle>();
 
         foreach (Transform ob in generator.obstaclesParent)
         {
@@ -290,11 +292,11 @@ public class GameManagerCycle : MonoBehaviour
             if (mo != null)
             {
                 mo.ForceStopMovement();
-                obstacles.Add(mo);
+                allObstacles.Add(mo);
             }
         }
 
-        if (obstacles.Count == 0)
+        if (allObstacles.Count == 0)
             return;
 
         MovingObstacle.MoveType moveType = MovingObstacle.MoveType.None;
@@ -314,27 +316,72 @@ public class GameManagerCycle : MonoBehaviour
         if (moveType == MovingObstacle.MoveType.None)
             return;
 
-        // shuffle
-        for (int i = 0; i < obstacles.Count; i++)
+        // FILTER ELIGIBLE OBSTACLES
+        foreach (var mo in allObstacles)
         {
-            int r = Random.Range(i, obstacles.Count);
-            (obstacles[i], obstacles[r]) = (obstacles[r], obstacles[i]);
+            bool valid = true;
+
+            // UpDown cannot use Z borders
+            if (moveType == MovingObstacle.MoveType.UpDown)
+            {
+                if (mo.tileZ == 0 || mo.tileZ == 9)
+                    valid = false;
+            }
+
+            if (moveType == MovingObstacle.MoveType.LeftRight)
+            {
+                if (mo.tileX == 0 || mo.tileX == 9)
+                    valid = false;
+            }
+
+            if (moveType == MovingObstacle.MoveType.Both)
+            {
+                if (mo.tileX == 0 || mo.tileX == 9 ||
+                    mo.tileZ == 0 || mo.tileZ == 9)
+                    valid = false;
+            }
+
+            if (valid)
+                eligibleObstacles.Add(mo);
         }
 
-        int moveCount = Mathf.Max(1, obstacles.Count / 2);
+        if (eligibleObstacles.Count == 0)
+            return;
+
+        // shuffle
+        for (int i = 0; i < eligibleObstacles.Count; i++)
+        {
+            int r = Random.Range(i, eligibleObstacles.Count);
+            (eligibleObstacles[i], eligibleObstacles[r]) = (eligibleObstacles[r], eligibleObstacles[i]);
+        }
+
+        int moveCount = Mathf.Max(1, allObstacles.Count / 2);
+        moveCount = Mathf.Min(moveCount, eligibleObstacles.Count);
 
         for (int i = 0; i < moveCount; i++)
-            movingObstaclesForLayout.Add(obstacles[i]);
+            movingObstaclesForLayout.Add(eligibleObstacles[i]);
 
-        for (int i = 0; i < obstacles.Count; i++)
+        //for (int i = 0; i < obstacles.Count; i++)
+        //{
+        //    if (i < moveCount)
+        //    {
+        //        obstacles[i].SetMovementType(moveType);
+        //        obstacles[i].StartWarningGlow();
+        //    }
+        //    else
+        //        obstacles[i].ForceStopMovement();
+        //}
+        foreach (var mo in allObstacles)
         {
-            if (i < moveCount)
+            if (movingObstaclesForLayout.Contains(mo))
             {
-                obstacles[i].SetMovementType(moveType);
-                obstacles[i].StartWarningGlow();
+                mo.SetMovementType(moveType);
+                mo.StartWarningGlow();
             }
             else
-                obstacles[i].ForceStopMovement();
+            {
+                mo.ForceStopMovement();
+            }
         }
     }
 
