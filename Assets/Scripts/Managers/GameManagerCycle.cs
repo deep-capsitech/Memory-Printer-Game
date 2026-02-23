@@ -92,6 +92,11 @@ public class GameManagerCycle : MonoBehaviour
     private WorldData pendingUnlockedWorld;
     [Header("Daily Reward")]
     public GameObject dailyRewardPanel;
+    [Header("Daily Reward Button")]
+    public Button dailyRewardButton;
+    public TextMeshProUGUI dailyRewardButtonText;
+    public Image dailyRewardButtonIcon;
+    private const string DAILY_POPUP_DATE = "DailyRewardPopupDate";
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -177,17 +182,63 @@ public class GameManagerCycle : MonoBehaviour
 
         isGameRunning = false;
         player.canMove = false;
-        // DAILY REWARD (Menu Only)
-        if (DailyRewardManager.Instance != null &&
-            DailyRewardManager.Instance.CanShowDailyReward())
+
+        // ✅ AUTO DAILY REWARD (ONCE PER DAY)
+        if (ShouldAutoShowDailyReward())
         {
             DisableAllPanels();
             dailyRewardPanel.SetActive(true);
             UpdateHUD(HUDVisibilityController.UIState.Menu);
             return;
         }
-    }
 
+        UpdateDailyRewardButton();
+    }
+    void UpdateDailyRewardButton()
+    {
+        if (DailyRewardManager.Instance == null)
+            return;
+
+        bool canClaim = DailyRewardManager.Instance.CanShowDailyReward();
+
+        dailyRewardButton.interactable = true; // ALWAYS clickable
+
+        if (canClaim)
+        {
+            dailyRewardButtonText.text = "CLAIM";
+            dailyRewardButtonIcon.color = Color.white; // or yellow glow
+        }
+        else
+        {
+            dailyRewardButtonText.text = "CLAIMED";
+            dailyRewardButtonIcon.color = Color.white; // NOT gray
+        }
+    }
+    bool ShouldAutoShowDailyReward()
+    {
+        if (DailyRewardManager.Instance == null)
+            return false;
+
+        if (!DailyRewardManager.Instance.CanShowDailyReward())
+            return false;
+
+        string lastPopupDate = PlayerPrefs.GetString(DAILY_POPUP_DATE, "");
+        string today = System.DateTime.UtcNow.ToString("yyyyMMdd");
+
+        if (lastPopupDate == today)
+            return false;
+
+        PlayerPrefs.SetString(DAILY_POPUP_DATE, today);
+        PlayerPrefs.Save();
+
+        return true;
+    }
+    public void OnDailyRewardButtonClicked()
+    {
+        DisableAllPanels();
+        dailyRewardPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Menu);
+    }
     public void OnStartGameClicked()
     {
         Time.timeScale = 1f; 

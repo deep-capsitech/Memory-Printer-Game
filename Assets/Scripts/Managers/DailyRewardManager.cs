@@ -107,6 +107,13 @@ public class DailyRewardManager : MonoBehaviour
         }
     }
 
+    public bool HasClaimedTodayPublic()
+    {
+        string lastDate = PlayerPrefs.GetString("DailyRewardLastClaimDate", "");
+        string today = DateTime.UtcNow.ToString("yyyyMMdd");
+        return lastDate == today;
+    }
+
     // ----------------------------
     // GETTERS (FOR UI LATER)
     // ----------------------------

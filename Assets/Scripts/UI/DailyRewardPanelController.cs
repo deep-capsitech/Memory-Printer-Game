@@ -27,13 +27,13 @@ public class DailyRewardPanelController : MonoBehaviour
         watchAdButton.onClick.AddListener(OnWatchAdClicked);
         closeButton.onClick.AddListener(OnCloseClicked);
     }
-
     void RefreshUI()
     {
         if (DailyRewardManager.Instance == null)
             return;
 
-        int today = DailyRewardManager.Instance.GetCurrentDay();
+        int rawDay = DailyRewardManager.Instance.GetCurrentDay();
+        bool claimedToday = DailyRewardManager.Instance.HasClaimedTodayPublic();
 
         for (int i = 0; i < dayItems.Length; i++)
         {
@@ -77,31 +77,40 @@ public class DailyRewardPanelController : MonoBehaviour
             // ---------- CLAIMED CHECK ----------
             Transform claimedCheck = dayItems[i].transform.Find("ClaimedCheck");
             if (claimedCheck != null)
-                claimedCheck.gameObject.SetActive(dayNumber < today);
+            {
+                claimedCheck.gameObject.SetActive(dayNumber < rawDay);
+            }
 
-            // ---------- TODAY HIGHLIGHT ----------
+            // ---------- BACKGROUND COLORS ----------
             Image bg = dayItems[i].GetComponent<Image>();
             if (bg != null)
             {
-                if (dayNumber == today)
-                    bg.color = new Color(0.1f, 1f, 0.6f, 1f);   // Today highlight
-                else if (dayNumber < today)
-                    bg.color = new Color(1f, 1f, 1f, 0.6f);     // Claimed (dim)
+                if (!claimedToday && dayNumber == rawDay)
+                {
+                    // Highlight ONLY if not claimed
+                    bg.color = new Color(0.1f, 1f, 0.6f, 1f);
+                }
+                else if (dayNumber < rawDay)
+                {
+                    // Claimed days dim
+                    bg.color = new Color(1f, 1f, 1f, 0.6f);
+                }
                 else
-                    bg.color = new Color(1f, 1f, 1f, 0.85f);    // Future
+                {
+                    // Future days
+                    bg.color = new Color(1f, 1f, 1f, 0.85f);
+                }
             }
         }
 
-        // ---------- TODAY TEXT ----------
-        int todayAmount = GetRewardAmount(today);
-        string todayName = GetRewardName(today);
+        // ---------- BUTTON STATES ----------
+        collectButton.interactable = !claimedToday;
+        watchAdButton.interactable = !claimedToday;
 
-        bool todayIsCoins = todayName == "COINS";
-
-        todayRewardText.text =
-            "TODAY'S REWARD: " +
-            (todayIsCoins ? todayAmount.ToString() : "×" + todayAmount)
-            + " " + todayName;
+        if (claimedToday)
+            collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "CLAIMED";
+        else
+            collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "COLLECT";
     }
 
     int GetRewardAmount(int day)
