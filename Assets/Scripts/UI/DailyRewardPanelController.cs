@@ -30,41 +30,106 @@ public class DailyRewardPanelController : MonoBehaviour
 
     void RefreshUI()
     {
+        if (DailyRewardManager.Instance == null)
+            return;
+
         int today = DailyRewardManager.Instance.GetCurrentDay();
 
         for (int i = 0; i < dayItems.Length; i++)
         {
+            if (dayItems[i] == null)
+                continue;
+
+            int dayNumber = i + 1;
+
+            // ---------- DAY LABEL ----------
+            Transform dayLabel = dayItems[i].transform.Find("DayLabel");
+            if (dayLabel != null)
+            {
+                var txt = dayLabel.GetComponent<TextMeshProUGUI>();
+                if (txt != null)
+                    txt.text = "DAY " + dayNumber;
+            }
+
+            // ---------- REWARD TYPE ----------
+            Transform rewardType = dayItems[i].transform.Find("RewardTypeText");
+            if (rewardType != null)
+            {
+                var txt = rewardType.GetComponent<TextMeshProUGUI>();
+                if (txt != null)
+                    txt.text = GetRewardName(dayNumber);
+            }
+
+            // ---------- REWARD VALUE ----------
+            Transform rewardValue = dayItems[i].transform.Find("RewardValueText");
+            if (rewardValue != null)
+            {
+                var txt = rewardValue.GetComponent<TextMeshProUGUI>();
+                if (txt != null)
+                {
+                    int amount = GetRewardAmount(dayNumber);
+                    bool isCoins = GetRewardName(dayNumber) == "COINS";
+
+                    txt.text = isCoins ? amount.ToString() : "×" + amount;
+                }
+            }
+
+            // ---------- CLAIMED CHECK ----------
             Transform claimedCheck = dayItems[i].transform.Find("ClaimedCheck");
-
-            // Show check for past days
             if (claimedCheck != null)
-                claimedCheck.gameObject.SetActive(i + 1 < today);
+                claimedCheck.gameObject.SetActive(dayNumber < today);
 
-            // Highlight current day (optional glow effect)
+            // ---------- TODAY HIGHLIGHT ----------
             Image bg = dayItems[i].GetComponent<Image>();
             if (bg != null)
             {
-                if (i + 1 == today)
-                    bg.color = new Color(0f, 1f, 0.6f, 1f);   // neon highlight
+                if (dayNumber == today)
+                    bg.color = new Color(0.1f, 1f, 0.6f, 1f);   // Today highlight
+                else if (dayNumber < today)
+                    bg.color = new Color(1f, 1f, 1f, 0.6f);     // Claimed (dim)
                 else
-                    bg.color = Color.white;
+                    bg.color = new Color(1f, 1f, 1f, 0.85f);    // Future
             }
         }
 
-        todayRewardText.text = GetRewardText(today);
+        // ---------- TODAY TEXT ----------
+        int todayAmount = GetRewardAmount(today);
+        string todayName = GetRewardName(today);
+
+        bool todayIsCoins = todayName == "COINS";
+
+        todayRewardText.text =
+            "TODAY'S REWARD: " +
+            (todayIsCoins ? todayAmount.ToString() : "×" + todayAmount)
+            + " " + todayName;
     }
 
-    string GetRewardText(int day)
+    int GetRewardAmount(int day)
     {
         switch (day)
         {
-            case 1: return "TODAY'S REWARD: 50 COINS";
-            case 2: return "TODAY'S REWARD: 1 BATTERY";
-            case 3: return "TODAY'S REWARD: 75 COINS";
-            case 4: return "TODAY'S REWARD: FREEZE POWER";
-            case 5: return "TODAY'S REWARD: 2 BATTERIES";
-            case 6: return "TODAY'S REWARD: 100 COINS";
-            case 7: return "TODAY'S REWARD: 200 COINS";
+            case 1: return 50;
+            case 2: return 1;
+            case 3: return 75;
+            case 4: return 1;
+            case 5: return 2;
+            case 6: return 100;
+            case 7: return 200;
+            default: return 0;
+        }
+    }
+
+    string GetRewardName(int day)
+    {
+        switch (day)
+        {
+            case 1: return "COINS";
+            case 2: return "BATTERY";
+            case 3: return "COINS";
+            case 4: return "FREEZE";
+            case 5: return "BATTERIES";
+            case 6: return "COINS";
+            case 7: return "COINS";
             default: return "";
         }
     }
@@ -77,7 +142,7 @@ public class DailyRewardPanelController : MonoBehaviour
 
     void OnWatchAdClicked()
     {
-        // Simulate ad success
+        // Simulated ad success
         DailyRewardManager.Instance.ClaimReward();
         DailyRewardManager.Instance.ClaimReward(); // double reward
         ClosePanel();
