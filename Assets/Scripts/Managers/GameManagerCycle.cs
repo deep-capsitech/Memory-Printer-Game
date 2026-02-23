@@ -274,6 +274,7 @@ public class GameManagerCycle : MonoBehaviour
         snapshotActive = false;
         isGameRunning = true;
         UpdatePlayerMovement();
+        StartCoroutine(StartSnapshotNextFrame());
     }
 
     void DecideMovementForCurrentLayout()
@@ -780,11 +781,12 @@ public class GameManagerCycle : MonoBehaviour
 
     public void StartSnapshot()
     {
-        if (snapshotActive) return;
+        if (snapshotActive || powerUpActive || freezeTimeActive) return;
 
         snapshot.TakeSnapshot();
         snapshotTimer = 5f;
         snapshotActive = true;
+        StopAllObstacleMovement();
         UpdatePlayerMovement();
     }
 
@@ -803,6 +805,14 @@ public class GameManagerCycle : MonoBehaviour
         }
     }
 
+    IEnumerator StartSnapshotNextFrame()
+    {
+        yield return null; // wait 1 frame (VERY IMPORTANT)
+
+        if (!isGameRunning) yield break;
+
+        StartSnapshot();
+    }
     void UpdateMapTimer()
     {
         mapTimer -= Time.deltaTime;
@@ -822,6 +832,12 @@ public class GameManagerCycle : MonoBehaviour
             DecideMovementForCurrentLayout();
             //SetObstacleMovement(false);
             StopAllObstacleMovement();
+
+            snapshot.ClearSnapshot();
+            snapshotActive = false;
+
+            // ⭐ START SNAPSHOT FOR NEW LAYOUT
+            StartCoroutine(StartSnapshotNextFrame());
 
             mapTimer = 20f;
         }
