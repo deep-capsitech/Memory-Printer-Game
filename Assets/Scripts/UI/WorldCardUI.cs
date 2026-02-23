@@ -16,7 +16,7 @@ public class WorldCardUI : MonoBehaviour
         worldNameText.text = data.worldName;
 
         bool unlocked =
-            data.worldId == 0 ||          // ✅ World 1 always unlocked
+            data.worldId == 1 ||          // ✅ World 1 always unlocked
             totalStars >= data.starsRequired;
 
         lockIcon.SetActive(!unlocked);
