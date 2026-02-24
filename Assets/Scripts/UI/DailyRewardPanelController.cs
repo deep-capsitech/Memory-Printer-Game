@@ -111,6 +111,28 @@ public class DailyRewardPanelController : MonoBehaviour
             collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "CLAIMED";
         else
             collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "COLLECT";
+        // ---------- TODAY REWARD TEXT ----------
+        int displayDay;
+
+        // If already claimed, show the reward that was just claimed
+        if (claimedToday)
+        {
+            displayDay = rawDay - 1;
+            if (displayDay < 1)
+                displayDay = 7;
+        }
+        else
+        {
+            displayDay = rawDay;
+        }
+        int rewardAmount = GetRewardAmount(displayDay);
+        string rewardName = GetRewardName(displayDay);
+        bool rewardIsCoins = rewardName == "COINS";
+
+        todayRewardText.text =
+            "TODAY'S REWARD: " +
+            (rewardIsCoins ? rewardAmount.ToString() : "×" + rewardAmount) +
+            " " + rewardName;
     }
 
     int GetRewardAmount(int day)
