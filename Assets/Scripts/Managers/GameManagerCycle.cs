@@ -128,7 +128,7 @@ public class GameManagerCycle : MonoBehaviour
             UpdatePowerUpTimer();
         if (freezeTimeActive)
             UpdateFreezeTimer();
-        if (snapshotActive)
+        if (snapshotActive && !freezeTimeActive && !powerUpActive)
             UpdateSnapshotTimer();
 
         UpdateMapTimer();
@@ -183,7 +183,7 @@ public class GameManagerCycle : MonoBehaviour
         isGameRunning = false;
         player.canMove = false;
 
-        // ✅ AUTO DAILY REWARD (ONCE PER DAY)
+        // AUTO DAILY REWARD (ONCE PER DAY)
         if (ShouldAutoShowDailyReward())
         {
             DisableAllPanels();
@@ -540,6 +540,18 @@ public class GameManagerCycle : MonoBehaviour
 
         if (freezeTimeActive) return;
 
+        if (snapshotActive)
+        {
+            snapshot.ClearSnapshot();
+            snapshotActive = false;
+        }
+
+        // STOP POWERUP IF RUNNING
+        if (powerUpActive)
+        {
+            EndPowerUp();
+        }
+
         freezeTimeActive = true;
         freezeTimer = freezeTimeDuration;
 
@@ -640,7 +652,7 @@ public class GameManagerCycle : MonoBehaviour
         GiveCoinsForStars();
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
 
-        // ✅ unlock NEXT level ONLY after WIN
+        // unlock NEXT level ONLY after WIN
         if (levelIndex == unlockedLevel && levelIndex < totalLevels)
         {
             PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel + 1);
@@ -660,7 +672,7 @@ public class GameManagerCycle : MonoBehaviour
     {
         int levelsPerWorld = 10;
 
-        // ✅ Check if this was the last level of the current world
+        // Check if this was the last level of the current world
         bool isLastLevelOfWorld = (levelIndex % levelsPerWorld == 0);
 
         if (isLastLevelOfWorld)
@@ -678,11 +690,11 @@ public class GameManagerCycle : MonoBehaviour
                 levelPanel.SetActive(true);
                 UpdateHUD(HUDVisibilityController.UIState.Level);
 
-                return; // 🔥 STOP here
+                return; 
             }
         }
 
-        // 🔁 Normal next-level flow
+        // Normal next-level flow
         levelIndex++;
 
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
@@ -716,14 +728,14 @@ public class GameManagerCycle : MonoBehaviour
 
     IEnumerator GameOverAfterDeathSequence()
     {
-        // ⏱ Wait for player hit animation
+        // Wait for player hit animation
         yield return new WaitForSeconds(1.8f);
-        // ⬆ adjust if your animation is longer
+        // adjust if your animation is longer
 
-        // 🧱 Stop obstacle movement AFTER they fall
+        // Stop obstacle movement AFTER they fall
         StopAllObstacleMovement();
 
-        // ⏱ Small buffer for obstacle settle
+        // Small buffer for obstacle settle
         yield return new WaitForSeconds(0.3f);
 
         ShowGameOver();
@@ -740,7 +752,7 @@ public class GameManagerCycle : MonoBehaviour
 
         Time.timeScale = 0f;
 
-        // 🔥 Store which panel was active
+        //Store which panel was active
         if (gameOverPanel.activeSelf)
             previousPanelBeforeNoBattery = gameOverPanel;
         else if (levelPanel.activeSelf)
@@ -802,7 +814,7 @@ public class GameManagerCycle : MonoBehaviour
 
     public void Retry()
     {
-        // 🔋 Retry ALWAYS costs battery
+        // Retry ALWAYS costs battery
         if (!BatteryManager.Instance.HasBattery())
         {
             ShowNoBatteryPanel();
@@ -886,10 +898,14 @@ public class GameManagerCycle : MonoBehaviour
             //player.canMove = true;
             UpdatePlayerMovement();
             //DecideMovementForCurrentLayout();
-            if (!IsObstacleMovementBlocked())
+            if (!freezeTimeActive && !powerUpActive)
+            {
                 ApplyStoredMovementRules();
+            }
             else
+            {
                 StopAllObstacleMovement();
+            }
         }
     }
 
@@ -1014,7 +1030,7 @@ public class GameManagerCycle : MonoBehaviour
 
         ApplyStoredMovementRules();
 
-        // ✅ FIX: restore correct HUD (prevents coin/battery UI)
+        // FIX: restore correct HUD (prevents coin/battery UI)
         UpdateHUD(HUDVisibilityController.UIState.Gameplay);
     }
     public void OnNewWorldYesClicked()
@@ -1098,7 +1114,7 @@ public class GameManagerCycle : MonoBehaviour
 
         foreach (WorldData world in WorldDatabase.Instance.GetWorlds())
         {
-            // 🔒 World 1 is always unlocked by default → never show popup
+            // World 1 is always unlocked by default → never show popup
             if (world.worldId == 1)
                 continue;
 
