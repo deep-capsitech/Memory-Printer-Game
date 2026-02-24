@@ -1,4 +1,5 @@
 
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -231,16 +232,21 @@ public class PlayerController : MonoBehaviour
             GameManagerCycle.Instance.BoosterCollected();
             Destroy(other.gameObject); // remove booster after use
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (GameManagerCycle.Instance == null) return;
-
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (other.CompareTag("Obstacle"))
+        {
             GameManagerCycle.Instance.PlayerHitObstacle();
+        }
     }
 
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (GameManagerCycle.Instance == null) return;
+
+    //    if (collision.gameObject.CompareTag("Obstacle"))
+    //        GameManagerCycle.Instance.PlayerHitObstacle();
+    //}
+
+     
     public void ReviveToLastSafeTile()
     {
         transform.position = lastSafePosition;

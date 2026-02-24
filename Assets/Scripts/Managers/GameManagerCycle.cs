@@ -461,11 +461,28 @@ public class GameManagerCycle : MonoBehaviour
         }
     }
 
+    bool IsObstacleMovementBlocked()
+    {
+        return snapshotActive || powerUpActive || freezeTimeActive;
+    }
     public void ActivatePowerUp()
     {
         Debug.Log("Power UP Mode On");
 
         if (powerUpActive) return;
+
+        // TOP FREEZE TIME FIRST
+        if (freezeTimeActive)
+        {
+            EndFreezeTime();
+        }
+
+        // STOP SNAPSHOT ALSO
+        if (snapshotActive)
+        {
+            snapshot.ClearSnapshot();
+            snapshotActive = false;
+        }
 
         powerUpActive = true;
         //snapshotActive = true;
@@ -497,7 +514,11 @@ public class GameManagerCycle : MonoBehaviour
         generator.EnableDragMode(false);
 
         //DecideMovementForCurrentLayout();
-        ApplyStoredMovementRules();
+        if (!IsObstacleMovementBlocked())
+            ApplyStoredMovementRules();
+        else
+            StopAllObstacleMovement();
+
         UpdatePlayerMovement();
     }
 
@@ -538,12 +559,16 @@ public class GameManagerCycle : MonoBehaviour
         freezeTimeActive = false;
         snapshot.ClearSnapshot();
         //player.canMove = true;
-        Time.timeScale = 1f;
+        if (!powerUpActive)
+            Time.timeScale = 1f;
         player.freezeMode = false;
         player.EnableUnscaledAnimation(false);
 
         //DecideMovementForCurrentLayout();
-        ApplyStoredMovementRules();
+        if (!IsObstacleMovementBlocked())
+            ApplyStoredMovementRules();
+        else
+            StopAllObstacleMovement();
     }
 
     void UpdateFreezeTimer()
@@ -861,7 +886,10 @@ public class GameManagerCycle : MonoBehaviour
             //player.canMove = true;
             UpdatePlayerMovement();
             //DecideMovementForCurrentLayout();
-            ApplyStoredMovementRules();
+            if (!IsObstacleMovementBlocked())
+                ApplyStoredMovementRules();
+            else
+                StopAllObstacleMovement();
         }
     }
 
@@ -1057,10 +1085,10 @@ public class GameManagerCycle : MonoBehaviour
 
         pendingUnlockedWorld = world;
 
-        // ✅ ONLY world name here
+        // ONLY world name here
         newWorldNameText.text = world.worldName.ToUpper();
 
-        // ✅ Question is FIXED text
+        // Question is FIXED text
         newWorldQuestionText.text = "Do you want to go to this world now?";
     }
 
