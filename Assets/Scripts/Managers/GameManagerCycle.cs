@@ -826,8 +826,17 @@ public class GameManagerCycle : MonoBehaviour
         UpdateHUD(HUDVisibilityController.UIState.Gameplay);
         Time.timeScale = 1f;
         isGameRunning = true;
-        ApplyStoredMovementRules();
+        //ApplyStoredMovementRules();
+        if (!snapshotActive && !powerUpActive && !freezeTimeActive)
+        {
+            ApplyStoredMovementRules();
+        }
+        else
+        {
+            StopAllObstacleMovement();
+        }
         UpdatePlayerMovement();
+        
     }
 
     public void StartSnapshot()
