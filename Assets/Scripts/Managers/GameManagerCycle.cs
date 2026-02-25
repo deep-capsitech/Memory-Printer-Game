@@ -321,8 +321,8 @@ public class GameManagerCycle : MonoBehaviour
         layoutIndex = 0;
         
         levelText.text = "LEVEL " + (levelIndex);
-        timerText.text = "TIMER : " + levelTimer.ToString("0");
-        mapTimerText.text = "MAP TIMER : " + mapTimer.ToString("0");
+        timerText.text = levelTimer.ToString("0");
+        mapTimerText.text = mapTimer.ToString("0");
 
         generator.GenerateFromJson(levelIndex, layoutIndex);
 
@@ -943,7 +943,7 @@ public class GameManagerCycle : MonoBehaviour
     void UpdateMapTimer()
     {
         mapTimer -= Time.deltaTime;
-        mapTimerText.text = "MAP TIMER : " + mapTimer.ToString("0");
+        mapTimerText.text = mapTimer.ToString("0");
 
         if (mapTimer <= 0)
         {
@@ -977,7 +977,7 @@ public class GameManagerCycle : MonoBehaviour
     void UpdateLevelTimer()
     {
         levelTimer -= Time.deltaTime;
-        timerText.text = "TIMER : " + levelTimer.ToString("0");
+        timerText.text = levelTimer.ToString("0");
 
         if (levelTimer <= 0)
             ShowGameOver();
