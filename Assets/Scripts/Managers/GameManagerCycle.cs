@@ -102,12 +102,9 @@ public class GameManagerCycle : MonoBehaviour
     public Button invisionButton;
     public Button freezeButton;
 
-    [Header("PowerUp UI Lock Elements")]
+    [Header("PowerUp Lock Icons")]
     public GameObject invisionLockIcon;
-    public TextMeshProUGUI invisionUnlockText;
-
     public GameObject freezeLockIcon;
-    public TextMeshProUGUI freezeUnlockText;
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -344,26 +341,18 @@ public class GameManagerCycle : MonoBehaviour
     }
     void UpdatePowerUpUI()
     {
-        // ---------- INVISION ----------
+        // -------- INVISION --------
         bool invisionUnlocked = IsInvisionUnlocked();
 
         invisionButton.interactable = invisionUnlocked;
         invisionLockIcon.SetActive(!invisionUnlocked);
-        invisionUnlockText.gameObject.SetActive(!invisionUnlocked);
-
-        if (!invisionUnlocked)
-            invisionUnlockText.text = "";   // only number
 
 
-        // ---------- FREEZE ----------
+        // -------- FREEZE --------
         bool freezeUnlocked = IsFreezeUnlocked();
 
         freezeButton.interactable = freezeUnlocked;
         freezeLockIcon.SetActive(!freezeUnlocked);
-        freezeUnlockText.gameObject.SetActive(!freezeUnlocked);
-
-        if (!freezeUnlocked)
-            freezeUnlockText.text = "";   // only number
     }
     void DecideMovementForCurrentLayout()
     {
