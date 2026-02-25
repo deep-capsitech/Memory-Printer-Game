@@ -344,20 +344,15 @@ public class GameManagerCycle : MonoBehaviour
     }
     void UpdatePowerUpUI()
     {
-        int currentLevel = levelIndex;
-
         // ---------- INVISION ----------
         bool invisionUnlocked = IsInvisionUnlocked();
 
         invisionButton.interactable = invisionUnlocked;
         invisionLockIcon.SetActive(!invisionUnlocked);
+        invisionUnlockText.gameObject.SetActive(!invisionUnlocked);
 
         if (!invisionUnlocked)
-            invisionUnlockText.text = "Unlocks at Level 11";
-        else
-            invisionUnlockText.text = "";
-
-        invisionUnlockText.gameObject.SetActive(!invisionUnlocked);
+            invisionUnlockText.text = "11";   // only number
 
 
         // ---------- FREEZE ----------
@@ -365,13 +360,10 @@ public class GameManagerCycle : MonoBehaviour
 
         freezeButton.interactable = freezeUnlocked;
         freezeLockIcon.SetActive(!freezeUnlocked);
+        freezeUnlockText.gameObject.SetActive(!freezeUnlocked);
 
         if (!freezeUnlocked)
-            freezeUnlockText.text = "Unlocks at Level 21";
-        else
-            freezeUnlockText.text = "";
-
-        freezeUnlockText.gameObject.SetActive(!freezeUnlocked);
+            freezeUnlockText.text = "21";   // only number
     }
     void DecideMovementForCurrentLayout()
     {
