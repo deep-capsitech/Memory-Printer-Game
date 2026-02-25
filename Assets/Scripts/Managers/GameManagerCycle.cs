@@ -97,6 +97,17 @@ public class GameManagerCycle : MonoBehaviour
     public TextMeshProUGUI dailyRewardButtonText;
     public Image dailyRewardButtonIcon;
     private const string DAILY_POPUP_DATE = "DailyRewardPopupDate";
+
+    [Header("PowerUp Buttons")]
+    public Button invisionButton;
+    public Button freezeButton;
+
+    [Header("PowerUp UI Lock Elements")]
+    public GameObject invisionLockIcon;
+    public TextMeshProUGUI invisionUnlockText;
+
+    public GameObject freezeLockIcon;
+    public TextMeshProUGUI freezeUnlockText;
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -329,8 +340,39 @@ public class GameManagerCycle : MonoBehaviour
         isGameRunning = true;
         UpdatePlayerMovement();
         StartCoroutine(StartSnapshotNextFrame());
+        UpdatePowerUpUI();
     }
+    void UpdatePowerUpUI()
+    {
+        int currentLevel = levelIndex;
 
+        // ---------- INVISION ----------
+        bool invisionUnlocked = IsInvisionUnlocked();
+
+        invisionButton.interactable = invisionUnlocked;
+        invisionLockIcon.SetActive(!invisionUnlocked);
+
+        if (!invisionUnlocked)
+            invisionUnlockText.text = "Unlocks at Level 11";
+        else
+            invisionUnlockText.text = "";
+
+        invisionUnlockText.gameObject.SetActive(!invisionUnlocked);
+
+
+        // ---------- FREEZE ----------
+        bool freezeUnlocked = IsFreezeUnlocked();
+
+        freezeButton.interactable = freezeUnlocked;
+        freezeLockIcon.SetActive(!freezeUnlocked);
+
+        if (!freezeUnlocked)
+            freezeUnlockText.text = "Unlocks at Level 21";
+        else
+            freezeUnlockText.text = "";
+
+        freezeUnlockText.gameObject.SetActive(!freezeUnlocked);
+    }
     void DecideMovementForCurrentLayout()
     {
         movingObstaclesForLayout.Clear();
@@ -470,17 +512,17 @@ public class GameManagerCycle : MonoBehaviour
     }
     public void ActivatePowerUp()
     {
-        Debug.Log("Power UP Mode On");
+        if (!IsInvisionUnlocked())
+        {
+            Debug.Log("Invision locked until Level 11");
+            return;
+        }
 
         if (powerUpActive) return;
 
-        // TOP FREEZE TIME FIRST
         if (freezeTimeActive)
-        {
             EndFreezeTime();
-        }
 
-        // STOP SNAPSHOT ALSO
         if (snapshotActive)
         {
             snapshot.ClearSnapshot();
@@ -488,18 +530,15 @@ public class GameManagerCycle : MonoBehaviour
         }
 
         powerUpActive = true;
-        //snapshotActive = true;
         powerUpTimer = powerUpDuration;
 
         snapshot.TakeSnapshot();
-        //player.canMove = false;
         Time.timeScale = 0f;
         DisableAllPanels();
         backgroundPanel.SetActive(false);
         CameraManager.Instance.EnableTopCamera();
-        generator.EnableDragMode(true); // allow dragging
+        generator.EnableDragMode(true);
 
-        //SetObstacleMovement(false);
         StopAllObstacleMovement();
         UpdatePlayerMovement();
     }
@@ -539,7 +578,11 @@ public class GameManagerCycle : MonoBehaviour
 
     public void ActivateFreezeTime()
     {
-        Debug.Log("Freeze Time Mode On");
+        if (!IsFreezeUnlocked())
+        {
+            Debug.Log("FreezeTime locked until Level 21");
+            return;
+        }
 
         if (freezeTimeActive) return;
 
@@ -549,11 +592,8 @@ public class GameManagerCycle : MonoBehaviour
             snapshotActive = false;
         }
 
-        // STOP POWERUP IF RUNNING
         if (powerUpActive)
-        {
             EndPowerUp();
-        }
 
         freezeTimeActive = true;
         freezeTimer = freezeTimeDuration;
@@ -565,10 +605,8 @@ public class GameManagerCycle : MonoBehaviour
         player.freezeMode = true;
         player.EnableUnscaledAnimation(true);
 
-        //SetObstacleMovement(false);
         StopAllObstacleMovement();
     }
-
     void EndFreezeTime()
     {
         freezeTimeActive = false;
@@ -1151,4 +1189,23 @@ public class GameManagerCycle : MonoBehaviour
             break; // unlock ONLY one world at a time
         }
     }
+
+    #region PowerUp Unlock System
+
+    public bool IsInvisionUnlocked()
+    {
+        return levelIndex >= 11;
+    }
+
+    public bool IsFreezeUnlocked()
+    {
+        return levelIndex >= 21;
+    }
+
+    public bool IsBoosterUnlocked()
+    {
+        return levelIndex >= 21;
+    }
+
+    #endregion
 }

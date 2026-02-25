@@ -75,8 +75,13 @@ public class LevelGenerator : MonoBehaviour
         }
 
         // Spawn Booster
-        StartCoroutine(SpawnBoosterAfterDelay());
-       
+        //StartCoroutine(SpawnBoosterAfterDelay());
+        // Spawn Booster ONLY if unlocked (Level 21+)
+        if (GameManagerCycle.Instance != null &&
+            GameManagerCycle.Instance.CurrentLevelNumber >= 21)
+        {
+            StartCoroutine(SpawnBoosterAfterDelay());
+        }
     }
 
 
