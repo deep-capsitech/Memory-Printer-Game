@@ -352,7 +352,7 @@ public class GameManagerCycle : MonoBehaviour
         invisionUnlockText.gameObject.SetActive(!invisionUnlocked);
 
         if (!invisionUnlocked)
-            invisionUnlockText.text = "11";   // only number
+            invisionUnlockText.text = "";   // only number
 
 
         // ---------- FREEZE ----------
@@ -363,7 +363,7 @@ public class GameManagerCycle : MonoBehaviour
         freezeUnlockText.gameObject.SetActive(!freezeUnlocked);
 
         if (!freezeUnlocked)
-            freezeUnlockText.text = "21";   // only number
+            freezeUnlockText.text = "";   // only number
     }
     void DecideMovementForCurrentLayout()
     {
