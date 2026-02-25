@@ -11,8 +11,9 @@ public class JsonLevelData
 public class JsonLevel
 {
     public int level;
-    public float levelTime = 60f;
-    public float mapChangeTime = 20f;
+    public float levelTime;
+    public float mapChangeTime;
+    public float snapshotTime;
     public List<JsonLayout> layouts;
 }
 

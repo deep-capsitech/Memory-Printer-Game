@@ -51,7 +51,7 @@ public class GameManagerCycle : MonoBehaviour
     public int totalLevels = 50;
 
     [Header("Power Ups")]
-    public float powerUpDuration = 2f;
+    public float powerUpDuration = 3f;
     public float freezeTimeDuration = 2f;
     private float freezeTimer;
     private float powerUpTimer;
@@ -131,8 +131,8 @@ public class GameManagerCycle : MonoBehaviour
         if (snapshotActive && !freezeTimeActive && !powerUpActive)
             UpdateSnapshotTimer();
 
-        UpdateMapTimer();
         UpdateLevelTimer();
+        UpdateMapTimer();
     }
 
     void DisableAllPanels()
@@ -304,12 +304,15 @@ public class GameManagerCycle : MonoBehaviour
     {
         GameEconomyManager.Instance.ResetLevelCoins();
 
-        levelTimer = 60f;
-        mapTimer = 20f;
+        JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
+
+        levelTimer = level.levelTime;
+        mapTimer = level.mapChangeTime;
+        snapshotTimer = level.snapshotTime;
+
         layoutIndex = 0;
-
+        
         levelText.text = "LEVEL " + (levelIndex);
-
         timerText.text = "TIMER : " + levelTimer.ToString("0");
         mapTimerText.text = "MAP TIMER : " + mapTimer.ToString("0");
 
@@ -879,12 +882,13 @@ public class GameManagerCycle : MonoBehaviour
     public void StartSnapshot()
     {
         if (snapshotActive || powerUpActive || freezeTimeActive) return;
-
+        JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
+        snapshotTimer = level.snapshotTime;
         snapshot.TakeSnapshot();
-        snapshotTimer = 5f;
         snapshotActive = true;
         StopAllObstacleMovement();
         UpdatePlayerMovement();
+        Debug.Log("Snapshot Time = " + snapshotTimer);
     }
 
     void UpdateSnapshotTimer()
@@ -940,10 +944,10 @@ public class GameManagerCycle : MonoBehaviour
             snapshot.ClearSnapshot();
             snapshotActive = false;
 
-            // ⭐ START SNAPSHOT FOR NEW LAYOUT
+            // START SNAPSHOT FOR NEW LAYOUT
             StartCoroutine(StartSnapshotNextFrame());
-
-            mapTimer = 20f;
+            // reset map timer from JSON
+            mapTimer = level.mapChangeTime;
         }
     }
     public void BoosterCollected()

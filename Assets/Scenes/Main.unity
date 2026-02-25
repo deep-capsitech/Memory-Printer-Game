@@ -2672,7 +2672,7 @@ MonoBehaviour:
   emptyStar: {fileID: 21300000, guid: db61c9f5ffe33b2499de6127e53c59e0, type: 3}
   coinsEarnedText: {fileID: 1685802098}
   totalLevels: 50
-  powerUpDuration: 4
+  powerUpDuration: 3
   freezeTimeDuration: 2
   hud: {fileID: 1711909702}
   backgroundPanel: {fileID: 1492915264}
