@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
 public class WorldCardUI : MonoBehaviour
 {
     public GameObject lockIcon;
     public Button button;
     public TextMeshProUGUI worldNameText;
 
-    int worldId;
+    private int worldId;
 
     public void Setup(WorldData data, int totalStars)
     {
@@ -16,21 +15,15 @@ public class WorldCardUI : MonoBehaviour
         worldNameText.text = data.worldName;
 
         bool unlocked =
-            data.worldId == 1 ||          // ✅ World 1 always unlocked
+            data.worldId == 1 ||
             totalStars >= data.starsRequired;
 
         lockIcon.SetActive(!unlocked);
         button.interactable = unlocked;
-
-        Debug.Log($"WORLD {data.worldId} | Required: {data.starsRequired} | TotalStar: {totalStars}");
     }
 
     public void OnClick()
     {
-        PlayerPrefs.SetInt("SelectedWorld", worldId);   // ✅ FIX
-        PlayerPrefs.Save();
-
-        WorldClickHandler.Instance.OnWorldSelected(worldId);
+        GameManagerCycle.Instance.OnWorldSelected(worldId);
     }
-
 }

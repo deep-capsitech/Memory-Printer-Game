@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -70,7 +70,7 @@ public class DailyRewardPanelController : MonoBehaviour
                     int amount = GetRewardAmount(dayNumber);
                     bool isCoins = GetRewardName(dayNumber) == "COINS";
 
-                    txt.text = isCoins ? amount.ToString() : "×" + amount;
+                    txt.text = isCoins ? amount.ToString() : "Ã—" + amount;
                 }
             }
 
@@ -131,7 +131,7 @@ public class DailyRewardPanelController : MonoBehaviour
 
         todayRewardText.text =
             "TODAY'S REWARD: " +
-            (rewardIsCoins ? rewardAmount.ToString() : "×" + rewardAmount) +
+            (rewardIsCoins ? rewardAmount.ToString() : "Ã—" + rewardAmount) +
             " " + rewardName;
     }
 
@@ -168,6 +168,7 @@ public class DailyRewardPanelController : MonoBehaviour
     void OnCollectClicked()
     {
         DailyRewardManager.Instance.ClaimReward();
+        RefreshUI();
         ClosePanel();
     }
 
@@ -176,6 +177,7 @@ public class DailyRewardPanelController : MonoBehaviour
         // Simulated ad success
         DailyRewardManager.Instance.ClaimReward();
         DailyRewardManager.Instance.ClaimReward(); // double reward
+        RefreshUI() ;
         ClosePanel();
     }
 
@@ -187,6 +189,6 @@ public class DailyRewardPanelController : MonoBehaviour
     void ClosePanel()
     {
         gameObject.SetActive(false);
-        GameManagerCycle.Instance.ShowMenu();
+        GameManagerCycle.Instance.uiFlowController.ShowMenu();
     }
 }

@@ -797,6 +797,73 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97936092}
   m_CullTransparentMesh: 1
+--- !u!1 &113152994
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 113152996}
+  - component: {fileID: 113152995}
+  - component: {fileID: 113152997}
+  m_Layer: 0
+  m_Name: PowerupController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &113152995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 113152994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa863c986a9ac14ea8a6510f187a7a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snapshot: {fileID: 2086586503}
+  uiFlowController: {fileID: 327556129}
+  cameraManager: {fileID: 113152997}
+  generator: {fileID: 211100146}
+  movementController: {fileID: 583805502}
+  player: {fileID: 959374380}
+  gameStateController: {fileID: 1691961192}
+  powerUpDuration: 3
+--- !u!4 &113152996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 113152994}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1218, y: 562.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &113152997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 113152994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9184d62247968047bd3a3e41d63fb77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 330585545}
+  topDownCamera: {fileID: 2001099886}
 --- !u!1 &124813837
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,8 +946,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 327556126}
-        m_TargetAssemblyTypeName: GameManagerCycle, Assembly-CSharp
+      - m_Target: {fileID: 327556129}
+        m_TargetAssemblyTypeName: UIFlowController, Assembly-CSharp
         m_MethodName: ShowMenu
         m_Mode: 1
         m_Arguments:
@@ -2270,9 +2337,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 327556126}
-        m_TargetAssemblyTypeName: GameManagerCycle, Assembly-CSharp
-        m_MethodName: ShowMenu
+      - m_Target: {fileID: 327556129}
+        m_TargetAssemblyTypeName: UIFlowController, Assembly-CSharp
+        m_MethodName: OpenWorldLevels
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2784,6 +2851,8 @@ GameObject:
   - component: {fileID: 327556127}
   - component: {fileID: 327556126}
   - component: {fileID: 327556128}
+  - component: {fileID: 327556129}
+  - component: {fileID: 327556130}
   m_Layer: 0
   m_Name: GameCycleManager
   m_TagString: Untagged
@@ -2803,6 +2872,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159d73b0d254b0e4d860738574474201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiFlowController: {fileID: 327556129}
+  dailyRewardController: {fileID: 810880251}
+  progressionController: {fileID: 1217653297}
+  gameStateController: {fileID: 1691961192}
+  movementController: {fileID: 583805502}
+  levelTimeController: {fileID: 327556130}
+  powerUpController: {fileID: 113152995}
   menuPanel: {fileID: 1933489060}
   gameplayPanel: {fileID: 1554477593}
   pausePanel: {fileID: 1023435289}
@@ -2834,10 +2910,6 @@ MonoBehaviour:
   newWorldPanel: {fileID: 1378615760}
   newWorldNameText: {fileID: 2089633552}
   newWorldQuestionText: {fileID: 128136889}
-  dailyRewardPanel: {fileID: 1632747082}
-  dailyRewardButton: {fileID: 1835430477}
-  dailyRewardButtonText: {fileID: 625221371}
-  dailyRewardButtonIcon: {fileID: 772351626}
   invisionButton: {fileID: 2076829896}
   freezeButton: {fileID: 1610959819}
   invisionLockIcon: {fileID: 2000386830}
@@ -2871,6 +2943,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 330585545}
   topDownCamera: {fileID: 2001099886}
+--- !u!114 &327556129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327556125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23b17c04543b4ce41b252c74dda149d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuPanel: {fileID: 1933489060}
+  gameplayPanel: {fileID: 1554477593}
+  pausePanel: {fileID: 1023435289}
+  gameOverPanel: {fileID: 82509337}
+  levelCompletePanel: {fileID: 1431752350}
+  worldPanel: {fileID: 2066177102}
+  levelPanel: {fileID: 1287943170}
+  noBatteryPanel: {fileID: 760917746}
+  newWorldPanel: {fileID: 1378615760}
+  backgroundPanel: {fileID: 1492915264}
+  hud: {fileID: 1711909702}
+  dailyRewardController: {fileID: 810880251}
+--- !u!114 &327556130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327556125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94b190eba0c78d746baf278e01c50886, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameStateController: {fileID: 1691961192}
+  uiFlowController: {fileID: 327556129}
+  timerText: {fileID: 1172697803}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -5821,6 +5932,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 572668358}
   m_CullTransparentMesh: 1
+--- !u!1 &583805501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 583805503}
+  - component: {fileID: 583805502}
+  m_Layer: 0
+  m_Name: ObstacleController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &583805502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583805501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9d658a901bc12f47a2e3850a92a617d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generator: {fileID: 211100146}
+  gameStateController: {fileID: 1691961192}
+--- !u!4 &583805503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583805501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1218, y: 562.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &588716222
 GameObject:
   m_ObjectHideFlags: 0
@@ -7955,6 +8112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 810880250}
   - component: {fileID: 810880249}
+  - component: {fileID: 810880251}
   m_Layer: 0
   m_Name: DailyRewardManager
   m_TagString: Untagged
@@ -7989,6 +8147,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &810880251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810880248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d4f617dff404f040a9f92f9ceeed08a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dailyRewardPanel: {fileID: 1632747082}
+  dailyRewardButton: {fileID: 1835430477}
+  dailyRewardButtonText: {fileID: 625221371}
+  dailyRewardButtonIcon: {fileID: 772351626}
 --- !u!1 &811986302
 GameObject:
   m_ObjectHideFlags: 0
@@ -11297,50 +11471,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121348829}
   m_CullTransparentMesh: 1
---- !u!1 &1167271294
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1167271296}
-  - component: {fileID: 1167271295}
-  m_Layer: 0
-  m_Name: WorldClickHandled
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1167271295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167271294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3440a0608002d444a9d35b556f3e9e3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1167271296
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167271294}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -405.81882, y: 149.76828, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1168713523
 GameObject:
   m_ObjectHideFlags: 0
@@ -12804,6 +12934,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1211858867}
   m_CullTransparentMesh: 1
+--- !u!1 &1217653296
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1217653298}
+  - component: {fileID: 1217653297}
+  m_Layer: 0
+  m_Name: ProgressionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1217653297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217653296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1174bc6ec9e44fa41801a3a703c6bef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalLevels: 50
+  star1: {fileID: 618368323}
+  star2: {fileID: 570020716}
+  star3: {fileID: 1600606966}
+  filledStar: {fileID: 1978364624, guid: 015c1273879e2304984c8699da3a972b, type: 3}
+  emptyStar: {fileID: 21300000, guid: db61c9f5ffe33b2499de6127e53c59e0, type: 3}
+  uiFlowController: {fileID: 327556129}
+--- !u!4 &1217653298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217653296}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1218, y: 562.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1227234417
 GameObject:
   m_ObjectHideFlags: 0
@@ -17289,6 +17470,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1685802096}
   m_CullTransparentMesh: 1
+--- !u!1 &1691961191
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1691961193}
+  - component: {fileID: 1691961192}
+  m_Layer: 0
+  m_Name: GameStateController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1691961192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691961191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8089f76ed4e0a3a4d8d74d36adeb4350, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1691961193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691961191}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1218, y: 562.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1708956621
 GameObject:
   m_ObjectHideFlags: 0
@@ -19985,8 +20210,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 327556126}
-        m_TargetAssemblyTypeName: GameManagerCycle, Assembly-CSharp
+      - m_Target: {fileID: 327556129}
+        m_TargetAssemblyTypeName: UIFlowController, Assembly-CSharp
         m_MethodName: ShowMenu
         m_Mode: 1
         m_Arguments:
@@ -22476,5 +22701,8 @@ SceneRoots:
   - {fileID: 1251414289}
   - {fileID: 534087654}
   - {fileID: 1596977351}
-  - {fileID: 1167271296}
   - {fileID: 810880250}
+  - {fileID: 1217653298}
+  - {fileID: 1691961193}
+  - {fileID: 583805503}
+  - {fileID: 113152996}

@@ -89,6 +89,6 @@ public class LevelPanelController : MonoBehaviour
 
     public void OnBackClicked()
     {
-        GameManagerCycle.Instance.BackToWorldPanel();
+        GameManagerCycle.Instance.uiFlowController.OpenWorldLevels();
     }
 }
