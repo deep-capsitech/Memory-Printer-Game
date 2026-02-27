@@ -19,7 +19,6 @@ public class ProgressionController : MonoBehaviour
 
     private int _earnedStars;
     private int _totalStars;
-    private int _highestLevel;
 
     public void CalculateStars(float levelTimer)
     {
@@ -47,6 +46,7 @@ public class ProgressionController : MonoBehaviour
         string key = "LevelStars" + level;
         int previous = PlayerPrefs.GetInt(key, 0);
 
+        _totalStars = PlayerPrefs.GetInt("TotalStar", 0);
         if (_earnedStars > previous)
         {
             int diff = _earnedStars - previous;
@@ -76,21 +76,6 @@ public class ProgressionController : MonoBehaviour
         };
 
         GameEconomyManager.Instance.AddCoins(coins);
-    }
-
-    public void LoadHighestLevel()
-    {
-        _highestLevel = PlayerPrefs.GetInt("HighestLevel", 1);
-    }
-
-    public void UpdateHighestLevel(int currentLevel)
-    {
-        if (currentLevel > _highestLevel)
-        {
-            _highestLevel = currentLevel;
-            PlayerPrefs.SetInt("HighestLevel", _highestLevel);
-            PlayerPrefs.Save();
-        }
     }
 
     public void ClearLevelFailed(int level)

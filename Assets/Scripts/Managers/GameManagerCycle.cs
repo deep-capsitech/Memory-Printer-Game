@@ -26,34 +26,22 @@ public class GameManagerCycle : MonoBehaviour
     [Header("Time Controller")]
     public LevelTimeController levelTimeController;
 
+    [Header("Powerup Controller")]
+    public PowerUpController powerUpController;
+
     [Header("Gameplay References")]
     public SnapshotManager snapshot;
     public LevelGenerator generator;
     public PlayerController player;
 
-    [Header("UI - Menu")]
-    public TextMeshProUGUI bestLevelMenuText;
-
     [Header("UI - Gameplay")]
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI mapTimerText;
-
-    [Header("UI - Game Over")]
-    public TextMeshProUGUI lastLevelText;
-    public TextMeshProUGUI bestLevelGameOverText;
 
     public TextMeshProUGUI coinsEarnedText;
 
     [Header("Level Unlock System")]
     public int totalLevels = 50;
-
-    [Header("Power Ups")]
-    public float powerUpDuration = 3f;
-    public float freezeTimeDuration = 2f;
-    private float freezeTimer;
-    private float powerUpTimer;
-    private bool powerUpActive = false;
-    private bool freezeTimeActive = false;
 
     private int levelIndex = 0;
     private int layoutIndex = 0;
@@ -65,13 +53,7 @@ public class GameManagerCycle : MonoBehaviour
 
     private WorldData pendingUnlockedWorld;
 
-    [Header("PowerUp Buttons")]
-    public Button invisionButton;
-    public Button freezeButton;
-
-    [Header("PowerUp Lock Icons")]
-    public GameObject invisionLockIcon;
-    public GameObject freezeLockIcon;
+    public bool IsSnapshotActive => snapshotActive;
 
     void Awake()
     {
@@ -96,7 +78,6 @@ public class GameManagerCycle : MonoBehaviour
             PlayerPrefs.Save();
         }
         Time.timeScale = 1f;
-        progressionController.LoadHighestLevel();
 
         uiFlowController.ShowMenu();
         gameStateController.SetState(GameStateController.GameState.Menu);
@@ -116,18 +97,13 @@ public class GameManagerCycle : MonoBehaviour
     {
         if (!gameStateController.IsGameplayActive()) return;
 
-        if (powerUpActive)
-            UpdatePowerUpTimer();
-        if (freezeTimeActive)
-            UpdateFreezeTimer();
-        if (snapshotActive && !freezeTimeActive && !powerUpActive)
+        if (snapshotActive && !powerUpController.IsAnyPowerUpActive())
             UpdateSnapshotTimer();
 
-        //UpdateLevelTimer();
         UpdateMapTimer();
     }
 
-    void UpdatePlayerMovement()
+    public void UpdatePlayerMovement()
     {
         player.canMove = gameStateController.IsGameplayActive() && !snapshotActive;
     }
@@ -204,137 +180,7 @@ public class GameManagerCycle : MonoBehaviour
         gameStateController.SetState(GameStateController.GameState.Gameplay);
         UpdatePlayerMovement();
         StartCoroutine(StartSnapshotNextFrame());
-        UpdatePowerUpUI();
-    }
-
-    void UpdatePowerUpUI()
-    {
-        bool invisionUnlocked = IsInvisionUnlocked();
-
-        invisionButton.interactable = invisionUnlocked;
-        invisionLockIcon.SetActive(!invisionUnlocked);
-
-        bool freezeUnlocked = IsFreezeUnlocked();
-
-        freezeButton.interactable = freezeUnlocked;
-        freezeLockIcon.SetActive(!freezeUnlocked);
-    }
-
-    public void ActivatePowerUp()
-    {
-        if (!IsInvisionUnlocked())
-        {
-            Debug.Log("Invision locked until Level 11");
-            return;
-        }
-
-        if (powerUpActive) return;
-
-        if (freezeTimeActive)
-            EndFreezeTime();
-
-        if (snapshotActive)
-        {
-            snapshot.ClearSnapshot();
-            snapshotActive = false;
-        }
-
-        powerUpActive = true;
-        powerUpTimer = powerUpDuration;
-
-        snapshot.TakeSnapshot();
-        Time.timeScale = 0f;
-
-        uiFlowController.ShowPowerUpMode();
-        CameraManager.Instance.EnableTopCamera();
-        generator.EnableDragMode(true);
-
-        movementController.OnPowerUpStart();
-        UpdatePlayerMovement();
-    }
-
-    void EndPowerUp()
-    {
-        powerUpActive = false;
-
-        snapshot.ClearSnapshot();
-        snapshotActive = false;
-        Time.timeScale = 1f;
-        uiFlowController.ShowGameplay();
-        CameraManager.Instance.EnableMainCamera();
-        generator.EnableDragMode(false);
-
-        movementController.OnPowerUpEnd();
-
-        UpdatePlayerMovement();
-    }
-
-    void UpdatePowerUpTimer()
-    {
-        if (!powerUpActive) return;
-
-        powerUpTimer -= Time.unscaledDeltaTime;
-
-        if (powerUpTimer <= 0f)
-        {
-            EndPowerUp();
-        }
-    }
-
-    public void ActivateFreezeTime()
-    {
-        if (!IsFreezeUnlocked())
-        {
-            Debug.Log("FreezeTime locked until Level 21");
-            return;
-        }
-
-        if (freezeTimeActive) return;
-
-        if (snapshotActive)
-        {
-            snapshot.ClearSnapshot();
-            snapshotActive = false;
-        }
-
-        if (powerUpActive)
-            EndPowerUp();
-
-        freezeTimeActive = true;
-        freezeTimer = freezeTimeDuration;
-
-        snapshot.TakeSnapshot();
-
-        Time.timeScale = 0f;
-        player.canMove = true;
-        player.freezeMode = true;
-        player.EnableUnscaledAnimation(true);
-
-        movementController.OnFreezeStart();
-    }
-
-    void EndFreezeTime()
-    {
-        freezeTimeActive = false;
-        snapshot.ClearSnapshot();
-        snapshotActive = false;
-        if (!powerUpActive)
-            Time.timeScale = 1f;
-        player.freezeMode = false;
-        player.EnableUnscaledAnimation(false);
-        movementController.OnFreezeEnd();
-    }
-
-    void UpdateFreezeTimer()
-    {
-        if (!freezeTimeActive) return;
-
-        freezeTimer -= Time.unscaledDeltaTime;
-
-        if (freezeTimer <= 0f)
-        {
-            EndFreezeTime();
-        }
+        powerUpController.UpdatePowerUpUI();
     }
 
     public void PauseGame()
@@ -410,7 +256,6 @@ public class GameManagerCycle : MonoBehaviour
         }
 
         layoutIndex = 0;
-        progressionController.UpdateHighestLevel(levelIndex);
 
         uiFlowController.ShowGameplay();
         LoadLevel();
@@ -466,8 +311,8 @@ public class GameManagerCycle : MonoBehaviour
 
     public void StartSnapshot()
     {
-        if (snapshotActive || powerUpActive || freezeTimeActive) return;
-
+        if (snapshotActive || powerUpController.IsAnyPowerUpActive())
+            return;
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
         snapshotTimer = level.snapshotTime;
 
@@ -475,6 +320,7 @@ public class GameManagerCycle : MonoBehaviour
         snapshotActive = true;
 
         movementController.OnSnapshotStart();
+        powerUpController.UpdatePowerUpUI();
 
         UpdatePlayerMovement();
 
@@ -491,6 +337,7 @@ public class GameManagerCycle : MonoBehaviour
             snapshotActive = false;
 
             movementController.OnSnapshotEnd();
+            powerUpController.UpdatePowerUpUI();
 
             UpdatePlayerMovement();
         }
@@ -545,8 +392,7 @@ public class GameManagerCycle : MonoBehaviour
         Time.timeScale = 1f;
 
         snapshot.ClearSnapshot();
-        freezeTimeActive = false;
-        powerUpActive = false;
+;
         snapshotActive = false;
 
         player.ReviveToLastSafeTile();
@@ -561,6 +407,10 @@ public class GameManagerCycle : MonoBehaviour
         movementController.InitializeLayout(levelIndex);
     }
 
+    public void SetSnapshotInactive()
+    {
+        snapshotActive = false;
+    }
     public void OnNewWorldYesClicked()
     {
         if (pendingUnlockedWorld == null)
@@ -589,21 +439,6 @@ public class GameManagerCycle : MonoBehaviour
     }
 
     #region PowerUp Unlock System
-
-    public bool IsInvisionUnlocked()
-    {
-        return levelIndex >= 11;
-    }
-
-    public bool IsFreezeUnlocked()
-    {
-        return levelIndex >= 21;
-    }
-
-    public bool IsBoosterUnlocked()
-    {
-        return levelIndex >= 21;
-    }
 
     #endregion
     public void OnWorldSelected(int worldId)
