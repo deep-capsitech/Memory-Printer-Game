@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldId: 3
   worldName: World 3
-  starsRequired: 10
+  starsRequired: 45
   primaryColor: {r: 1, g: 0.5686275, b: 0, a: 1}
   secondaryColor: {r: 1, g: 0.42745098, b: 0, a: 1}
   panelBackground: {fileID: 386386009, guid: 376548e960911ea43b6ae5fc5a746e66, type: 3}
