@@ -160,6 +160,7 @@ public class PlayerController : MonoBehaviour
 
         anim.SetBool("isWalking", true);
         transform.forward = dir;
+        SoundManager.Instance.PlayWalk();
     }
 
     public void EnableUnscaledAnimation(bool enable)
@@ -226,7 +227,10 @@ public class PlayerController : MonoBehaviour
         //    GameManagerCycle.Instance.PlayerHitObstacle();
 
         if (other.CompareTag("Door"))
+        {
+            SoundManager.Instance.PlayWin();
             GameManagerCycle.Instance.PlayerReachedDoor();
+        }
         else if (other.CompareTag("Booster"))
         {
             GameManagerCycle.Instance.BoosterCollected();
@@ -234,6 +238,7 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("Obstacle"))
         {
+            SoundManager.Instance.PlayDeath();
             GameManagerCycle.Instance.PlayerHitObstacle();
         }
     }
