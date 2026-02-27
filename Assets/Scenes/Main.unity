@@ -379,7 +379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &70969142
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11658,9 +11658,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1291489803}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 238, y: -45}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1028460438
@@ -14960,7 +14960,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1291489803
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14980,7 +14980,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -700, y: 14}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 338, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1291489804
 MonoBehaviour:
@@ -15755,7 +15755,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1385881417
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19493,7 +19493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   batteryBar: {fileID: 1291489802}
   coinPanel: {fileID: 1385881416}
-  settings: {fileID: 0}
+  settings: {fileID: 70969141}
 --- !u!1 &1715047722
 GameObject:
   m_ObjectHideFlags: 0
@@ -24037,9 +24037,9 @@ RectTransform:
   - {fileID: 1417975294}
   m_Father: {fileID: 1291489803}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 65, y: -45}
   m_SizeDelta: {x: 130, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2119384462
