@@ -11,9 +11,6 @@ public class LevelTimeController : MonoBehaviour
     private float levelTimer;
     private bool isRunning;
 
-    // ================================
-    // START TIMER
-    // ================================
     public void StartTimer(float duration)
     {
         levelTimer = duration;
@@ -21,17 +18,11 @@ public class LevelTimeController : MonoBehaviour
         UpdateUI();
     }
 
-    // ================================
-    // STOP TIMER
-    // ================================
     public void StopTimer()
     {
         isRunning = false;
     }
 
-    // ================================
-    // UPDATE LOOP
-    // ================================
     void Update()
     {
         if (!isRunning) return;
@@ -44,10 +35,10 @@ public class LevelTimeController : MonoBehaviour
             levelTimer = 0f;
             isRunning = false;
             UpdateUI();
-            uiFlowController.ShowGameOver();
+
+            GameManagerCycle.Instance.HandleTimeOut();
             return;
         }
-
         UpdateUI();
     }
 
@@ -60,4 +51,5 @@ public class LevelTimeController : MonoBehaviour
     {
         return levelTimer;
     }
+
 }

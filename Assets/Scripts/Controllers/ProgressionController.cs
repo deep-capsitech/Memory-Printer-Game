@@ -14,20 +14,12 @@ public class ProgressionController : MonoBehaviour
     public Sprite filledStar;
     public Sprite emptyStar;
 
-    //[Header("New World Panel")]
-    //public GameObject newWorldPanel;
-    //public TextMeshProUGUI newWorldNameText;
-    //public TextMeshProUGUI newWorldQuestionText;
-
     [Header("Dependencies")]
     public UIFlowController uiFlowController;
 
     private int _earnedStars;
     private int _totalStars;
     private int _highestLevel;
-    //private WorldData _pendingUnlockedWorld;
-
-    // ---------- STARS ----------
 
     public void CalculateStars(float levelTimer)
     {
@@ -73,8 +65,6 @@ public class ProgressionController : MonoBehaviour
         star3.sprite = count >= 3 ? filledStar : emptyStar;
     }
 
-    // ---------- COINS ----------
-
     public void GiveCoinsForStars()
     {
         int coins = _earnedStars switch
@@ -87,8 +77,6 @@ public class ProgressionController : MonoBehaviour
 
         GameEconomyManager.Instance.AddCoins(coins);
     }
-
-    // ---------- LEVELS ----------
 
     public void LoadHighestLevel()
     {
@@ -109,8 +97,6 @@ public class ProgressionController : MonoBehaviour
     {
         PlayerPrefs.DeleteKey($"LevelFailed_{level}");
     }
-
-    // ---------- WORLDS ----------
 
     bool IsWorldUnlocked(int worldId)
     {
@@ -168,7 +154,6 @@ public class ProgressionController : MonoBehaviour
     {
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
 
-        // Unlock NEXT level only if player just completed the highest unlocked one
         if (completedLevel == unlockedLevel && completedLevel < totalLevels)
         {
             PlayerPrefs.SetInt("UnlockedLevel", unlockedLevel + 1);

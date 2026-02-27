@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Security.Cryptography;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class DailyRewardPanelController : MonoBehaviour
 {
@@ -29,11 +30,11 @@ public class DailyRewardPanelController : MonoBehaviour
     }
     void RefreshUI()
     {
-        if (DailyRewardManager.Instance == null)
+        if (DailyRewardController.Instance == null)
             return;
 
-        int rawDay = DailyRewardManager.Instance.GetCurrentDay();
-        bool claimedToday = DailyRewardManager.Instance.HasClaimedTodayPublic();
+        int rawDay = DailyRewardController.Instance.GetCurrentDay();
+        bool claimedToday = DailyRewardController.Instance.HasClaimedTodayPublic();
 
         for (int i = 0; i < dayItems.Length; i++)
         {
@@ -57,7 +58,7 @@ public class DailyRewardPanelController : MonoBehaviour
             {
                 var txt = rewardType.GetComponent<TextMeshProUGUI>();
                 if (txt != null)
-                    txt.text = GetRewardName(dayNumber);
+                    txt.text = DailyRewardController.Instance.GetRewardName(dayNumber);
             }
 
             // ---------- REWARD VALUE ----------
@@ -67,8 +68,8 @@ public class DailyRewardPanelController : MonoBehaviour
                 var txt = rewardValue.GetComponent<TextMeshProUGUI>();
                 if (txt != null)
                 {
-                    int amount = GetRewardAmount(dayNumber);
-                    bool isCoins = GetRewardName(dayNumber) == "COINS";
+                    int amount = DailyRewardController.Instance.GetRewardAmount(dayNumber);
+                    bool isCoins = DailyRewardController.Instance.GetRewardName(dayNumber) == "COINS";
 
                     txt.text = isCoins ? amount.ToString() : "×" + amount;
                 }
@@ -125,8 +126,8 @@ public class DailyRewardPanelController : MonoBehaviour
         {
             displayDay = rawDay;
         }
-        int rewardAmount = GetRewardAmount(displayDay);
-        string rewardName = GetRewardName(displayDay);
+        int rewardAmount = DailyRewardController.Instance.GetRewardAmount(displayDay);
+        string rewardName = DailyRewardController.Instance.GetRewardName(displayDay);
         bool rewardIsCoins = rewardName == "COINS";
 
         todayRewardText.text =
@@ -135,39 +136,9 @@ public class DailyRewardPanelController : MonoBehaviour
             " " + rewardName;
     }
 
-    int GetRewardAmount(int day)
-    {
-        switch (day)
-        {
-            case 1: return 50;
-            case 2: return 1;
-            case 3: return 75;
-            case 4: return 1;
-            case 5: return 2;
-            case 6: return 100;
-            case 7: return 200;
-            default: return 0;
-        }
-    }
-
-    string GetRewardName(int day)
-    {
-        switch (day)
-        {
-            case 1: return "COINS";
-            case 2: return "BATTERY";
-            case 3: return "COINS";
-            case 4: return "FREEZE";
-            case 5: return "BATTERIES";
-            case 6: return "COINS";
-            case 7: return "COINS";
-            default: return "";
-        }
-    }
-
     void OnCollectClicked()
     {
-        DailyRewardManager.Instance.ClaimReward();
+        DailyRewardController.Instance.ClaimReward();
         RefreshUI();
         ClosePanel();
     }
@@ -175,8 +146,8 @@ public class DailyRewardPanelController : MonoBehaviour
     void OnWatchAdClicked()
     {
         // Simulated ad success
-        DailyRewardManager.Instance.ClaimReward();
-        DailyRewardManager.Instance.ClaimReward(); // double reward
+        DailyRewardController.Instance.ClaimReward();
+        DailyRewardController.Instance.ClaimReward(); // double reward
         RefreshUI() ;
         ClosePanel();
     }

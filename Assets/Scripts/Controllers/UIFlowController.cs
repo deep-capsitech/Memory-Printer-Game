@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class UIFlowController : MonoBehaviour
@@ -11,13 +12,18 @@ public class UIFlowController : MonoBehaviour
     public GameObject worldPanel;
     public GameObject levelPanel;
     public GameObject noBatteryPanel;
+
     public GameObject newWorldPanel;
+    public TextMeshProUGUI newWorldNameText;
+    public TextMeshProUGUI newWorldQuestionText;
+
     public GameObject backgroundPanel;
 
     [Header("HUD")]
     public HUDVisibilityController hud;
 
     private GameObject _previousPanelBeforeNoBattery;
+    
     public DailyRewardController dailyRewardController;
 
     public void DisableAllPanels()
@@ -91,14 +97,11 @@ public class UIFlowController : MonoBehaviour
         levelPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Level);
     }
-
-    public void ShowNoBatteryPanel(GameObject currentPanel)
+    public void ShowNoBatteryPanel()
     {
-        _previousPanelBeforeNoBattery = currentPanel;
-
         DisableAllPanels();
         noBatteryPanel.SetActive(true);
-        UpdateHUD(HUDVisibilityController.UIState.NoBattery);
+        UpdateHUD(HUDVisibilityController.UIState.Menu);
     }
 
     public void ReturnFromNoBatteryPanel()
@@ -109,5 +112,49 @@ public class UIFlowController : MonoBehaviour
             _previousPanelBeforeNoBattery.SetActive(true);
         else
             menuPanel.SetActive(true);
+    }
+    public void ShowDailyRewardPanel()
+    {
+        DisableAllPanels();
+        dailyRewardController.dailyRewardPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Menu);
+    }
+    public void ShowGameplay()
+    {
+        DisableAllPanels();
+        backgroundPanel.SetActive(false);
+        gameplayPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Gameplay);
+    }
+    public void ShowWorldSelect()
+    {
+        DisableAllPanels();
+        worldPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.World);
+    }
+    public void ShowLevelSelect()
+    {
+        DisableAllPanels();
+        levelPanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.Level);
+    }
+    public void ShowNewWorldPanel(WorldData world)
+    {
+        DisableAllPanels();
+        newWorldPanel.SetActive(true);
+
+        newWorldNameText.text = world.worldName.ToUpper();
+        newWorldQuestionText.text = "Do you want to go to this world now?";
+    }
+    public void ShowLevelComplete()
+    {
+        DisableAllPanels();
+        levelCompletePanel.SetActive(true);
+        UpdateHUD(HUDVisibilityController.UIState.LevelComplete);
+    }
+    public void ShowPowerUpMode()
+    {
+        DisableAllPanels();
+        backgroundPanel.SetActive(false);
     }
 }

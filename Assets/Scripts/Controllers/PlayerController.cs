@@ -97,7 +97,14 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isWalking", false);
         }
     }
-
+    public void StopMovementImmediately()
+    {
+        if (TryGetComponent<Rigidbody2D>(out var rb))
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+    }
     void HandleMobileHoldMovement()
     {
         if (!holdUp && !holdDown && !holdLeft && !holdRight) return;
@@ -219,33 +226,20 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        //GameManagerCycle gm = FindAnyObjectByType<GameManagerCycle>();
         if (GameManagerCycle.Instance == null) return;
-
-        //if (other.CompareTag("Obstacle"))
-        //    GameManagerCycle.Instance.PlayerHitObstacle();
 
         if (other.CompareTag("Door"))
             GameManagerCycle.Instance.PlayerReachedDoor();
         else if (other.CompareTag("Booster"))
         {
             GameManagerCycle.Instance.BoosterCollected();
-            Destroy(other.gameObject); // remove booster after use
+            Destroy(other.gameObject);
         }
         if (other.CompareTag("Obstacle"))
         {
             GameManagerCycle.Instance.PlayerHitObstacle();
         }
     }
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (GameManagerCycle.Instance == null) return;
-
-    //    if (collision.gameObject.CompareTag("Obstacle"))
-    //        GameManagerCycle.Instance.PlayerHitObstacle();
-    //}
-
      
     public void ReviveToLastSafeTile()
     {

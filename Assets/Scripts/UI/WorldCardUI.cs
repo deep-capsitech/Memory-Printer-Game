@@ -14,9 +14,16 @@ public class WorldCardUI : MonoBehaviour
         worldId = data.worldId;
         worldNameText.text = data.worldName;
 
-        bool unlocked =
-            data.worldId == 1 ||
-            totalStars >= data.starsRequired;
+        bool unlocked;
+
+        if (data.worldId == 1)
+        {
+            unlocked = true;
+        }
+        else
+        {
+            unlocked = PlayerPrefs.GetInt($"WorldUnlocked_{data.worldId}", 0) == 1;
+        }
 
         lockIcon.SetActive(!unlocked);
         button.interactable = unlocked;
