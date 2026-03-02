@@ -3328,7 +3328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiFlowController: {fileID: 327556129}
-  dailyRewardController: {fileID: 0}
+  dailyRewardController: {fileID: 810880251}
   progressionController: {fileID: 1312646691}
   gameStateController: {fileID: 917927754}
   movementController: {fileID: 1840542801}
@@ -3395,7 +3395,7 @@ MonoBehaviour:
   newWorldQuestionText: {fileID: 128136889}
   backgroundPanel: {fileID: 1492915264}
   hud: {fileID: 1711909702}
-  dailyRewardController: {fileID: 0}
+  dailyRewardController: {fileID: 810880251}
 --- !u!114 &327556130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9033,7 +9033,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 810880250}
-  - component: {fileID: 810880249}
   - component: {fileID: 810880251}
   m_Layer: 0
   m_Name: DailyRewardManager
@@ -9042,18 +9041,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &810880249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 810880248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 601a0f93eb62ad444ada49e9003ac2ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &810880250
 Transform:
   m_ObjectHideFlags: 0
@@ -12573,50 +12560,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121348829}
   m_CullTransparentMesh: 1
---- !u!1 &1167271294
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1167271296}
-  - component: {fileID: 1167271295}
-  m_Layer: 0
-  m_Name: WorldClickHandled
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1167271295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167271294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3440a0608002d444a9d35b556f3e9e3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1167271296
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167271294}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -405.81882, y: 149.76828, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1168713523
 GameObject:
   m_ObjectHideFlags: 0
@@ -22218,8 +22161,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 327556126}
-        m_TargetAssemblyTypeName: GameManagerCycle, Assembly-CSharp
+      - m_Target: {fileID: 327556129}
+        m_TargetAssemblyTypeName: UIFlowController, Assembly-CSharp
         m_MethodName: ShowMenu
         m_Mode: 1
         m_Arguments:
@@ -24784,7 +24727,6 @@ SceneRoots:
   - {fileID: 1251414289}
   - {fileID: 534087654}
   - {fileID: 1596977351}
-  - {fileID: 1167271296}
   - {fileID: 810880250}
   - {fileID: 1707193823}
   - {fileID: 1312646692}
