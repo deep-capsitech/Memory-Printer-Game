@@ -3306,6 +3306,8 @@ GameObject:
   - component: {fileID: 327556127}
   - component: {fileID: 327556126}
   - component: {fileID: 327556128}
+  - component: {fileID: 327556129}
+  - component: {fileID: 327556130}
   m_Layer: 0
   m_Name: GameCycleManager
   m_TagString: Untagged
@@ -3325,45 +3327,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159d73b0d254b0e4d860738574474201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPanel: {fileID: 1933489060}
-  gameplayPanel: {fileID: 1554477593}
-  pausePanel: {fileID: 1023435289}
-  gameOverPanel: {fileID: 82509337}
-  levelCompletePanel: {fileID: 1431752350}
-  worldPanel: {fileID: 2066177102}
+  uiFlowController: {fileID: 327556129}
+  dailyRewardController: {fileID: 0}
+  progressionController: {fileID: 1312646691}
+  gameStateController: {fileID: 917927754}
+  movementController: {fileID: 1840542801}
+  levelTimeController: {fileID: 327556130}
+  powerUpController: {fileID: 358582717}
   snapshot: {fileID: 2086586503}
   generator: {fileID: 211100146}
   player: {fileID: 959374380}
-  bestLevelMenuText: {fileID: 1032760892}
   levelText: {fileID: 1206800564}
-  timerText: {fileID: 1172697803}
   mapTimerText: {fileID: 485226820}
-  lastLevelText: {fileID: 1411922702}
-  bestLevelGameOverText: {fileID: 2005675170}
-  star1: {fileID: 618368323}
-  star2: {fileID: 570020716}
-  star3: {fileID: 1600606966}
-  filledStar: {fileID: 1978364624, guid: 015c1273879e2304984c8699da3a972b, type: 3}
-  emptyStar: {fileID: 21300000, guid: db61c9f5ffe33b2499de6127e53c59e0, type: 3}
   coinsEarnedText: {fileID: 1685802098}
   totalLevels: 50
-  powerUpDuration: 3
-  freezeTimeDuration: 2
-  hud: {fileID: 1711909702}
-  backgroundPanel: {fileID: 1492915264}
-  levelPanel: {fileID: 1287943170}
-  noBatteryPanel: {fileID: 760917746}
-  newWorldPanel: {fileID: 1378615760}
-  newWorldNameText: {fileID: 2089633552}
-  newWorldQuestionText: {fileID: 128136889}
-  dailyRewardPanel: {fileID: 1632747082}
-  dailyRewardButton: {fileID: 1835430477}
-  dailyRewardButtonText: {fileID: 625221371}
-  dailyRewardButtonIcon: {fileID: 772351626}
-  invisionButton: {fileID: 2076829896}
-  freezeButton: {fileID: 1610959819}
-  invisionLockIcon: {fileID: 2000386830}
-  freezeLockIcon: {fileID: 171856549}
 --- !u!4 &327556127
 Transform:
   m_ObjectHideFlags: 0
@@ -3393,6 +3370,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 330585545}
   topDownCamera: {fileID: 2001099886}
+--- !u!114 &327556129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327556125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c19e73fdd5b6d948a32cdea9f630bad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuPanel: {fileID: 1933489060}
+  gameplayPanel: {fileID: 1554477593}
+  pausePanel: {fileID: 1023435289}
+  gameOverPanel: {fileID: 82509337}
+  levelCompletePanel: {fileID: 1431752350}
+  worldPanel: {fileID: 2066177102}
+  levelPanel: {fileID: 1287943170}
+  noBatteryPanel: {fileID: 760917746}
+  newWorldPanel: {fileID: 1378615760}
+  newWorldNameText: {fileID: 2089633552}
+  newWorldQuestionText: {fileID: 128136889}
+  backgroundPanel: {fileID: 1492915264}
+  hud: {fileID: 1711909702}
+  dailyRewardController: {fileID: 0}
+--- !u!114 &327556130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327556125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 189fb5cc052dfee4f96652358bdace47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameStateController: {fileID: 917927754}
+  uiFlowController: {fileID: 327556129}
+  timerText: {fileID: 1172697803}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -3826,6 +3844,61 @@ Transform:
   - {fileID: 1191744429}
   - {fileID: 635327190}
   m_Father: {fileID: 1524189139}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &358582716
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 358582718}
+  - component: {fileID: 358582717}
+  m_Layer: 0
+  m_Name: PowerupController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &358582717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358582716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db7b0eab8911b5a449804c85f5fa4e32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerUpDuration: 3
+  freezeTimeDuration: 2
+  invisionButton: {fileID: 2076829896}
+  freezeButton: {fileID: 1610959819}
+  invisionLockIcon: {fileID: 2000386830}
+  freezeLockIcon: {fileID: 171856549}
+  snapshot: {fileID: 2086586503}
+  generator: {fileID: 211100146}
+  player: {fileID: 959374380}
+  movementController: {fileID: 1840542801}
+  uiFlowController: {fileID: 327556129}
+--- !u!4 &358582718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358582716}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1389, y: 642, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &359241673
 GameObject:
@@ -8961,6 +9034,7 @@ GameObject:
   m_Component:
   - component: {fileID: 810880250}
   - component: {fileID: 810880249}
+  - component: {fileID: 810880251}
   m_Layer: 0
   m_Name: DailyRewardManager
   m_TagString: Untagged
@@ -8995,6 +9069,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &810880251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810880248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f447edeb44440845bba82466d0182b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dailyRewardPanel: {fileID: 1632747082}
+  dailyRewardButton: {fileID: 1835430477}
+  dailyRewardButtonText: {fileID: 625221371}
+  dailyRewardButtonIcon: {fileID: 772351626}
 --- !u!1 &811986302
 GameObject:
   m_ObjectHideFlags: 0
@@ -10077,6 +10167,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 917715817}
   m_CullTransparentMesh: 1
+--- !u!1 &917927753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 917927755}
+  - component: {fileID: 917927754}
+  m_Layer: 0
+  m_Name: GameStateController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &917927754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917927753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aa72133eeaad3d479c31506e8f7332a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &917927755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917927753}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1389, y: 642, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &923531726
 GameObject:
   m_ObjectHideFlags: 0
@@ -15111,6 +15245,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304088881}
   m_CullTransparentMesh: 1
+--- !u!1 &1312646690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1312646692}
+  - component: {fileID: 1312646691}
+  m_Layer: 0
+  m_Name: ProgressionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1312646691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312646690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba01fd1f2989764449f6f19554614179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalLevels: 50
+  star1: {fileID: 618368323}
+  star2: {fileID: 570020716}
+  star3: {fileID: 1600606966}
+  filledStar: {fileID: 1978364624, guid: 015c1273879e2304984c8699da3a972b, type: 3}
+  emptyStar: {fileID: 21300000, guid: db61c9f5ffe33b2499de6127e53c59e0, type: 3}
+  uiFlowController: {fileID: 327556129}
+--- !u!4 &1312646692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312646690}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1389, y: 642, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1320403354
 GameObject:
   m_ObjectHideFlags: 0
@@ -20459,6 +20644,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1835430475}
   m_CullTransparentMesh: 1
+--- !u!1 &1840542800
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1840542802}
+  - component: {fileID: 1840542801}
+  m_Layer: 0
+  m_Name: ObstacleController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1840542801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840542800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c4e6a285885c9a4cb15cf1270ee6756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generator: {fileID: 211100146}
+  gameStateController: {fileID: 917927754}
+--- !u!4 &1840542802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840542800}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1389, y: 642, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1863798366
 GameObject:
   m_ObjectHideFlags: 0
@@ -24556,3 +24787,7 @@ SceneRoots:
   - {fileID: 1167271296}
   - {fileID: 810880250}
   - {fileID: 1707193823}
+  - {fileID: 1312646692}
+  - {fileID: 917927755}
+  - {fileID: 1840542802}
+  - {fileID: 358582718}
