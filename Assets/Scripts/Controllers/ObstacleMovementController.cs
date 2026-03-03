@@ -14,9 +14,9 @@ public class ObstacleMovementController : MonoBehaviour
     private bool freezeActive;
 
     private MovingObstacle.MoveType currentMoveType;
-    // =========================================================
+    
     // INITIALIZE FOR NEW LAYOUT
-    // =========================================================
+    
     public void InitializeLayout(int levelIndex)
     {
         movingObstaclesForLayout.Clear();
@@ -30,6 +30,7 @@ public class ObstacleMovementController : MonoBehaviour
             if (mo == null) continue;
 
             mo.ForceStopMovement();
+            mo.isLockedForLayout = false;
             allObstacles.Add(mo);
         }
 
@@ -58,9 +59,8 @@ public class ObstacleMovementController : MonoBehaviour
         ApplyStoredMovementRules();
     }
 
-    // =========================================================
     // MOVEMENT CONTROL
-    // =========================================================
+    
     public void StopAll()
     {
         foreach (Transform ob in generator.obstaclesParent)
@@ -93,9 +93,18 @@ public class ObstacleMovementController : MonoBehaviour
         }
     }
 
-    // =========================================================
+    public void RemoveFromMovingList(MovingObstacle mo)
+    {
+        if (movingObstaclesForLayout.Contains(mo))
+        {
+            movingObstaclesForLayout.Remove(mo);
+        }
+
+        mo.ForceStopMovement();
+    }
+
+    
     // STATE HOOKS
-    // =========================================================
     public void OnSnapshotStart()
     {
         snapshotActive = true;
@@ -132,9 +141,8 @@ public class ObstacleMovementController : MonoBehaviour
         ApplyStoredMovementRules();
     }
 
-    // =========================================================
+    
     // INTERNAL LOGIC
-    // =========================================================
     bool IsMovementBlocked()
     {
         return !gameStateController.IsGameplayActive()
@@ -162,6 +170,9 @@ public class ObstacleMovementController : MonoBehaviour
 
     bool IsValidForMoveType(MovingObstacle mo, MovingObstacle.MoveType moveType)
     {
+        if (mo.isLockedForLayout)
+            return false;
+
         if (moveType == MovingObstacle.MoveType.UpDown)
             return !(mo.tileZ == 0 || mo.tileZ == 9);
 
@@ -183,9 +194,8 @@ public class ObstacleMovementController : MonoBehaviour
             (list[i], list[r]) = (list[r], list[i]);
         }
     }
-    // =========================================================
+
     // GAME OVER / RESET
-    // =========================================================
     public void OnGameOver()
     {
         snapshotActive = false;
