@@ -1,6 +1,12 @@
 using TMPro;
 using UnityEngine;
 
+public enum PowerupType
+{
+    Invision,
+    Freeze,
+    Snapshot
+}
 public class UIFlowController : MonoBehaviour
 {
     [Header("Panels")]
@@ -12,7 +18,6 @@ public class UIFlowController : MonoBehaviour
     public GameObject worldPanel;
     public GameObject levelPanel;
     public GameObject noBatteryPanel;
-
     public GameObject newWorldPanel;
     public TextMeshProUGUI newWorldNameText;
     public TextMeshProUGUI newWorldQuestionText;
@@ -25,6 +30,8 @@ public class UIFlowController : MonoBehaviour
     private GameObject _previousPanelBeforeNoBattery;
     
     public DailyRewardController dailyRewardController;
+
+    public BuyPowerupPanelController buyPowerupPanel;
 
     public void DisableAllPanels()
     {
@@ -156,5 +163,12 @@ public class UIFlowController : MonoBehaviour
     {
         DisableAllPanels();
         backgroundPanel.SetActive(false);
+    }
+
+    public void ShowBuyPowerupPanel(PowerupType type)
+    {
+        DisableAllPanels();
+        buyPowerupPanel.gameObject.SetActive(true);
+        buyPowerupPanel.Setup(type);
     }
 }

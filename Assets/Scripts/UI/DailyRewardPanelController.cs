@@ -15,7 +15,11 @@ public class DailyRewardPanelController : MonoBehaviour
     public Button collectButton;
     public Button watchAdButton;
     public Button closeButton;
-
+    [Header("Reward Icons")]
+    public Sprite snapshotSprite;
+    public Sprite coinSprite;
+    public Sprite invisionSprite;
+    public Sprite freezeSprite;
     void OnEnable()
     {
         RefreshUI();
@@ -53,12 +57,16 @@ public class DailyRewardPanelController : MonoBehaviour
             }
 
             // ---------- REWARD TYPE ----------
+            DailyRewardController.DailyReward reward =
+     DailyRewardController.Instance.GetRewardForDay(dayNumber);
+
+            // ---------- REWARD TYPE ----------
             Transform rewardType = dayItems[i].transform.Find("RewardTypeText");
             if (rewardType != null)
             {
                 var txt = rewardType.GetComponent<TextMeshProUGUI>();
                 if (txt != null)
-                    txt.text = DailyRewardController.Instance.GetRewardName(dayNumber);
+                    txt.text = reward.type.ToString().ToUpper();
             }
 
             // ---------- REWARD VALUE ----------
@@ -68,13 +76,39 @@ public class DailyRewardPanelController : MonoBehaviour
                 var txt = rewardValue.GetComponent<TextMeshProUGUI>();
                 if (txt != null)
                 {
-                    int amount = DailyRewardController.Instance.GetRewardAmount(dayNumber);
-                    bool isCoins = DailyRewardController.Instance.GetRewardName(dayNumber) == "COINS";
-
-                    txt.text = isCoins ? amount.ToString() : "×" + amount;
+                    if (reward.type == DailyRewardController.DailyRewardType.Coins)
+                        txt.text = reward.amount.ToString();
+                    else
+                        txt.text = "×" + reward.amount;
                 }
             }
+            // ---------- REWARD ICON ----------
+            Transform rewardIcon = dayItems[i].transform.Find("RewardIcon");
+            if (rewardIcon != null)
+            {
+                Image iconImg = rewardIcon.GetComponent<Image>();
+                if (iconImg != null)
+                {
+                    switch (reward.type)
+                    {
+                        case DailyRewardController.DailyRewardType.Snapshot:
+                            iconImg.sprite = snapshotSprite;
+                            break;
 
+                        case DailyRewardController.DailyRewardType.Coins:
+                            iconImg.sprite = coinSprite;
+                            break;
+
+                        case DailyRewardController.DailyRewardType.Invision:
+                            iconImg.sprite = invisionSprite;
+                            break;
+
+                        case DailyRewardController.DailyRewardType.Freeze:
+                            iconImg.sprite = freezeSprite;
+                            break;
+                    }
+                }
+            }
             // ---------- CLAIMED CHECK ----------
             Transform claimedCheck = dayItems[i].transform.Find("ClaimedCheck");
             if (claimedCheck != null)
@@ -126,14 +160,23 @@ public class DailyRewardPanelController : MonoBehaviour
         {
             displayDay = rawDay;
         }
-        int rewardAmount = DailyRewardController.Instance.GetRewardAmount(displayDay);
-        string rewardName = DailyRewardController.Instance.GetRewardName(displayDay);
-        bool rewardIsCoins = rewardName == "COINS";
+        DailyRewardController.DailyReward todayReward =
+    DailyRewardController.Instance.GetRewardForDay(displayDay);
 
-        todayRewardText.text =
-            "TODAY'S REWARD: " +
-            (rewardIsCoins ? rewardAmount.ToString() : "×" + rewardAmount) +
-            " " + rewardName;
+        string rewardText;
+
+        if (todayReward.type == DailyRewardController.DailyRewardType.Coins)
+            rewardText = todayReward.amount.ToString() + " COINS";
+        else
+            rewardText = "×" + todayReward.amount + " " + todayReward.type.ToString().ToUpper();
+
+        todayRewardText.text = "TODAY'S REWARD: " + rewardText;
+
+        // Show bonus on Day 7
+        if (displayDay == 7)
+        {
+            todayRewardText.text += " + 200 BONUS COINS";
+        }
     }
 
     void OnCollectClicked()
@@ -142,16 +185,22 @@ public class DailyRewardPanelController : MonoBehaviour
         RefreshUI();
         ClosePanel();
     }
-
     void OnWatchAdClicked()
     {
         // Simulated ad success
         DailyRewardController.Instance.ClaimReward();
-        DailyRewardController.Instance.ClaimReward(); // double reward
-        RefreshUI() ;
+
+        // Give extra reward manually (same as today)
+        int day = DailyRewardController.Instance.GetCurrentDay() - 1;
+        if (day <= 0)
+            day = 7;
+
+        var reward = DailyRewardController.Instance.GetRewardForDay(day);
+        DailyRewardController.Instance.GiveExtraReward(reward);
+
+        RefreshUI();
         ClosePanel();
     }
-
     void OnCloseClicked()
     {
         ClosePanel();
