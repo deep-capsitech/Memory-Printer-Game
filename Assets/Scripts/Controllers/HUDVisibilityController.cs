@@ -17,7 +17,8 @@ public class HUDVisibilityController : MonoBehaviour
         Revive,
         GameOver,
         LevelComplete,
-        NoBattery
+        NoBattery,
+        BuyPanel
     }
     public void UpdateHUD(UIState state)
     {
@@ -34,7 +35,8 @@ public class HUDVisibilityController : MonoBehaviour
             state == UIState.Level ||
             state == UIState.Revive ||
             state == UIState.World ||
-            state == UIState.NoBattery;
+            state == UIState.NoBattery ||
+            state == UIState.BuyPanel;
 
         coinPanel.SetActive(showCoins);
 

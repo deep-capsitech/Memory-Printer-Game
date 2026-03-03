@@ -170,5 +170,6 @@ public class UIFlowController : MonoBehaviour
         DisableAllPanels();
         buyPowerupPanel.gameObject.SetActive(true);
         buyPowerupPanel.Setup(type);
+        UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
     }
 }
