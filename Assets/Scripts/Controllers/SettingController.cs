@@ -2,9 +2,22 @@ using UnityEngine;
 
 public class SettingController : MonoBehaviour
 {
-    public GameObject settingsPanel;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject infoPanel;
 
-    public GameObject infoPanel;
+    public void OpenSettings()
+    {
+        if (settingsPanel != null)
+            settingsPanel.SetActive(true);
+
+        if (infoPanel != null)
+            infoPanel.SetActive(false);
+    }
+
+    public void CloseSettings()
+    {
+        settingsPanel.SetActive(false);
+    }
 
     public void OpenInfo()
     {
@@ -14,14 +27,5 @@ public class SettingController : MonoBehaviour
     public void CloseInfo()
     {
         infoPanel.SetActive(false);
-    }
-    public void OpenSettings()
-    {
-        settingsPanel.SetActive(true);
-    }
-
-    public void CloseSettings()
-    {
-        settingsPanel.SetActive(false);
     }
 }
