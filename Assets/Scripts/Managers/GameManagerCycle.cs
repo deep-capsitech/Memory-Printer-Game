@@ -51,6 +51,9 @@ public class GameManagerCycle : MonoBehaviour
 
     private bool snapshotActive;
 
+    private const string SNAPSHOT_KEY = "SNAPSHOT_COUNT";
+    private const string SNAPSHOT_INIT_KEY = "SNAPSHOT_INITIALIZED";
+
     private WorldData pendingUnlockedWorld;
 
     public bool IsSnapshotActive => snapshotActive;
@@ -70,6 +73,8 @@ public class GameManagerCycle : MonoBehaviour
             PlayerPrefs.SetInt("SelectedWorld", 0);
             PlayerPrefs.SetInt("WorldUnlocked_1", 1);
             PlayerPrefs.SetInt("GameInitialized", 1);
+            PlayerPrefs.SetInt(SNAPSHOT_KEY, 3); // Level 1 initial gift
+            PlayerPrefs.SetInt(SNAPSHOT_INIT_KEY, 1);
             PlayerPrefs.Save();
         }
         if (PlayerPrefs.GetInt("WorldUnlocked_1", 0) == 0)
@@ -177,6 +182,7 @@ public class GameManagerCycle : MonoBehaviour
         player.ResetPosition();
 
         snapshotActive = false;
+
         gameStateController.SetState(GameStateController.GameState.Gameplay);
         UpdatePlayerMovement();
         StartCoroutine(StartSnapshotNextFrame());
@@ -313,6 +319,7 @@ public class GameManagerCycle : MonoBehaviour
     {
         if (snapshotActive || powerUpController.IsAnyPowerUpActive())
             return;
+
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
         snapshotTimer = level.snapshotTime;
 
@@ -324,7 +331,7 @@ public class GameManagerCycle : MonoBehaviour
 
         UpdatePlayerMovement();
 
-        Debug.Log("Snapshot Time = " + snapshotTimer);
+       // Debug.Log("Snapshot Time = " + snapshotTimer);
     }
 
     void UpdateSnapshotTimer()
@@ -351,7 +358,24 @@ public class GameManagerCycle : MonoBehaviour
 
         StartSnapshot();
     }
+    public void UseManualSnapshot()
+    {
+        if (snapshotActive || powerUpController.IsAnyPowerUpActive())
+            return;
 
+        if (!ConsumeSnapshot())
+            return;
+        powerUpController.UpdatePowerUpUI();
+        JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
+        snapshotTimer = level.snapshotTime;
+
+        snapshot.TakeSnapshot();
+        snapshotActive = true;
+
+        movementController.OnSnapshotStart();
+        powerUpController.UpdatePowerUpUI();
+        UpdatePlayerMovement();
+    }
     void UpdateMapTimer()
     {
         mapTimer -= Time.deltaTime;
@@ -464,5 +488,26 @@ public class GameManagerCycle : MonoBehaviour
         levelTimeController.StopTimer();
 
         uiFlowController.ShowGameOver();
+    }
+    public void AddSnapshotUse()
+    {
+        int count = GetSnapshotUses();
+        PlayerPrefs.SetInt(SNAPSHOT_KEY, count + 1);
+        PlayerPrefs.Save();
+    }
+    public int GetSnapshotUses()
+    {
+        return PlayerPrefs.GetInt(SNAPSHOT_KEY, 0);
+    }
+    public bool ConsumeSnapshot()
+    {
+        int count = GetSnapshotUses();
+
+        if (count <= 0)
+            return false;
+
+        PlayerPrefs.SetInt(SNAPSHOT_KEY, count - 1);
+        PlayerPrefs.Save();
+        return true;
     }
 }

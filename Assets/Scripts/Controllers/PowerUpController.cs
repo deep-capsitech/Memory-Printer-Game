@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PowerUpController : MonoBehaviour
@@ -26,6 +27,16 @@ public class PowerUpController : MonoBehaviour
     public PlayerController player;
     public ObstacleMovementController movementController;
     public UIFlowController uiFlowController;
+
+    [Header("Count UI")]
+    public TextMeshProUGUI invisionCountText;
+    public GameObject invisionPlusIcon;
+
+    public TextMeshProUGUI freezeCountText;
+    public GameObject freezePlusIcon;
+
+    public TextMeshProUGUI snapshotCountText;
+    public GameObject snapshotPlusIcon;
 
     void Update()
     {
@@ -62,7 +73,6 @@ public class PowerUpController : MonoBehaviour
     {
         bool snapshotActive = GameManagerCycle.Instance.IsSnapshotActive;
 
-        // If snapshot is active → disable all powerups
         if (snapshotActive)
         {
             invisionButton.interactable = false;
@@ -70,7 +80,6 @@ public class PowerUpController : MonoBehaviour
             return;
         }
 
-        // Otherwise apply normal unlock rules
         bool invisionUnlocked = IsInvisionUnlocked();
         invisionButton.interactable = invisionUnlocked;
         invisionLockIcon.SetActive(!invisionUnlocked);
@@ -78,6 +87,8 @@ public class PowerUpController : MonoBehaviour
         bool freezeUnlocked = IsFreezeUnlocked();
         freezeButton.interactable = freezeUnlocked;
         freezeLockIcon.SetActive(!freezeUnlocked);
+
+        UpdateCountUI();
     }
 
     public void ActivatePowerUp()
@@ -90,6 +101,14 @@ public class PowerUpController : MonoBehaviour
 
         if (freezeTimeActive)
             EndFreezeTime();
+
+        if (PowerupInventoryManager.Instance.GetInvisionCount() <= 0)
+        {
+            uiFlowController.ShowBuyPowerupPanel(PowerupType.Invision);
+            return;
+        }
+
+        PowerupInventoryManager.Instance.ConsumeInvision();
 
         if (GameManagerCycle.Instance.IsSnapshotActive)
         {
@@ -109,6 +128,8 @@ public class PowerUpController : MonoBehaviour
 
         movementController.OnPowerUpStart();
         GameManagerCycle.Instance.UpdatePlayerMovement();
+
+        UpdatePowerUpUI();
     }
 
     void EndPowerUp()
@@ -126,6 +147,7 @@ public class PowerUpController : MonoBehaviour
 
         movementController.OnPowerUpEnd();
         GameManagerCycle.Instance.UpdatePlayerMovement();
+        UpdatePowerUpUI();
     }
 
     void UpdatePowerUpTimer()
@@ -141,17 +163,25 @@ public class PowerUpController : MonoBehaviour
         if (!IsFreezeUnlocked())
             return;
 
+        if (powerUpActive)
+            EndPowerUp();
+
         if (freezeTimeActive)
             return;
+
+        if (PowerupInventoryManager.Instance.GetFreezeCount() <= 0)
+        {
+            uiFlowController.ShowBuyPowerupPanel(PowerupType.Freeze);
+            return;
+        }
+
+        PowerupInventoryManager.Instance.ConsumeFreeze();
 
         if (GameManagerCycle.Instance.IsSnapshotActive)
         {
             snapshot.ClearSnapshot();
             GameManagerCycle.Instance.SetSnapshotInactive();
         }
-
-        if (powerUpActive)
-            EndPowerUp();
 
         freezeTimeActive = true;
         freezeTimer = freezeTimeDuration;
@@ -165,6 +195,7 @@ public class PowerUpController : MonoBehaviour
         player.EnableUnscaledAnimation(true);
 
         movementController.OnFreezeStart();
+        UpdateCountUI();
     }
 
     void EndFreezeTime()
@@ -181,6 +212,7 @@ public class PowerUpController : MonoBehaviour
         player.EnableUnscaledAnimation(false);
 
         movementController.OnFreezeEnd();
+        UpdatePowerUpUI();
     }
 
     void UpdateFreezeTimer()
@@ -194,5 +226,60 @@ public class PowerUpController : MonoBehaviour
     public bool IsAnyPowerUpActive()
     {
         return powerUpActive || freezeTimeActive;
+    }
+
+    void UpdateCountUI()
+    {
+        int invisionCount = PowerupInventoryManager.Instance.GetInvisionCount();
+
+        if (invisionCount > 0)
+        {
+            invisionCountText.text = invisionCount.ToString();
+            invisionCountText.gameObject.SetActive(true);
+            invisionPlusIcon.SetActive(false);
+        }
+        else
+        {
+            invisionCountText.gameObject.SetActive(false);
+            invisionPlusIcon.SetActive(true);
+        }
+
+        int freezeCount = PowerupInventoryManager.Instance.GetFreezeCount();
+
+        if (freezeCount > 0)
+        {
+            freezeCountText.text = freezeCount.ToString();
+            freezeCountText.gameObject.SetActive(true);
+            freezePlusIcon.SetActive(false);
+        }
+        else
+        {
+            freezeCountText.gameObject.SetActive(false);
+            freezePlusIcon.SetActive(true);
+        }
+
+        int snapshotCount = GameManagerCycle.Instance.GetSnapshotUses();
+
+        if (snapshotCount > 0)
+        {
+            snapshotCountText.text = snapshotCount.ToString();
+            snapshotCountText.gameObject.SetActive(true);
+            snapshotPlusIcon.SetActive(false);
+        }
+        else
+        {
+            snapshotCountText.gameObject.SetActive(false);
+            snapshotPlusIcon.SetActive(true);
+        }
+    }
+    public void OnSnapshotButtonPressed()
+    {
+        if (GameManagerCycle.Instance.GetSnapshotUses() <= 0)
+        {
+            uiFlowController.ShowBuyPowerupPanel(PowerupType.Snapshot);
+            return;
+        }
+
+        GameManagerCycle.Instance.UseManualSnapshot();
     }
 }

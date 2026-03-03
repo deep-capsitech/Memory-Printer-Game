@@ -28,16 +28,6 @@ public class DailyRewardController : MonoBehaviour
 
     private int currentDay; // 1–7
 
-    private DailyRewardData[] rewardTable = new DailyRewardData[]
-{
-    new DailyRewardData { rewardName = "COINS",     amount = 50  },
-    new DailyRewardData { rewardName = "BATTERY",   amount = 1   },
-    new DailyRewardData { rewardName = "COINS",     amount = 75  },
-    new DailyRewardData { rewardName = "FREEZE",    amount = 1   },
-    new DailyRewardData { rewardName = "BATTERIES", amount = 2   },
-    new DailyRewardData { rewardName = "COINS",     amount = 100 },
-    new DailyRewardData { rewardName = "COINS",     amount = 200 }
-};
     void Awake()
     {
         if (Instance != null)
@@ -80,14 +70,10 @@ public class DailyRewardController : MonoBehaviour
     {
         UpdateDailyRewardButton();
     }
-
-    // ----------------------------
-    // DATE CHECK
-    // ----------------------------
     bool HasClaimedToday()
     {
         string lastDate = PlayerPrefs.GetString(DATE_KEY, "");
-        string today = DateTime.UtcNow.ToString("yyyyMMdd");
+        string today = DateTime.Now.ToString("yyyyMMdd");
         return lastDate == today;
     }
 
@@ -95,14 +81,12 @@ public class DailyRewardController : MonoBehaviour
     {
         return !HasClaimedToday();
     }
-
     public bool HasClaimedTodayPublic()
     {
         string lastDate = PlayerPrefs.GetString(DATE_KEY, "");
-        string today = DateTime.UtcNow.ToString("yyyyMMdd");
+        string today = DateTime.Now.ToString("yyyyMMdd");
         return lastDate == today;
     }
-
     // ----------------------------
     // AUTO POPUP LOGIC
     // ----------------------------
@@ -112,7 +96,7 @@ public class DailyRewardController : MonoBehaviour
             return false;
 
         string lastPopupDate = PlayerPrefs.GetString(DAILY_POPUP_DATE, "");
-        string today = DateTime.UtcNow.ToString("yyyyMMdd");
+        string today = DateTime.Now.ToString("yyyyMMdd");
 
         if (lastPopupDate == today)
             return false;
@@ -122,71 +106,30 @@ public class DailyRewardController : MonoBehaviour
 
         return true;
     }
-
-    // ----------------------------
-    // CLAIM REWARD
-    // ----------------------------
-    //public void ClaimReward()
-    //{
-    //    GiveRewardForDay(currentDay);
-
-    //    string today = DateTime.UtcNow.ToString("yyyyMMdd");
-    //    PlayerPrefs.SetString(DATE_KEY, today);
-
-    //    currentDay++;
-    //    if (currentDay > 7)
-    //        currentDay = 1;
-
-    //    PlayerPrefs.SetInt(DAY_KEY, currentDay);
-    //    PlayerPrefs.Save();
-
-    //    UpdateDailyRewardButton();
-    //}
     public void ClaimReward()
     {
         if (!CanShowDailyReward())
             return;
 
-        GiveRewardForDay(currentDay);
+        DailyReward reward = GetRewardForDay(currentDay);
 
-        string today = DateTime.UtcNow.ToString("yyyyMMdd");
+        GiveReward(reward);
+
+        // Day 7 Bonus
+        if (currentDay == 7)
+        {
+            GiveDaySevenBonus();
+        }
+
+        string today = DateTime.Now.ToString("yyyyMMdd");
         PlayerPrefs.SetString(DATE_KEY, today);
 
         currentDay++;
-
         if (currentDay > 7)
             currentDay = 1;
 
         PlayerPrefs.SetInt(DAY_KEY, currentDay);
         PlayerPrefs.Save();
-    }
-    // ----------------------------
-    // REWARD TABLE
-    // ----------------------------
-    void GiveRewardForDay(int day)
-    {
-        int index = day - 1;
-
-        if (index < 0 || index >= rewardTable.Length)
-            return;
-
-        var reward = rewardTable[index];
-
-        switch (reward.rewardName)
-        {
-            case "COINS":
-                GameEconomyManager.Instance.AddCoins(reward.amount);
-                break;
-
-            case "BATTERY":
-            case "BATTERIES":
-                BatteryManager.Instance.AddBatteryInstant(reward.amount);
-                break;
-
-            case "FREEZE":
-                // future powerup reward
-                break;
-        }
     }
 
     // ----------------------------
@@ -222,35 +165,105 @@ public class DailyRewardController : MonoBehaviour
     {
         return currentDay;
     }
-
-    public int GetRewardAmount(int day)
-    {
-        int index = day - 1;
-
-        if (index < 0 || index >= rewardTable.Length)
-            return 0;
-
-        return rewardTable[index].amount;
-    }
-
-    public string GetRewardName(int day)
-    {
-        int index = day - 1;
-
-        if (index < 0 || index >= rewardTable.Length)
-            return "";
-
-        return rewardTable[index].rewardName;
-    }
-
     int GetDaysDifference(string lastDateString)
     {
         if (string.IsNullOrEmpty(lastDateString))
             return 0;
 
         DateTime lastDate = DateTime.ParseExact(lastDateString, "yyyyMMdd", null);
-        DateTime today = DateTime.UtcNow.Date;
+        DateTime today = DateTime.Now.Date;
 
         return (today - lastDate).Days;
+    }
+    public enum DailyRewardType
+    {
+        Snapshot,
+        Invision,
+        Freeze,
+        Coins
+    }
+
+    public struct DailyReward
+    {
+        public DailyRewardType type;
+        public int amount;
+
+        public DailyReward(DailyRewardType t, int a)
+        {
+            type = t;
+            amount = a;
+        }
+    }
+    public DailyReward GetRewardForDay(int day)
+    {
+        int world = PlayerPrefs.GetInt("SelectedWorld", 1);
+
+        switch (day)
+        {
+            case 1:
+                return new DailyReward(DailyRewardType.Snapshot, 1);
+
+            case 2:
+                return new DailyReward(DailyRewardType.Coins, 50);
+
+            case 3:
+                return new DailyReward(DailyRewardType.Snapshot, 1);
+
+            case 4:
+                if (world >= 2)
+                    return new DailyReward(DailyRewardType.Invision, 1);
+                else
+                    return new DailyReward(DailyRewardType.Snapshot, 1);
+
+            case 5:
+                return new DailyReward(DailyRewardType.Coins, 100);
+
+            case 6:
+                return new DailyReward(DailyRewardType.Snapshot, 1);
+
+            case 7:
+                if (world >= 3)
+                    return new DailyReward(DailyRewardType.Freeze, 1);
+                else if (world >= 2)
+                    return new DailyReward(DailyRewardType.Invision, 1);
+                else
+                    return new DailyReward(DailyRewardType.Snapshot, 2);
+
+            default:
+                return new DailyReward(DailyRewardType.Coins, 50);
+        }
+    }
+    void GiveReward(DailyReward reward)
+    {
+        switch (reward.type)
+        {
+            case DailyRewardType.Snapshot:
+                for (int i = 0; i < reward.amount; i++)
+                    GameManagerCycle.Instance.AddSnapshotUse();
+                break;
+
+            case DailyRewardType.Invision:
+                PowerupInventoryManager.Instance.AddInvision(reward.amount);
+                break;
+
+            case DailyRewardType.Freeze:
+                PowerupInventoryManager.Instance.AddFreeze(reward.amount);
+                break;
+
+            case DailyRewardType.Coins:
+                GameEconomyManager.Instance.AddCoins(reward.amount);
+                break;
+        }
+
+        GameManagerCycle.Instance.powerUpController.UpdatePowerUpUI();
+    }
+    void GiveDaySevenBonus()
+    {
+        int bonusCoins = 200;
+        GameEconomyManager.Instance.AddCoins(bonusCoins);
+    }
+    public void GiveExtraReward(DailyReward reward)
+    {
+        GiveReward(reward);
     }
 }
