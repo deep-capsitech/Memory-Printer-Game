@@ -4,9 +4,12 @@ public class SettingController : MonoBehaviour
 {
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject infoPanel;
-
+    [SerializeField] private GameObject menuPanel;
     public void OpenSettings()
     {
+        if(menuPanel != null)
+            menuPanel.SetActive(false);
+
         if (settingsPanel != null)
             settingsPanel.SetActive(true);
 
@@ -17,6 +20,7 @@ public class SettingController : MonoBehaviour
     public void CloseSettings()
     {
         settingsPanel.SetActive(false);
+        menuPanel.SetActive(true);
     }
 
     public void OpenInfo()
