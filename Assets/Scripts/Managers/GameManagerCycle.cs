@@ -383,6 +383,11 @@ public class GameManagerCycle : MonoBehaviour
 
         if (mapTimer <= 0)
         {
+            player.SnapToTargetTile();
+            player.StopMovementImmediately();
+            player.ForceStopAnimation();
+            player.canMove = false;
+
             layoutIndex++;
 
             JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);

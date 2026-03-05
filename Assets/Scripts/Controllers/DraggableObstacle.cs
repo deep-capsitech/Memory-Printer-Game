@@ -8,10 +8,14 @@ public class DraggableObstacle : MonoBehaviour
     private float yOffset;
 
     private TileGrid grid;
+    private MovingObstacle movingObstacle;
+    private ObstacleMovementController movementController;
 
     void Start()
     {
         grid = FindAnyObjectByType<TileGrid>();
+        movementController = FindAnyObjectByType<ObstacleMovementController>();
+        movingObstacle = GetComponent<MovingObstacle>();
         yOffset = transform.position.y;
     }
 
@@ -86,5 +90,13 @@ public class DraggableObstacle : MonoBehaviour
             yOffset,
             snappedPos.z
         );
+        if (movingObstacle != null)
+        {
+            movingObstacle.isLockedForLayout = true;
+            if (movementController != null && movingObstacle != null)
+            {
+                movementController.RemoveFromMovingList(movingObstacle);
+            }
+        }
     }
 }

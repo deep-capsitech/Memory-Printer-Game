@@ -203,6 +203,14 @@ public class PlayerController : MonoBehaviour
         anim.SetTrigger("WinJump");
     }
 
+    public void ForceStopAnimation()
+    {
+        isMoving = false;
+        holdUp = holdDown = holdLeft = holdRight = false;
+
+        if (anim != null)
+            anim.SetBool("isWalking", false);
+    }
     public void ResetPosition()
     {
         transform.position = startPos;
@@ -225,6 +233,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SnapToTargetTile()
+    {
+        if (isMoving)
+        {
+            transform.position = targetPos;
+            lastSafePosition = targetPos;
+            isMoving = false;
+
+            if (anim != null)
+                anim.SetBool("isWalking", false);
+        }
+    }
     void OnTriggerEnter(Collider other)
     {
         if (GameManagerCycle.Instance == null) return;
