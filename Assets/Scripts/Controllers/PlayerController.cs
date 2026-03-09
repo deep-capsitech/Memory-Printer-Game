@@ -101,7 +101,6 @@ public class PlayerController : MonoBehaviour
 
             isMoving = false;
             anim.SetBool("isWalking", false);
-            CheckObstacleCrossed();
         }
     }
     public void StopMovementImmediately()
@@ -132,12 +131,6 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer(Vector3 dir)
     {
-        if (TutorialManager.Instance != null)
-        {
-            TutorialManager.Instance.OnMovementButtonPressed();
-        }
-
-
         if (!canMove || isMoving) return;
 
         Vector3 nextPos = transform.position + dir;
@@ -265,53 +258,20 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Door"))
         {
             SoundManager.Instance.PlayWin();
-            if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
-            {
-                TutorialManager.Instance.OnDoorReached();
-            }
             GameManagerCycle.Instance.PlayerReachedDoor();
         }
         else if (other.CompareTag("Booster"))
         {
             GameManagerCycle.Instance.BoosterCollected();
-            if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
-            {
-                TutorialManager.Instance.OnBoosterCollected();
-            }
             Destroy(other.gameObject);
         }
         if (other.CompareTag("Obstacle"))
         {
-            if (freezeMode)
-                return;
             SoundManager.Instance.PlayDeath();
             GameManagerCycle.Instance.PlayerHitObstacle();
         }
     }
-
-    void CheckObstacleCrossed()
-    {
-        if (!freezeMode) return;
-
-        Collider[] hits = Physics.OverlapSphere(transform.position, 1.2f);
-
-        foreach (var hit in hits)
-        {
-            if (hit.CompareTag("Obstacle"))
-            {
-                Vector3 dirToObstacle = hit.transform.position - transform.position;
-
-                // obstacle player ke piche reh gaya
-                if (Vector3.Dot(transform.forward, dirToObstacle) < 0)
-                {
-                    if (TutorialManager.Instance != null)
-                    {
-                        TutorialManager.Instance.OnObstacleCrossed();
-                    }
-                }
-            }
-        }
-    }
+     
     public void ReviveToLastSafeTile()
     {
         transform.position = lastSafePosition;
