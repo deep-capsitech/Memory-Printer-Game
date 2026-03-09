@@ -15,7 +15,7 @@ public class LevelGenerator : MonoBehaviour
     public float obstacleYOffset = 0.6f;
     public float boosterYOffset = 0.6f;
 
-    public float boosterSpawnDelay = 5f;
+    public float boosterSpawnDelay = 10f;
     public float boosterLifeTime = 5f;
 
     JsonLayout currentLayout;
@@ -33,7 +33,7 @@ public class LevelGenerator : MonoBehaviour
             Debug.LogError("TileGrid is NOT assigned");
             return;
         }
-
+        StopAllCoroutines();
         DestroyAllObstacles();
         DestroyBooster();
 
@@ -74,23 +74,27 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
+        bool tutorialCompleted = PlayerPrefs.GetInt("TutorialDone", 0) == 1;
+
         // Spawn Booster
         //StartCoroutine(SpawnBoosterAfterDelay());
         // Spawn Booster ONLY if unlocked (Level 21+)
-        if (GameManagerCycle.Instance != null &&
-            GameManagerCycle.Instance.CurrentLevelNumber >= 21)
+        if ((levelNumber == 1 && !tutorialCompleted) || levelNumber >= 21)
         {
             StartCoroutine(SpawnBoosterAfterDelay());
         }
     }
 
-
     IEnumerator SpawnBoosterAfterDelay()
     {
         yield return new WaitForSeconds(boosterSpawnDelay);
-
+        SpawnBoosterNow();
+    }
+   
+    public void SpawnBoosterNow()
+    {
         if (currentLayout == null || currentLayout.booster == null)
-            yield break;
+            return;
 
         Vector3 boosterPos = tileGrid.GetTileCenter(
             currentLayout.booster.tileX,
@@ -105,9 +109,19 @@ public class LevelGenerator : MonoBehaviour
             boosterParent
         );
 
-        Destroy(booster, boosterLifeTime);
-    }
+        bool tutorialActive =
+            TutorialManager.Instance != null &&
+            TutorialManager.Instance.isTutorialActive;
 
+        if (tutorialActive)
+        {
+            TutorialManager.Instance.OnBoosterAppeared();
+        }
+        else
+        {
+            Destroy(booster, boosterLifeTime);
+        }
+    }
     public void DestroyAllObstacles()
     {
         foreach (Transform t in obstaclesParent)

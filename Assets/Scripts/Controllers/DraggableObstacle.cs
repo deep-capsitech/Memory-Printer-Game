@@ -98,5 +98,10 @@ public class DraggableObstacle : MonoBehaviour
                 movementController.RemoveFromMovingList(movingObstacle);
             }
         }
+
+        if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
+        {
+            TutorialManager.Instance.OnObstacleDragged();
+        }
     }
 }
