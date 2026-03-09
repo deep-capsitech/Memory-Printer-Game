@@ -127,12 +127,6 @@ MonoBehaviour:
   moveSpeed: 2
   defaultMat: {fileID: 2100000, guid: 4e1126fd81a0f2646b47a4a83c4b3756, type: 2}
   glowMat: {fileID: 2100000, guid: a82e8396bb7dd104e8f8f169cce8c653, type: 2}
-  tileSize: 1.2
-  minBorderIndex: 1
-  maxBorderIndex: 8
-  tileX: 0
-  tileZ: 0
-  isLockedForLayout: 0
 --- !u!114 &4963914865036842516
 MonoBehaviour:
   m_ObjectHideFlags: 0
