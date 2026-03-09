@@ -57,17 +57,28 @@ public class PowerUpController : MonoBehaviour
 
     public bool IsInvisionUnlocked()
     {
+        if (IsTutorialLevel())
+            return true;
         return GetCurrentWorld() >= 2;
     }
 
     public bool IsFreezeUnlocked()
     {
+        if (IsTutorialLevel())
+            return true;
         return GetCurrentWorld() >= 3;
     }
 
     public bool IsBoosterUnlocked()
     {
+        if (IsTutorialLevel())
+            return true;
         return GetCurrentWorld() >= 3;
+    }
+
+    bool IsTutorialLevel()
+    {
+        return GameManagerCycle.Instance.levelIndex == 1 && PlayerPrefs.GetInt("TutorialDone", 0) == 0;
     }
     public void UpdatePowerUpUI()
     {
@@ -152,10 +163,20 @@ public class PowerUpController : MonoBehaviour
 
     void UpdatePowerUpTimer()
     {
+        if (IsTutorialLevel())
+            return;
         powerUpTimer -= Time.unscaledDeltaTime;
 
         if (powerUpTimer <= 0f)
             EndPowerUp();
+    }
+
+    public void ForceEndPowerUp()
+    {
+        if (powerUpActive)
+        {
+            EndPowerUp();
+        }
     }
 
     public void ActivateFreezeTime()
@@ -217,12 +238,21 @@ public class PowerUpController : MonoBehaviour
 
     void UpdateFreezeTimer()
     {
+        if (IsTutorialLevel())
+            return;
         freezeTimer -= Time.unscaledDeltaTime;
 
         if (freezeTimer <= 0f)
             EndFreezeTime();
     }
 
+    public void EndFreezeFromTutorial()
+    {
+        if (freezeTimeActive)
+        {
+            EndFreezeTime();
+        }
+    }
     public bool IsAnyPowerUpActive()
     {
         return powerUpActive || freezeTimeActive;

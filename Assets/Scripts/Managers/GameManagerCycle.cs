@@ -43,7 +43,7 @@ public class GameManagerCycle : MonoBehaviour
     [Header("Level Unlock System")]
     public int totalLevels = 50;
 
-    private int levelIndex = 0;
+    public int levelIndex = 0;
     private int layoutIndex = 0;
 
     private float mapTimer;
@@ -56,8 +56,11 @@ public class GameManagerCycle : MonoBehaviour
 
     private WorldData pendingUnlockedWorld;
 
+    private bool isTutorial;
+
     public bool IsSnapshotActive => snapshotActive;
 
+    private const float TUTORIAL_TIME = 30f;
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -77,6 +80,7 @@ public class GameManagerCycle : MonoBehaviour
             PlayerPrefs.SetInt(SNAPSHOT_INIT_KEY, 1);
             PlayerPrefs.Save();
         }
+        isTutorial = PlayerPrefs.GetInt("TutorialDone", 0) == 0;
         if (PlayerPrefs.GetInt("WorldUnlocked_1", 0) == 0)
         {
             PlayerPrefs.SetInt("WorldUnlocked_1", 1);
@@ -96,6 +100,7 @@ public class GameManagerCycle : MonoBehaviour
             uiFlowController.UpdateHUD(HUDVisibilityController.UIState.Menu);
             return;
         }
+        CheckTutorial();
     }
 
     void Update()
@@ -106,6 +111,12 @@ public class GameManagerCycle : MonoBehaviour
             UpdateSnapshotTimer();
 
         UpdateMapTimer();
+    }
+
+    void CheckTutorial()
+    {
+        // Tutorial runs only first time
+        isTutorial = PlayerPrefs.GetInt("TutorialDone", 0) == 0;
     }
 
     public void UpdatePlayerMovement()
@@ -164,8 +175,21 @@ public class GameManagerCycle : MonoBehaviour
 
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
 
-        levelTimeController.StartTimer(level.levelTime);
-        mapTimer = level.mapChangeTime;
+        //levelTimeController.StartTimer(level.levelTime);
+        //mapTimer = level.mapChangeTime;
+        //snapshotTimer = level.snapshotTime;
+
+        if (isTutorial && levelIndex == 1)
+        {
+            levelTimeController.StartTimer(TUTORIAL_TIME);
+            mapTimer = TUTORIAL_TIME;
+        }
+        else
+        {
+            levelTimeController.StartTimer(level.levelTime);
+            mapTimer = level.mapChangeTime;
+        }
+
         snapshotTimer = level.snapshotTime;
 
         layoutIndex = 0;
@@ -187,6 +211,12 @@ public class GameManagerCycle : MonoBehaviour
         UpdatePlayerMovement();
         StartCoroutine(StartSnapshotNextFrame());
         powerUpController.UpdatePowerUpUI();
+
+        //for tutorial
+        if (levelIndex == 1)
+        {
+            TutorialManager.Instance.StartTutorial();
+        }
     }
 
     public void PauseGame()
@@ -347,6 +377,11 @@ public class GameManagerCycle : MonoBehaviour
             powerUpController.UpdatePowerUpUI();
 
             UpdatePlayerMovement();
+
+            if (levelIndex == 1)
+            {
+                TutorialManager.Instance.OnSnapshotFinished();
+            }
         }
     }
 
@@ -383,6 +418,13 @@ public class GameManagerCycle : MonoBehaviour
 
         if (mapTimer <= 0)
         {
+            if (isTutorial && levelIndex == 1)
+            {
+                mapTimer = TUTORIAL_TIME;
+                mapTimerText.text = mapTimer.ToString("0");
+                return;
+            }
+
             player.SnapToTargetTile();
             player.StopMovementImmediately();
             player.ForceStopAnimation();
@@ -411,6 +453,10 @@ public class GameManagerCycle : MonoBehaviour
     {
         generator.DestroyAllObstacles();
         generator.DestroyBooster();
+        if (TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.OnBoosterCollected();
+        }
     }
 
     public void RevivePlayer()
@@ -514,5 +560,9 @@ public class GameManagerCycle : MonoBehaviour
         PlayerPrefs.SetInt(SNAPSHOT_KEY, count - 1);
         PlayerPrefs.Save();
         return true;
+    }
+    public void CompleteTutorial()
+    {
+        isTutorial = false;
     }
 }
