@@ -78,23 +78,26 @@ public class BuyPowerupPanelController : MonoBehaviour
 
     public void OnWatchAd()
     {
-        switch (currentType)
+        AdManager.Instance.ShowRewarded(() =>
         {
-            case PowerupType.Snapshot:
-                GameManagerCycle.Instance.AddSnapshotUse();
-                break;
+            switch (currentType)
+            {
+                case PowerupType.Snapshot:
+                    GameManagerCycle.Instance.AddSnapshotUse();
+                    break;
 
-            case PowerupType.Invision:
-                PowerupInventoryManager.Instance.RefillViaAdInvision();
-                break;
+                case PowerupType.Invision:
+                    PowerupInventoryManager.Instance.RefillViaAdInvision();
+                    break;
 
-            case PowerupType.Freeze:
-                PowerupInventoryManager.Instance.RefillViaAdFreeze();
-                break;
-        }
+                case PowerupType.Freeze:
+                    PowerupInventoryManager.Instance.RefillViaAdFreeze();
+                    break;
+            }
 
-        Close();
-        GameManagerCycle.Instance.powerUpController.UpdatePowerUpUI();
+            Close();
+            GameManagerCycle.Instance.powerUpController.UpdatePowerUpUI();
+        });
     }
 
     public void OnClose()

@@ -56,9 +56,12 @@ public class NoBatteryPanelController : MonoBehaviour
     // 🔥 WATCH AD → RETURN TO PREVIOUS PANEL
     void OnWatchAdClicked()
     {
-        BatteryManager.Instance.AddBatteryInstant(1);
+        AdManager.Instance.ShowRewarded(() =>
+        {
+            BatteryManager.Instance.AddBatteryInstant(1);
 
-        GameManagerCycle.Instance.uiFlowController.ReturnFromNoBatteryPanel();
+            GameManagerCycle.Instance.uiFlowController.ReturnFromNoBatteryPanel();
+        });
     }
 
     void UpdateButtonStates()

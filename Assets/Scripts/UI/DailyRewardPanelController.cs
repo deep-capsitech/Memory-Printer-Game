@@ -140,7 +140,7 @@ public class DailyRewardPanelController : MonoBehaviour
 
         // ---------- BUTTON STATES ----------
         collectButton.interactable = !claimedToday;
-        watchAdButton.interactable = !claimedToday;
+        watchAdButton.interactable = !claimedToday && AdManager.Instance != null;
 
         if (claimedToday)
             collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "CLAIMED";
@@ -188,18 +188,20 @@ public class DailyRewardPanelController : MonoBehaviour
     void OnWatchAdClicked()
     {
         // Simulated ad success
-        DailyRewardController.Instance.ClaimReward();
+        AdManager.Instance.ShowRewarded(() =>
+        {
+            DailyRewardController.Instance.ClaimReward();
 
-        // Give extra reward manually (same as today)
-        int day = DailyRewardController.Instance.GetCurrentDay() - 1;
-        if (day <= 0)
-            day = 7;
+            int day = DailyRewardController.Instance.GetCurrentDay() - 1;
+            if (day <= 0)
+                day = 7;
 
-        var reward = DailyRewardController.Instance.GetRewardForDay(day);
-        DailyRewardController.Instance.GiveExtraReward(reward);
+            var reward = DailyRewardController.Instance.GetRewardForDay(day);
+            DailyRewardController.Instance.GiveExtraReward(reward);
 
-        RefreshUI();
-        ClosePanel();
+            RefreshUI();
+            ClosePanel();
+        });
     }
     void OnCloseClicked()
     {

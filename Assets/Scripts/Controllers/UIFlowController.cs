@@ -151,7 +151,8 @@ public class UIFlowController : MonoBehaviour
         newWorldPanel.SetActive(true);
 
         newWorldNameText.text = world.worldName.ToUpper();
-        newWorldQuestionText.text = "Do you want to go to this world now?";
+        newWorldQuestionText.text = $"Do you want to go to {world.worldName}?";
+        //newWorldQuestionText.text = "Do you want to go to this world now?";
     }
     public void ShowLevelComplete()
     {
