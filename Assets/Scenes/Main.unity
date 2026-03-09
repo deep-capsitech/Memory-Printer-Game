@@ -13950,10 +13950,10 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 4096
-  upButton: {fileID: 359241676}
-  downButton: {fileID: 150398651}
-  leftButton: {fileID: 2098824632}
-  rightButton: {fileID: 2049948285}
+  upButton: {fileID: 0}
+  downButton: {fileID: 0}
+  leftButton: {fileID: 0}
+  rightButton: {fileID: 0}
 --- !u!65 &959374381
 BoxCollider:
   m_ObjectHideFlags: 0
