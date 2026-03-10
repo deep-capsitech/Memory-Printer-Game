@@ -50,15 +50,18 @@ public class NoBatteryPanelController : MonoBehaviour
         GameEconomyManager.Instance.SpendCoins(batteryCost);
         BatteryManager.Instance.AddBatteryInstant(1);
 
-        GameManagerCycle.Instance.ReturnFromNoBatteryPanel();
+        GameManagerCycle.Instance.uiFlowController.ReturnFromNoBatteryPanel();
     }
 
     // 🔥 WATCH AD → RETURN TO PREVIOUS PANEL
     void OnWatchAdClicked()
     {
-        BatteryManager.Instance.AddBatteryInstant(1);
+        AdManager.Instance.ShowRewarded(() =>
+        {
+            BatteryManager.Instance.AddBatteryInstant(1);
 
-        GameManagerCycle.Instance.ReturnFromNoBatteryPanel();
+            GameManagerCycle.Instance.uiFlowController.ReturnFromNoBatteryPanel();
+        });
     }
 
     void UpdateButtonStates()

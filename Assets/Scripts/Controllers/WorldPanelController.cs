@@ -15,7 +15,7 @@ public class WorldPanelController : MonoBehaviour
         int totalStars = PlayerPrefs.GetInt("TotalStar", 0);
         List<WorldData> worlds = WorldDatabase.Instance.GetWorlds();
 
-        for (int i = 0; i < worldCards.Count; i++)
+        for (int i = 0; i < worldCards.Count && i < worlds.Count; i++)
         {
             worldCards[i].Setup(worlds[i], totalStars);
         }
@@ -23,6 +23,6 @@ public class WorldPanelController : MonoBehaviour
 
     public void OnBackButtonClicked()
     {
-        GameManagerCycle.Instance.ShowMenu();
+        GameManagerCycle.Instance.uiFlowController.ShowMenu();
     }
 }

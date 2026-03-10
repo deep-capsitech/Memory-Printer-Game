@@ -1,7 +1,7 @@
 
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -37,6 +37,12 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask wallLayer;
     public LayerMask doorLayer;
+
+    [Header("Mobile Buttons")]
+    public Button upButton;
+    public Button downButton;
+    public Button leftButton;
+    public Button rightButton;
 
     void Start()
     {
@@ -97,7 +103,14 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isWalking", false);
         }
     }
-
+    public void StopMovementImmediately()
+    {
+        if (TryGetComponent<Rigidbody2D>(out var rb))
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+    }
     void HandleMobileHoldMovement()
     {
         if (!holdUp && !holdDown && !holdLeft && !holdRight) return;
@@ -160,6 +173,7 @@ public class PlayerController : MonoBehaviour
 
         anim.SetBool("isWalking", true);
         transform.forward = dir;
+        SoundManager.Instance.PlayWalk();
     }
 
     public void EnableUnscaledAnimation(bool enable)
@@ -195,6 +209,14 @@ public class PlayerController : MonoBehaviour
         anim.SetTrigger("WinJump");
     }
 
+    public void ForceStopAnimation()
+    {
+        isMoving = false;
+        holdUp = holdDown = holdLeft = holdRight = false;
+
+        if (anim != null)
+            anim.SetBool("isWalking", false);
+    }
     public void ResetPosition()
     {
         transform.position = startPos;
@@ -217,35 +239,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SnapToTargetTile()
+    {
+        if (isMoving)
+        {
+            transform.position = targetPos;
+            lastSafePosition = targetPos;
+            isMoving = false;
+
+            if (anim != null)
+                anim.SetBool("isWalking", false);
+        }
+    }
     void OnTriggerEnter(Collider other)
     {
-        //GameManagerCycle gm = FindAnyObjectByType<GameManagerCycle>();
         if (GameManagerCycle.Instance == null) return;
 
-        //if (other.CompareTag("Obstacle"))
-        //    GameManagerCycle.Instance.PlayerHitObstacle();
-
         if (other.CompareTag("Door"))
+        {
+            SoundManager.Instance.PlayWin();
             GameManagerCycle.Instance.PlayerReachedDoor();
+        }
         else if (other.CompareTag("Booster"))
         {
             GameManagerCycle.Instance.BoosterCollected();
-            Destroy(other.gameObject); // remove booster after use
+            Destroy(other.gameObject);
         }
         if (other.CompareTag("Obstacle"))
         {
+            SoundManager.Instance.PlayDeath();
             GameManagerCycle.Instance.PlayerHitObstacle();
         }
     }
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (GameManagerCycle.Instance == null) return;
-
-    //    if (collision.gameObject.CompareTag("Obstacle"))
-    //        GameManagerCycle.Instance.PlayerHitObstacle();
-    //}
-
      
     public void ReviveToLastSafeTile()
     {
@@ -256,4 +281,11 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isWalking", false);
     }
 
+    public void SetControlInteraction(bool enable)
+    {
+        if (upButton) upButton.interactable = enable;
+        if (downButton) downButton.interactable = enable;
+        if (leftButton) leftButton.interactable = enable;
+        if (rightButton) rightButton.interactable = enable;
+    }
 }
