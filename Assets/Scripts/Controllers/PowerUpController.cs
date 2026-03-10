@@ -34,9 +34,11 @@ public class PowerUpController : MonoBehaviour
 
     public TextMeshProUGUI freezeCountText;
     public GameObject freezePlusIcon;
+    public Button snapshotButton;
 
+    [Header("Snapshot UI")]
     public TextMeshProUGUI snapshotCountText;
-    public GameObject snapshotPlusIcon;
+    public GameObject snapshotAdIcon;
 
     void Update()
     {
@@ -132,7 +134,7 @@ public class PowerUpController : MonoBehaviour
 
         snapshot.TakeSnapshot();
         Time.timeScale = 0f;
-
+        AdManager.Instance.HideBanner();
         uiFlowController.ShowPowerUpMode();
         CameraManager.Instance.EnableTopCamera();
         generator.EnableDragMode(true);
@@ -151,7 +153,7 @@ public class PowerUpController : MonoBehaviour
         GameManagerCycle.Instance.SetSnapshotInactive();
 
         Time.timeScale = 1f;
-
+        AdManager.Instance.ShowBanner();
         uiFlowController.ShowGameplay();
         CameraManager.Instance.EnableMainCamera();
         generator.EnableDragMode(false);
@@ -260,56 +262,89 @@ public class PowerUpController : MonoBehaviour
 
     void UpdateCountUI()
     {
-        int invisionCount = PowerupInventoryManager.Instance.GetInvisionCount();
+        bool invisionUnlocked = IsInvisionUnlocked();
+        bool freezeUnlocked = IsFreezeUnlocked();
 
-        if (invisionCount > 0)
+        // -------- INVISION --------
+        if (!invisionUnlocked)
         {
-            invisionCountText.text = invisionCount.ToString();
-            invisionCountText.gameObject.SetActive(true);
+            invisionCountText.gameObject.SetActive(false);
             invisionPlusIcon.SetActive(false);
         }
         else
         {
-            invisionCountText.gameObject.SetActive(false);
-            invisionPlusIcon.SetActive(true);
+            int invisionCount = PowerupInventoryManager.Instance.GetInvisionCount();
+
+            if (invisionCount > 0)
+            {
+                invisionCountText.text = invisionCount.ToString();
+                invisionCountText.gameObject.SetActive(true);
+                invisionPlusIcon.SetActive(false);
+            }
+            else
+            {
+                invisionCountText.gameObject.SetActive(false);
+                invisionPlusIcon.SetActive(true);
+            }
         }
 
-        int freezeCount = PowerupInventoryManager.Instance.GetFreezeCount();
-
-        if (freezeCount > 0)
+        // -------- FREEZE --------
+        if (!freezeUnlocked)
         {
-            freezeCountText.text = freezeCount.ToString();
-            freezeCountText.gameObject.SetActive(true);
+            freezeCountText.gameObject.SetActive(false);
             freezePlusIcon.SetActive(false);
         }
         else
         {
-            freezeCountText.gameObject.SetActive(false);
-            freezePlusIcon.SetActive(true);
+            int freezeCount = PowerupInventoryManager.Instance.GetFreezeCount();
+
+            if (freezeCount > 0)
+            {
+                freezeCountText.text = freezeCount.ToString();
+                freezeCountText.gameObject.SetActive(true);
+                freezePlusIcon.SetActive(false);
+            }
+            else
+            {
+                freezeCountText.gameObject.SetActive(false);
+                freezePlusIcon.SetActive(true);
+            }
         }
 
+        // -------- SNAPSHOT --------
         int snapshotCount = GameManagerCycle.Instance.GetSnapshotUses();
 
         if (snapshotCount > 0)
         {
             snapshotCountText.text = snapshotCount.ToString();
             snapshotCountText.gameObject.SetActive(true);
-            snapshotPlusIcon.SetActive(false);
+            snapshotAdIcon.SetActive(false);
         }
         else
         {
             snapshotCountText.gameObject.SetActive(false);
-            snapshotPlusIcon.SetActive(true);
+            snapshotAdIcon.SetActive(true);
         }
     }
     public void OnSnapshotButtonPressed()
     {
-        if (GameManagerCycle.Instance.GetSnapshotUses() <= 0)
+        if (GameManagerCycle.Instance.IsSnapshotActive)
+            return;
+
+        int snapshotCount = GameManagerCycle.Instance.GetSnapshotUses();
+
+        if (snapshotCount <= 0)
         {
-            uiFlowController.ShowBuyPowerupPanel(PowerupType.Snapshot);
+            AdManager.Instance.ShowRewarded(() =>
+            {
+                GameManagerCycle.Instance.AddSnapshotUse();
+                UpdatePowerUpUI();
+            });
+
             return;
         }
 
         GameManagerCycle.Instance.UseManualSnapshot();
+        UpdatePowerUpUI();
     }
 }

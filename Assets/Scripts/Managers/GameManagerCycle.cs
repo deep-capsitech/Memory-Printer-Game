@@ -50,7 +50,7 @@ public class GameManagerCycle : MonoBehaviour
     private float snapshotTimer;
 
     private bool snapshotActive;
-
+    private int levelsSinceLastAd = 0;
     private const string SNAPSHOT_KEY = "SNAPSHOT_COUNT";
     private const string SNAPSHOT_INIT_KEY = "SNAPSHOT_INITIALIZED";
 
@@ -260,6 +260,28 @@ public class GameManagerCycle : MonoBehaviour
         coinsEarnedText.text = "COINS EARNED :    " + earnedCoins;
 
         Debug.Log("Coins Earned: " + earnedCoins);
+        // -------- Interstitial Logic --------
+        if (levelIndex > 10)
+        {
+            levelsSinceLastAd++;
+
+            if (levelsSinceLastAd >= 3)
+            {
+                levelsSinceLastAd = 0;
+                AdManager.Instance.ShowInterstitial();
+            }
+        }
+    }
+
+    public void ShowMenuWithAd()
+    {
+        if (levelIndex > 10)
+        {
+            AdManager.Instance.ShowInterstitial();
+        }
+
+        uiFlowController.ShowMenu();
+        gameStateController.SetState(GameStateController.GameState.Menu);
     }
 
     public void OnNextLevelButton()
@@ -349,7 +371,7 @@ public class GameManagerCycle : MonoBehaviour
     {
         if (snapshotActive || powerUpController.IsAnyPowerUpActive())
             return;
-
+        player.SetControlInteraction(false);
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
         snapshotTimer = level.snapshotTime;
 
@@ -375,7 +397,7 @@ public class GameManagerCycle : MonoBehaviour
 
             movementController.OnSnapshotEnd();
             powerUpController.UpdatePowerUpUI();
-
+            player.SetControlInteraction(true);
             UpdatePlayerMovement();
 
             if (levelIndex == 1)

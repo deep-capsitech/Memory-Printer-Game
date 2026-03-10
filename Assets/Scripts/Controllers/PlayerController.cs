@@ -1,7 +1,7 @@
 
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -38,6 +38,11 @@ public class PlayerController : MonoBehaviour
     public LayerMask wallLayer;
     public LayerMask doorLayer;
 
+    [Header("Mobile Buttons")]
+    public Button upButton;
+    public Button downButton;
+    public Button leftButton;
+    public Button rightButton;
     void Start()
     {
         startPos = transform.position;
@@ -105,6 +110,14 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
         }
+    }
+
+    public void SetControlInteraction(bool enable)
+    {
+        if (upButton) upButton.interactable = enable;
+        if (downButton) downButton.interactable = enable;
+        if (leftButton) leftButton.interactable = enable;
+        if (rightButton) rightButton.interactable = enable;
     }
     void HandleMobileHoldMovement()
     {
