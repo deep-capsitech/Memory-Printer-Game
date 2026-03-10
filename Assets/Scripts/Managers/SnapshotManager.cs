@@ -52,4 +52,24 @@ public class SnapshotManager : MonoBehaviour
         foreach (var tile in tileGrid.tiles)
             tile.SetActive(false);
     }
+
+    public void MoveGhost(Transform original)
+    {
+        for (int i = 0; i < ghosts.Count; i++)
+        {
+            if (ghosts[i] == null) continue;
+
+            // Ghost same index pe hai jaha original obstacle tha
+            if (i < generator.obstaclesParent.childCount)
+            {
+                Transform real = generator.obstaclesParent.GetChild(i);
+
+                if (real == original)
+                {
+                    ghosts[i].transform.position =
+                        original.position + Vector3.up * 0.05f;
+                }
+            }
+        }
+    }
 }
