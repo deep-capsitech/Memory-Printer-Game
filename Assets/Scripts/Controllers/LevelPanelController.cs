@@ -44,6 +44,7 @@ public class LevelPanelController : MonoBehaviour
 
         backButtonImage.color = world.primaryColor;
 
+        // WORLD UNLOCK CHECK
         bool worldUnlocked =
             worldId == 1 ||
             totalStars >= world.starsRequired;
@@ -64,10 +65,13 @@ public class LevelPanelController : MonoBehaviour
             }
             else if (level == startLevel)
             {
+                // First level of unlocked world
                 levelUnlocked = true;
             }
             else
             {
+                // PROFESSIONAL RULE:
+                // Unlock only if PREVIOUS LEVEL WAS WON
                 int previousStars = PlayerPrefs.GetInt("LevelStars" + (level - 1), 0);
                 levelUnlocked = previousStars > 0;
             }
@@ -85,6 +89,6 @@ public class LevelPanelController : MonoBehaviour
 
     public void OnBackClicked()
     {
-        GameManagerCycle.Instance.uiFlowController.OpenWorldLevels();
+        GameManagerCycle.Instance.BackToWorldPanel();
     }
 }

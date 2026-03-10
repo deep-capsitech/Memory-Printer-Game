@@ -40,7 +40,6 @@ public class MovingObstacle : MonoBehaviour
 
     [HideInInspector] public int tileX;
     [HideInInspector] public int tileZ;
-    [HideInInspector] public bool isLockedForLayout = false;
 
     private MoveType currentMoveType = MoveType.None;
 
@@ -134,13 +133,13 @@ public class MovingObstacle : MonoBehaviour
         {
             return;
         }
-        rend.enabled = true;
+
         if (glowMat == null)
         {
             canMove = true;
             return;
         }
-        //rend.enabled = true;
+        rend.enabled = true;
 
         squareStartPos = originalStartPos;
         squareStep = 0;
@@ -188,13 +187,8 @@ public class MovingObstacle : MonoBehaviour
     {
         canMove = false;
 
-        StopAllCoroutines();
-
         if (rend != null && defaultMat != null)
-        {
             rend.material = defaultMat;
-            rend.enabled = false;
-        }
 
     }
 }

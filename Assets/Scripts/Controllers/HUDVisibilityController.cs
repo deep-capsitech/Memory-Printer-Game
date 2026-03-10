@@ -5,7 +5,6 @@ public class HUDVisibilityController : MonoBehaviour
     [Header("HUD Elements")]
     public GameObject batteryBar;
     public GameObject coinPanel;
-    public GameObject settings;
 
     public enum UIState
     {
@@ -17,8 +16,7 @@ public class HUDVisibilityController : MonoBehaviour
         Revive,
         GameOver,
         LevelComplete,
-        NoBattery,
-        BuyPanel
+        NoBattery
     }
     public void UpdateHUD(UIState state)
     {
@@ -32,17 +30,12 @@ public class HUDVisibilityController : MonoBehaviour
         batteryBar.SetActive(showBattery);
 
         bool showCoins =
+            state == UIState.Menu ||
             state == UIState.Level ||
             state == UIState.Revive ||
-            state == UIState.World ||
-            state == UIState.NoBattery ||
-            state == UIState.BuyPanel;
+            state == UIState.NoBattery;
 
         coinPanel.SetActive(showCoins);
-
-        bool setting =
-            state == UIState.Menu;
-        settings.SetActive(setting);
     }
 
 }
