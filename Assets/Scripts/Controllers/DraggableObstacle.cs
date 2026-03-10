@@ -8,10 +8,16 @@ public class DraggableObstacle : MonoBehaviour
     private float yOffset;
 
     private TileGrid grid;
+    private MovingObstacle movingObstacle;
+    private ObstacleMovementController movementController;
+    private SnapshotManager snapshot;
 
     void Start()
     {
         grid = FindAnyObjectByType<TileGrid>();
+        movementController = FindAnyObjectByType<ObstacleMovementController>();
+        movingObstacle = GetComponent<MovingObstacle>();
+        snapshot = FindAnyObjectByType<SnapshotManager>();
         yOffset = transform.position.y;
     }
 
@@ -46,6 +52,10 @@ public class DraggableObstacle : MonoBehaviour
                 yOffset,
                 snap.z
             );
+            if (snapshot != null)
+            {
+                snapshot.MoveGhost(transform);
+            }
         }
     }
 
@@ -86,5 +96,18 @@ public class DraggableObstacle : MonoBehaviour
             yOffset,
             snappedPos.z
         );
+        if (movingObstacle != null)
+        {
+            movingObstacle.isLockedForLayout = true;
+            if (movementController != null && movingObstacle != null)
+            {
+                movementController.RemoveFromMovingList(movingObstacle);
+            }
+        }
+
+        if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
+        {
+            TutorialManager.Instance.OnObstacleDragged();
+        }
     }
 }

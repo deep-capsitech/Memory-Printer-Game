@@ -24,11 +24,27 @@ public class NoBatteryPanelController : MonoBehaviour
         watchAdButton.onClick.AddListener(OnWatchAdClicked);
 
         UpdateButtonStates();
+        if (BatteryManager.Instance.HasBattery())
+        {
+            ClosePanel();
+        }
     }
-
     void Update()
     {
         UpdateTimerUI();
+
+        // Safety check → if battery available close panel
+        if (BatteryManager.Instance.HasBattery())
+        {
+            ClosePanel();
+            return;
+        }
+
+        // Safety check → timer reached zero
+        if (BatteryManager.Instance.GetSecondsUntilNextBattery() <= 0f)
+        {
+            ClosePanel();
+        }
     }
 
     void UpdateTimerUI()
@@ -50,15 +66,17 @@ public class NoBatteryPanelController : MonoBehaviour
         GameEconomyManager.Instance.SpendCoins(batteryCost);
         BatteryManager.Instance.AddBatteryInstant(1);
 
-        GameManagerCycle.Instance.ReturnFromNoBatteryPanel();
+        GameManagerCycle.Instance.uiFlowController.ReturnFromNoBatteryPanel();
     }
 
-    // 🔥 WATCH AD → RETURN TO PREVIOUS PANEL
     void OnWatchAdClicked()
     {
-        BatteryManager.Instance.AddBatteryInstant(1);
+        AdManager.Instance.ShowRewarded(() =>
+        {
+            BatteryManager.Instance.AddBatteryInstant(1);
 
-        GameManagerCycle.Instance.ReturnFromNoBatteryPanel();
+            GameManagerCycle.Instance.uiFlowController.ReturnFromNoBatteryPanel();
+        });
     }
 
     void UpdateButtonStates()
@@ -67,5 +85,11 @@ public class NoBatteryPanelController : MonoBehaviour
 
         buyBatteryButton.interactable = coins >= batteryCost;
         watchAdButton.interactable = true;
+    }
+
+    void ClosePanel()
+    {
+        gameObject.SetActive(false);
+        GameManagerCycle.Instance.uiFlowController.ReturnFromNoBatteryPanel();
     }
 }
