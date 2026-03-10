@@ -238,6 +238,13 @@ public class GameManagerCycle : MonoBehaviour
         if (gameStateController.CurrentState != GameStateController.GameState.Gameplay)
             return;
 
+        StartCoroutine(LevelCompleteDelay());
+    }
+
+    IEnumerator LevelCompleteDelay()
+    {
+        yield return new WaitForSeconds(0.8f); // delay time
+
         OnLevelCompleted();
     }
 
@@ -333,7 +340,7 @@ public class GameManagerCycle : MonoBehaviour
 
     IEnumerator GameOverAfterDeathSequence()
     {
-        yield return new WaitForSeconds(1.6f);
+        yield return new WaitForSeconds(1.5f);
 
         movementController.OnGameOver();
 

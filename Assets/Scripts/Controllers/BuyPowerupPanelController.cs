@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class BuyPowerupPanelController : MonoBehaviour
 {
     [Header("UI")]
-    public TextMeshProUGUI titleText;
     public Image powerupIcon;
     public TextMeshProUGUI costText;
 
@@ -28,14 +27,12 @@ public class BuyPowerupPanelController : MonoBehaviour
         switch (type)
         {
             case PowerupType.Snapshot:
-                titleText.text = "NEED SNAPSHOT?";
                 powerupIcon.sprite = snapshotSprite;
 
                 buyWithCoinsButton.gameObject.SetActive(false); // No coins for snapshot
                 break;
 
             case PowerupType.Invision:
-                titleText.text = "OUT OF INVISION!";
                 powerupIcon.sprite = invisionSprite;
 
                 buyWithCoinsButton.gameObject.SetActive(true);
@@ -43,7 +40,6 @@ public class BuyPowerupPanelController : MonoBehaviour
                 break;
 
             case PowerupType.Freeze:
-                titleText.text = "OUT OF FREEZE TIME!";
                 powerupIcon.sprite = freezeSprite;
 
                 buyWithCoinsButton.gameObject.SetActive(true);

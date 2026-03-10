@@ -48,7 +48,7 @@ public class SnapshotManager : MonoBehaviour
             if (ghosts[i]) Destroy(ghosts[i]);
 
         ghosts.Clear();
-        
+
         foreach (var tile in tileGrid.tiles)
             tile.SetActive(false);
     }

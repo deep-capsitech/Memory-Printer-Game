@@ -19,7 +19,6 @@ public class UIFlowController : MonoBehaviour
     public GameObject levelPanel;
     public GameObject noBatteryPanel;
     public GameObject newWorldPanel;
-    public TextMeshProUGUI newWorldNameText;
     public TextMeshProUGUI newWorldQuestionText;
 
     public GameObject backgroundPanel;
@@ -150,10 +149,7 @@ public class UIFlowController : MonoBehaviour
         DisableAllPanels();
         newWorldPanel.SetActive(true);
 
-       
-        newWorldNameText.text = world.worldName.ToUpper();
         newWorldQuestionText.text = $"Do you want to go to {world.worldName}?";
-        //newWorldQuestionText.text = "Do you want to go to this world now?";
     }
     public void ShowLevelComplete()
     {
