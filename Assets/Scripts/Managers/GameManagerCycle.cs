@@ -76,6 +76,7 @@ public class GameManagerCycle : MonoBehaviour
             PlayerPrefs.SetInt("SelectedWorld", 0);
             PlayerPrefs.SetInt("WorldUnlocked_1", 1);
             PlayerPrefs.SetInt("GameInitialized", 1);
+            PlayerPrefs.SetInt("SkinUnlocked_0", 1);
             PlayerPrefs.SetInt(SNAPSHOT_KEY, 3); // Level 1 initial gift
             PlayerPrefs.SetInt(SNAPSHOT_INIT_KEY, 1);
             PlayerPrefs.Save();

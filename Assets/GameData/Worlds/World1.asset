@@ -17,4 +17,4 @@ MonoBehaviour:
   starsRequired: 0
   primaryColor: {r: 0.22921856, g: 0.5881771, b: 0.9528302, a: 1}
   secondaryColor: {r: 0.10840159, g: 0.44857842, b: 0.7924528, a: 1}
-  panelBackground: {fileID: 897976790, guid: 0ca6cfe1e9fd97745b0d131c85f4d3f1, type: 3}
+  panelBackground: {fileID: 21300000, guid: c5ec08b26e7574942bec3f0462c3b85f, type: 3}

@@ -46,16 +46,18 @@ public class LevelSelector : MonoBehaviour
         for (int i = 0; i < stars.Length; i++)
         {
             stars[i].enabled = true;
+            Color filledColor = new Color(1f, 0.85f, 0f);  // gold
+            Color emptyColor = new Color(0.5f, 0.5f, 0.5f); // gray
 
             if (i < starCount)
             {
                 stars[i].sprite = filledStar;
-                stars[i].color = Color.white;            // filled = normal
+                stars[i].color = filledColor;
             }
             else
             {
                 stars[i].sprite = emptyStar;
-                stars[i].color = world.secondaryColor;  // empty = theme
+                stars[i].color = emptyColor;
             }
         }
 

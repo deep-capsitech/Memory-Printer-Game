@@ -1,6 +1,6 @@
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class LevelTimeController : MonoBehaviour
 {
     [Header("Dependencies")]
@@ -10,11 +10,17 @@ public class LevelTimeController : MonoBehaviour
 
     private float levelTimer;
     private bool isRunning;
-
+    public Image timerRing;
+    private float startDuration;
     public void StartTimer(float duration)
     {
         levelTimer = duration;
+        startDuration = duration;
         isRunning = true;
+
+        if (timerRing != null)
+            timerRing.fillAmount = 0;
+
         UpdateUI();
     }
 
@@ -44,7 +50,16 @@ public class LevelTimeController : MonoBehaviour
 
     void UpdateUI()
     {
-        timerText.text = Mathf.CeilToInt(levelTimer).ToString();
+        int minutes = Mathf.FloorToInt(levelTimer / 60f);
+        int seconds = Mathf.FloorToInt(levelTimer % 60f);
+
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        if (timerRing != null)
+        {
+            float progress = 1f - (levelTimer / startDuration);
+            timerRing.fillAmount = progress;
+        }
     }
 
     public float GetRemainingTime()

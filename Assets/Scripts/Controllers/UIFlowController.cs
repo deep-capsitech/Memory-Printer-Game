@@ -10,6 +10,7 @@ public enum PowerupType
 public class UIFlowController : MonoBehaviour
 {
     [Header("Panels")]
+    public GameObject backgroundPanel;
     public GameObject menuPanel;
     public GameObject gameplayPanel;
     public GameObject pausePanel;
@@ -18,10 +19,10 @@ public class UIFlowController : MonoBehaviour
     public GameObject worldPanel;
     public GameObject levelPanel;
     public GameObject noBatteryPanel;
+    public GameObject shopPanel;
+    public BuyPowerupPanelController buyPowerupPanel;
     public GameObject newWorldPanel;
     public TextMeshProUGUI newWorldQuestionText;
-
-    public GameObject backgroundPanel;
 
     [Header("HUD")]
     public HUDVisibilityController hud;
@@ -29,8 +30,6 @@ public class UIFlowController : MonoBehaviour
     private GameObject _previousPanelBeforeNoBattery;
     
     public DailyRewardController dailyRewardController;
-
-    public BuyPowerupPanelController buyPowerupPanel;
 
     public void DisableAllPanels()
     {
@@ -49,6 +48,9 @@ public class UIFlowController : MonoBehaviour
 
         if (newWorldPanel != null)
             newWorldPanel.SetActive(false);
+
+        if (shopPanel != null)
+            shopPanel.SetActive(false);
 
         backgroundPanel.SetActive(true);
     }
@@ -168,6 +170,15 @@ public class UIFlowController : MonoBehaviour
         DisableAllPanels();
         buyPowerupPanel.gameObject.SetActive(true);
         buyPowerupPanel.Setup(type);
+        UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
+    }
+
+    public void ShowShopPanel()
+    {
+        DisableAllPanels();
+
+        shopPanel.SetActive(true);
+
         UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
     }
 }
