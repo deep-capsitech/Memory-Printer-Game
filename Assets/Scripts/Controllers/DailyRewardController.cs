@@ -18,8 +18,6 @@ public class DailyRewardController : MonoBehaviour
 
     [Header("Daily Reward Button")]
     public Button dailyRewardButton;
-    public TextMeshProUGUI dailyRewardButtonText;
-    public Image dailyRewardButtonIcon;
 
     // PlayerPrefs keys
     private const string DAY_KEY = "DailyRewardDay";
@@ -132,25 +130,9 @@ public class DailyRewardController : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // ----------------------------
-    // UI UPDATE
-    // ----------------------------
     public void UpdateDailyRewardButton()
     {
-        bool canClaim = CanShowDailyReward();
-
         dailyRewardButton.interactable = true;
-
-        if (canClaim)
-        {
-            dailyRewardButtonText.text = "CLAIM";
-            dailyRewardButtonIcon.color = Color.white;
-        }
-        else
-        {
-            dailyRewardButtonText.text = "CLAIMED";
-            dailyRewardButtonIcon.color = Color.white;
-        }
     }
 
     public void OnDailyRewardButtonClicked(UIFlowController uiFlowController)

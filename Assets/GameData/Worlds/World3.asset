@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: World3
   m_EditorClassIdentifier: 
   worldId: 3
-  worldName: World 3
+  worldName: Orange City
   starsRequired: 45
   primaryColor: {r: 1, g: 0.5686275, b: 0, a: 1}
   secondaryColor: {r: 1, g: 0.42745098, b: 0, a: 1}

@@ -21,6 +21,7 @@ public class UIFlowController : MonoBehaviour
     public GameObject noBatteryPanel;
     public GameObject shopPanel;
     public BuyPowerupPanelController buyPowerupPanel;
+    public GameObject claimRewardPanel;
     public GameObject newWorldPanel;
     public TextMeshProUGUI newWorldQuestionText;
 
@@ -51,6 +52,12 @@ public class UIFlowController : MonoBehaviour
 
         if (shopPanel != null)
             shopPanel.SetActive(false);
+
+        if (claimRewardPanel != null)
+            claimRewardPanel.SetActive(false);
+
+        if (dailyRewardController != null && dailyRewardController.dailyRewardPanel != null)
+            dailyRewardController.dailyRewardPanel.SetActive(false);
 
         backgroundPanel.SetActive(true);
     }
@@ -181,4 +188,12 @@ public class UIFlowController : MonoBehaviour
 
         UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
     }
+
+    public void ShowClaimRewardPanel() 
+    { 
+        DisableAllPanels(); 
+        claimRewardPanel.SetActive(true); 
+        UpdateHUD(HUDVisibilityController.UIState.Menu); 
+    }
+
 }

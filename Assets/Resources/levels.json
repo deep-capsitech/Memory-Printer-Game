@@ -4,7 +4,7 @@
       "level": 1,
       "levelTime": 90,
       "mapChangeTime": 30,
-      "snapshotTime": 5,
+      "snapshotTime": 3,
       "layouts": [
         {
           "booster": { "tileX": 5, "tileZ": 7 },
@@ -46,7 +46,7 @@
       "level": 2,
       "levelTime": 90,
       "mapChangeTime": 30,
-      "snapshotTime": 5,
+      "snapshotTime": 3,
       "layouts": [
         {
           "booster": { "tileX": 5, "tileZ": 4 },
@@ -91,7 +91,7 @@
       "level": 3,
       "levelTime": 90,
       "mapChangeTime": 30,
-      "snapshotTime": 5,
+      "snapshotTime": 3,
       "layouts": [
         {
           "booster": { "tileX": 3, "tileZ": 7 },
@@ -138,7 +138,7 @@
   "level": 4,
   "levelTime": 90,
   "mapChangeTime": 30,
-  "snapshotTime": 5,
+  "snapshotTime": 3,
   "layouts": [
     {
       "booster": { "tileX": 3, "tileZ": 5 },
@@ -188,7 +188,7 @@
   "level": 5,
   "levelTime": 90,
   "mapChangeTime": 30,
-  "snapshotTime": 5,
+  "snapshotTime": 3,
   "layouts": [
     {
       "booster": { "tileX": 5, "tileZ": 4 },

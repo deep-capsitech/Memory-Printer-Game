@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: World2
   m_EditorClassIdentifier: 
   worldId: 2
-  worldName: World 2
+  worldName: Green City
   starsRequired: 20
   primaryColor: {r: 0.4627451, g: 1, b: 0.011764706, a: 1}
   secondaryColor: {r: 0.39215687, g: 0.8666667, b: 0.09019608, a: 1}

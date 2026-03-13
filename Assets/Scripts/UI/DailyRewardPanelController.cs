@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,23 +12,26 @@ public class DailyRewardPanelController : MonoBehaviour
 
     [Header("Buttons")]
     public Button collectButton;
-    public Button watchAdButton;
     public Button closeButton;
     [Header("Reward Icons")]
     public Sprite snapshotSprite;
     public Sprite coinSprite;
     public Sprite invisionSprite;
     public Sprite freezeSprite;
+
+    public UIFlowController uiFlowController;
+    public GameObject claimPanel;
+    public Image claimRewardIcon;
+    public Button claimAdButton;
+    public Button claimCloseButton;
+
     void OnEnable()
     {
         RefreshUI();
 
         collectButton.onClick.RemoveAllListeners();
-        watchAdButton.onClick.RemoveAllListeners();
         closeButton.onClick.RemoveAllListeners();
-
         collectButton.onClick.AddListener(OnCollectClicked);
-        watchAdButton.onClick.AddListener(OnWatchAdClicked);
         closeButton.onClick.AddListener(OnCloseClicked);
     }
     void RefreshUI()
@@ -127,8 +129,7 @@ public class DailyRewardPanelController : MonoBehaviour
                 }
                 else if (dayNumber < rawDay)
                 {
-                    // Claimed days dim
-                    bg.color = new Color(1f, 1f, 1f, 0.6f);
+                    bg.color = new Color(0.2f, 1f, 0.3f, 1f); // green
                 }
                 else
                 {
@@ -140,12 +141,11 @@ public class DailyRewardPanelController : MonoBehaviour
 
         // ---------- BUTTON STATES ----------
         collectButton.interactable = !claimedToday;
-        watchAdButton.interactable = !claimedToday && AdManager.Instance != null;
 
         if (claimedToday)
             collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "CLAIMED";
         else
-            collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "COLLECT";
+            collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "CLAIM";
         // ---------- TODAY REWARD TEXT ----------
         int displayDay;
 
@@ -178,30 +178,63 @@ public class DailyRewardPanelController : MonoBehaviour
             todayRewardText.text += " + 200 BONUS COINS";
         }
     }
-
     void OnCollectClicked()
     {
+        int day = DailyRewardController.Instance.GetCurrentDay();
+
+        var reward = DailyRewardController.Instance.GetRewardForDay(day);
+
         DailyRewardController.Instance.ClaimReward();
+
+        ShowClaimPanel(reward);
+
         RefreshUI();
-        ClosePanel();
     }
-    void OnWatchAdClicked()
+
+    void ShowClaimPanel(DailyRewardController.DailyReward reward)
+    {
+        uiFlowController.ShowClaimRewardPanel();
+
+        switch (reward.type)
+        {
+            case DailyRewardController.DailyRewardType.Snapshot:
+                claimRewardIcon.sprite = snapshotSprite;
+                break;
+
+            case DailyRewardController.DailyRewardType.Coins:
+                claimRewardIcon.sprite = coinSprite;
+                break;
+
+            case DailyRewardController.DailyRewardType.Invision:
+                claimRewardIcon.sprite = invisionSprite;
+                break;
+
+            case DailyRewardController.DailyRewardType.Freeze:
+                claimRewardIcon.sprite = freezeSprite;
+                break;
+        }
+
+        claimAdButton.onClick.RemoveAllListeners();
+        claimAdButton.onClick.AddListener(() => WatchAdDouble(reward));
+
+        claimCloseButton.onClick.RemoveAllListeners();
+        claimCloseButton.onClick.AddListener(CloseClaimPanel);
+    }
+
+    void WatchAdDouble(DailyRewardController.DailyReward reward)
     {
         AdManager.Instance.ShowRewarded(() =>
         {
-            DailyRewardController.Instance.ClaimReward();
-
-            int day = DailyRewardController.Instance.GetCurrentDay() - 1;
-            if (day <= 0)
-                day = 7;
-
-            var reward = DailyRewardController.Instance.GetRewardForDay(day);
             DailyRewardController.Instance.GiveExtraReward(reward);
 
-            RefreshUI();
-            ClosePanel();
+            CloseClaimPanel();
         });
     }
+    public void CloseClaimPanel()
+    {
+        GameManagerCycle.Instance.uiFlowController.ShowDailyRewardPanel();
+    }
+
     void OnCloseClicked()
     {
         ClosePanel();
