@@ -20,6 +20,7 @@ public class LevelPanelController : MonoBehaviour
     {
         BuildPanel();
     }
+
     void BuildPanel()
     {
         ClearOldButtons();
@@ -34,14 +35,12 @@ public class LevelPanelController : MonoBehaviour
 
         // WORLD TITLE
         worldNameText.text = world.worldName;
-        worldNameText.color = Color.white;
-        worldNameText.fontMaterial = Instantiate(worldNameText.fontMaterial);
-        worldNameText.fontMaterial.SetColor("_OutlineColor", world.primaryColor);
+        worldNameText.color = world.primaryColor;
 
+        // PANEL FRAME COLOR
         panelFrame.color = world.primaryColor;
-        if (world.panelBackground != null)
-            panelFrame.sprite = world.panelBackground;
 
+        // BACK BUTTON COLOR
         backButtonImage.color = world.primaryColor;
 
         bool worldUnlocked =
@@ -56,16 +55,12 @@ public class LevelPanelController : MonoBehaviour
             GameObject btn = Instantiate(levelButtonPrefab, contentParent);
             LevelSelector selector = btn.GetComponent<LevelSelector>();
 
-            bool levelUnlocked = false;
+            bool levelUnlocked;
 
             if (!worldUnlocked)
-            {
                 levelUnlocked = false;
-            }
             else if (level == startLevel)
-            {
                 levelUnlocked = true;
-            }
             else
             {
                 int previousStars = PlayerPrefs.GetInt("LevelStars" + (level - 1), 0);
@@ -77,6 +72,7 @@ public class LevelPanelController : MonoBehaviour
             selector.Setup(level, levelUnlocked, stars, world);
         }
     }
+
     void ClearOldButtons()
     {
         for (int i = contentParent.childCount - 1; i >= 0; i--)

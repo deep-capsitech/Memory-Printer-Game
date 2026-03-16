@@ -4,18 +4,15 @@ using TMPro;
 
 public class LevelSelector : MonoBehaviour
 {
-    [Header("UI")]
     public Image buttonFrame;
     public Image lockIcon;
     public Image[] stars;
     public TextMeshProUGUI levelText;
 
-    [Header("Star Sprites (WHITE ONLY)")]
     public Sprite filledStar;
     public Sprite emptyStar;
 
     private Button button;
-    private Material runtimeTextMaterial;
     private int levelNumber;
 
     void Awake()
@@ -29,35 +26,24 @@ public class LevelSelector : MonoBehaviour
         levelNumber = level;
         levelText.text = level.ToString();
 
-        // 🔹 BUTTON FRAME
-        buttonFrame.color = world.primaryColor;
+        // LEVEL NUMBER COLOR SAME AS WORLD TITLE
+        levelText.color = world.primaryColor;
 
-        // 🔹 LEVEL TEXT OUTLINE (IMPORTANT)
-        runtimeTextMaterial = Instantiate(levelText.fontMaterial);
-        runtimeTextMaterial.SetColor("_OutlineColor", world.primaryColor);
-        levelText.fontMaterial = runtimeTextMaterial;
-        levelText.color = Color.white;
-
-        // 🔹 LOCK ICON (WHITE SVG / PNG REQUIRED)
-        lockIcon.color = world.secondaryColor;
+        // LOCK ICON
         lockIcon.gameObject.SetActive(!unlocked);
 
-        // 🔹 STARS
+        // STARS (keep sprite colors)
         for (int i = 0; i < stars.Length; i++)
         {
-            stars[i].enabled = true;
-            Color filledColor = new Color(1f, 0.85f, 0f);  // gold
-            Color emptyColor = new Color(0.5f, 0.5f, 0.5f); // gray
-
             if (i < starCount)
             {
                 stars[i].sprite = filledStar;
-                stars[i].color = filledColor;
+                stars[i].color = Color.white;
             }
             else
             {
                 stars[i].sprite = emptyStar;
-                stars[i].color = emptyColor;
+                stars[i].color = Color.white;
             }
         }
 

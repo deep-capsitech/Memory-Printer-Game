@@ -15,6 +15,4 @@ MonoBehaviour:
   worldId: 3
   worldName: Orange City
   starsRequired: 45
-  primaryColor: {r: 1, g: 0.5686275, b: 0, a: 1}
-  secondaryColor: {r: 1, g: 0.42745098, b: 0, a: 1}
-  panelBackground: {fileID: 386386009, guid: 376548e960911ea43b6ae5fc5a746e66, type: 3}
+  primaryColor: {r: 0.9764706, g: 0.4392157, b: 0.10980392, a: 1}
