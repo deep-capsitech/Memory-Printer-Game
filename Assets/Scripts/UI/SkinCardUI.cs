@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
@@ -6,10 +6,15 @@ public class SkinCardUI : MonoBehaviour
 {
     public Image skinImage;
     public TMP_Text skinName;
+
     public TMP_Text priceText;
-    public Button actionButton;
     public TMP_Text buttonText;
+
     public GameObject coinIcon;
+
+    public Image cardBackground;
+    public Sprite normalCard;
+    public Sprite selectedCard;
 
     private SkinData skinData;
     private int skinIndex;
@@ -27,45 +32,47 @@ public class SkinCardUI : MonoBehaviour
 
         if (unlocked == 0)
         {
-            // NOT BOUGHT
-            priceText.gameObject.SetActive(true);
-            coinIcon.SetActive(true);
+            // LOCKED
+            buttonText.text = "BUY";
 
             priceText.text = data.price.ToString();
-            buttonText.text = "BUY";
+
+            coinIcon.SetActive(true);
+            cardBackground.sprite = normalCard;
         }
         else
         {
             // BOUGHT
-            priceText.gameObject.SetActive(false);
-            coinIcon.SetActive(false);
+            priceText.text = "000";        // 👈 only change price
+            coinIcon.SetActive(true);      // 👈 keep icon visible
 
             if (selected == index)
             {
-                buttonText.text = "EQUIPPED";
-                actionButton.interactable = false;
+                buttonText.text = "SELECTED";
+                cardBackground.sprite = selectedCard;
             }
             else
             {
                 buttonText.text = "APPLY";
-                actionButton.interactable = true;
+                cardBackground.sprite = normalCard;
             }
         }
 
-        actionButton.onClick.RemoveAllListeners();
-        actionButton.onClick.AddListener(OnClick);
+        GetComponent<Button>().onClick.RemoveAllListeners();
+        GetComponent<Button>().onClick.AddListener(OnClick);
     }
+
     void OnClick()
     {
         int unlocked = PlayerPrefs.GetInt("SkinUnlocked_" + skinIndex, skinIndex == 0 ? 1 : 0);
 
         if (unlocked == 0)
         {
-            ShopManager.Instance.BuySkin(skinIndex, skinData.price);
+            RobotSkinManager.Instance.BuySkin(skinIndex, skinData.price);
         }
         else
         {
-            ShopManager.Instance.ApplySkin(skinIndex);
+            RobotSkinManager.Instance.ApplySkin(skinIndex);
         }
     }
 }

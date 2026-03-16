@@ -18,17 +18,18 @@ public class UIFlowController : MonoBehaviour
     public GameObject levelCompletePanel;
     public GameObject worldPanel;
     public GameObject levelPanel;
-    public GameObject noBatteryPanel;
+  //  public GameObject noBatteryPanel;
     public GameObject shopPanel;
-    public BuyPowerupPanelController buyPowerupPanel;
+  //  public BuyPowerupPanelController buyPowerupPanel;
     public GameObject claimRewardPanel;
+    public PurchasePanelController purchasePanel;
     public GameObject newWorldPanel;
     public TextMeshProUGUI newWorldQuestionText;
 
     [Header("HUD")]
     public HUDVisibilityController hud;
 
-    private GameObject _previousPanelBeforeNoBattery;
+  //  private GameObject _previousPanelBeforeNoBattery;
     
     public DailyRewardController dailyRewardController;
 
@@ -44,8 +45,10 @@ public class UIFlowController : MonoBehaviour
         if (levelPanel != null)
             levelPanel.SetActive(false);
 
-        if (noBatteryPanel != null)
-            noBatteryPanel.SetActive(false);
+        //if (noBatteryPanel != null)
+        //    noBatteryPanel.SetActive(false);
+        if(purchasePanel !=null)
+            purchasePanel.gameObject.SetActive(false);
 
         if (newWorldPanel != null)
             newWorldPanel.SetActive(false);
@@ -112,22 +115,22 @@ public class UIFlowController : MonoBehaviour
         levelPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Level);
     }
-    public void ShowNoBatteryPanel()
-    {
-        DisableAllPanels();
-        noBatteryPanel.SetActive(true);
-        UpdateHUD(HUDVisibilityController.UIState.Menu);
-    }
+    //public void ShowNoBatteryPanel()
+    //{
+    //    DisableAllPanels();
+    //    noBatteryPanel.SetActive(true);
+    //    UpdateHUD(HUDVisibilityController.UIState.Menu);
+    //}
 
-    public void ReturnFromNoBatteryPanel()
-    {
-        DisableAllPanels();
+    //public void ReturnFromNoBatteryPanel()
+    //{
+    //    DisableAllPanels();
 
-        if (_previousPanelBeforeNoBattery != null)
-            _previousPanelBeforeNoBattery.SetActive(true);
-        else
-            menuPanel.SetActive(true);
-    }
+    //    if (_previousPanelBeforeNoBattery != null)
+    //        _previousPanelBeforeNoBattery.SetActive(true);
+    //    else
+    //        menuPanel.SetActive(true);
+    //}
     public void ShowDailyRewardPanel()
     {
         DisableAllPanels();
@@ -172,13 +175,13 @@ public class UIFlowController : MonoBehaviour
         backgroundPanel.SetActive(false);
     }
 
-    public void ShowBuyPowerupPanel(PowerupType type)
-    {
-        DisableAllPanels();
-        buyPowerupPanel.gameObject.SetActive(true);
-        buyPowerupPanel.Setup(type);
-        UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
-    }
+    //public void ShowBuyPowerupPanel(PowerupType type)
+    //{
+    //    DisableAllPanels();
+    //    buyPowerupPanel.gameObject.SetActive(true);
+    //    buyPowerupPanel.Setup(type);
+    //    UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
+    //}
 
     public void ShowShopPanel()
     {
@@ -196,4 +199,13 @@ public class UIFlowController : MonoBehaviour
         UpdateHUD(HUDVisibilityController.UIState.Menu); 
     }
 
+    public void ShowPurchasePanel(PurchaseType type)
+    {
+        DisableAllPanels();
+
+        purchasePanel.gameObject.SetActive(true);
+        purchasePanel.Setup(type);
+
+        UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
+    }
 }

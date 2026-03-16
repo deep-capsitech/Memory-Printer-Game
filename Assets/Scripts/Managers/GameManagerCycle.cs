@@ -154,7 +154,7 @@ public class GameManagerCycle : MonoBehaviour
         {
             if (!BatteryManager.Instance.HasBattery())
             {
-                uiFlowController.ShowNoBatteryPanel();
+                uiFlowController.ShowPurchasePanel(PurchaseType.Battery);
                 return;
             }
 
@@ -197,7 +197,10 @@ public class GameManagerCycle : MonoBehaviour
 
         levelText.text = "LEVEL " + (levelIndex);
 
-        mapTimerText.text = mapTimer.ToString("0");
+        int minutes = Mathf.FloorToInt(mapTimer / 60f);
+        int seconds = Mathf.FloorToInt(mapTimer % 60f);
+
+        mapTimerText.text = $"{minutes:00}:{seconds:00}";
 
         generator.GenerateFromJson(levelIndex, layoutIndex);
 
@@ -349,7 +352,7 @@ public class GameManagerCycle : MonoBehaviour
 
         if (!BatteryManager.Instance.HasBattery())
         {
-            uiFlowController.ShowNoBatteryPanel();
+            uiFlowController.ShowPurchasePanel(PurchaseType.Battery);
             return;
         }
 
@@ -437,14 +440,17 @@ public class GameManagerCycle : MonoBehaviour
     void UpdateMapTimer()
     {
         mapTimer -= Time.deltaTime;
-        mapTimerText.text = mapTimer.ToString("0");
+        int minutes = Mathf.FloorToInt(mapTimer / 60f);
+        int seconds = Mathf.FloorToInt(mapTimer % 60f);
+
+        mapTimerText.text = $"{minutes:00}:{seconds:00}";
 
         if (mapTimer <= 0)
         {
             if (isTutorial && levelIndex == 1)
             {
                 mapTimer = TUTORIAL_TIME;
-                mapTimerText.text = mapTimer.ToString("0");
+               // mapTimerText.text = $"{minutes:00}:{seconds:00}";
                 return;
             }
 

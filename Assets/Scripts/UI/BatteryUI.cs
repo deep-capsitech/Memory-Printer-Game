@@ -14,7 +14,7 @@ public class BatteryUI : MonoBehaviour
         int current = BatteryManager.Instance.GetBatteryCount();
         int max = BatteryManager.Instance.maxBatteries;
 
-        batteryText.text = current.ToString();
+        batteryText.text = $"{current}/{max}";
 
         if (current >= max)
         {
