@@ -22,8 +22,19 @@ public class ProgressionController : MonoBehaviour
 
     public void CalculateStars(float levelTimer)
     {
+        int level = GameManagerCycle.Instance.CurrentLevelNumber;
+
+        // Tutorial always gives 3 stars
+        if (level == 1)
+        {
+            _earnedStars = 3;
+            SaveLevelStars();
+            ShowStars(_earnedStars);
+            return;
+        }
+
         float maxLevelTime = JsonLevelLoader.Instance
-            .GetLevel(GameManagerCycle.Instance.CurrentLevelNumber)
+            .GetLevel(level)
             .levelTime;
 
         float timeTaken = maxLevelTime - levelTimer;

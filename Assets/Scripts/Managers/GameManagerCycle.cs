@@ -184,6 +184,7 @@ public class GameManagerCycle : MonoBehaviour
         {
             levelTimeController.StartTimer(TUTORIAL_TIME);
             mapTimer = TUTORIAL_TIME;
+            TutorialManager.Instance.StartTutorial();
         }
         else
         {
@@ -216,11 +217,6 @@ public class GameManagerCycle : MonoBehaviour
         StartCoroutine(StartSnapshotNextFrame());
         powerUpController.UpdatePowerUpUI();
 
-        //for tutorial
-        if (levelIndex == 1)
-        {
-            TutorialManager.Instance.StartTutorial();
-        }
     }
 
     public void PauseGame()
@@ -348,6 +344,7 @@ public class GameManagerCycle : MonoBehaviour
 
     public void Retry()
     {
+        isTutorial = false;
         levelTimeController.StopTimer();
 
         if (!BatteryManager.Instance.HasBattery())
@@ -449,9 +446,13 @@ public class GameManagerCycle : MonoBehaviour
         {
             if (isTutorial && levelIndex == 1)
             {
-                mapTimer = TUTORIAL_TIME;
-               // mapTimerText.text = $"{minutes:00}:{seconds:00}";
-                return;
+                if (TutorialManager.Instance != null &&
+                    TutorialManager.Instance.isTutorialActive)
+                {
+                    TutorialManager.Instance.ForceEndTutorial();
+                }
+
+                isTutorial = false;
             }
 
             player.SnapToTargetTile();

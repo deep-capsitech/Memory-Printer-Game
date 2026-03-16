@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
         if (!holdUp && !holdDown && !holdLeft && !holdRight) return;
         if (isMoving) return;
 
-        holdTimer -= Time.deltaTime;
+        holdTimer -= Time.unscaledDeltaTime;
 
         if (holdTimer <= 0f)
         {
@@ -326,6 +326,16 @@ public class PlayerController : MonoBehaviour
         canMove = false;
 
         anim.SetBool("isWalking", false);
+    }
+
+    public void StopAllInput()
+    {
+        holdUp = false;
+        holdDown = false;
+        holdLeft = false;
+        holdRight = false;
+
+        holdTimer = 0f;
     }
 
 }

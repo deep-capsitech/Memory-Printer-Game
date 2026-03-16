@@ -74,12 +74,16 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
+        bool tutorialActive =
+            TutorialManager.Instance != null &&
+            TutorialManager.Instance.isTutorialActive;
+
         bool tutorialCompleted = PlayerPrefs.GetInt("TutorialDone", 0) == 1;
 
         // Spawn Booster
         //StartCoroutine(SpawnBoosterAfterDelay());
         // Spawn Booster ONLY if unlocked (Level 21+)
-        if ((levelNumber == 1 && !tutorialCompleted) || levelNumber >= 21)
+        if (!tutorialCompleted || levelNumber >= 21)
         {
             StartCoroutine(SpawnBoosterAfterDelay());
         }
@@ -93,6 +97,9 @@ public class LevelGenerator : MonoBehaviour
    
     public void SpawnBoosterNow()
     {
+        if (boosterParent.childCount > 0)
+            return;
+
         if (currentLayout == null || currentLayout.booster == null)
             return;
 

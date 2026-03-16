@@ -30,6 +30,13 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Reached Door")]
     public GameObject ReachedDoor;
+
+    [Header("Gameplay Cnotrol")]
+    public GameObject MobileControlBtn;
+    public GameObject SnapshotBtn;
+    public GameObject PowerUpBtn;
+    public GameObject FreezeBtn;
+    public GameObject PauseBtn;
     void Awake()
     {
         if (Instance == null)
@@ -46,11 +53,17 @@ public class TutorialManager : MonoBehaviour
             Time.timeScale = 1f;
             return;
         }
+       
+        ResetTutorialState();
 
         isTutorialActive = true;
 
         tutorialPanel.SetActive(true);
         currentStep = 0;
+
+        DisableAllBtn();
+        SnapshotBtn.SetActive(true);
+
         StartCoroutine(InstructionDelay());
     }
 
@@ -82,8 +95,11 @@ public class TutorialManager : MonoBehaviour
         if (!isTutorialActive) return;
         currentStep = 1;
         ShowStep(currentStep);
+        InstructionMove.SetActive(true);
+        DisableAllBtn();
+        MobileControlBtn.SetActive(true);
         waitingForMovementClick = true;
-        Time.timeScale = 0f; 
+        Time.timeScale = 0f;
     }
 
     public void OnMovementButtonPressed()
@@ -91,13 +107,20 @@ public class TutorialManager : MonoBehaviour
         if (!waitingForMovementClick) return;
         waitingForMovementClick = false;
         InstructionMove.SetActive(false);
-        Time.timeScale = 1f; 
+        MobileControlBtn.SetActive(false);
+
+        if (GameManagerCycle.Instance.player != null)
+            GameManagerCycle.Instance.player.StopAllInput();
+
+        Time.timeScale = 1f;
         NextStep();
     }
 
     public void StartDragObstacleStep()
     {
         if (!isTutorialActive) return;
+        DisableAllBtn();
+        PowerUpBtn.SetActive(true);
         Time.timeScale = 0f;
         // show hand pointing to 2D button
         Hand2D.SetActive(true);
@@ -110,6 +133,7 @@ public class TutorialManager : MonoBehaviour
         waitingFor2DClick = false;
         Hand2D.SetActive(false);
         InstructionDrag.SetActive(true);
+        PowerUpBtn.SetActive(false);
     }
 
     public void OnObstacleDragged()
@@ -134,7 +158,10 @@ public class TutorialManager : MonoBehaviour
 
     public void StartInvincibleStep()
     {
+
         if (!isTutorialActive) return;
+        DisableAllBtn();
+        FreezeBtn.SetActive(true);
         Time.timeScale = 0f;
         HandFreeze.SetActive(true);
         waitingForInvincibleClick = true;
@@ -146,13 +173,18 @@ public class TutorialManager : MonoBehaviour
             return;
         waitingForInvincibleClick = false;
         HandFreeze.SetActive(false);
+        MobileControlBtn.SetActive(true);
         InstructionFreeze.SetActive(true);
+
+        if (GameManagerCycle.Instance.player != null)
+            GameManagerCycle.Instance.player.StopAllInput();
     }
 
     public void OnObstacleCrossed()
     {
         if (!isTutorialActive) return;
         InstructionFreeze.SetActive(false);
+        DisableAllBtn();
         StartCoroutine(EndInvincibleDelay());
     }
 
@@ -164,6 +196,9 @@ public class TutorialManager : MonoBehaviour
         if (power != null)
             power.EndFreezeFromTutorial();
 
+        if (GameManagerCycle.Instance.player != null)
+            GameManagerCycle.Instance.player.StopAllInput();
+
         Time.timeScale = 1f;
 
         StartCoroutine(SpawnBoosterAfterDelay());
@@ -171,7 +206,7 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator SpawnBoosterAfterDelay()
     {
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(3f);
 
         LevelGenerator generator = FindAnyObjectByType<LevelGenerator>();
 
@@ -181,6 +216,7 @@ public class TutorialManager : MonoBehaviour
     public void OnBoosterAppeared()
     {
         if (!isTutorialActive) return;
+        MobileControlBtn.SetActive(true);
         if (currentStep == 3)
             NextStep();
         waitingForBoosterCollect = true;
@@ -189,7 +225,7 @@ public class TutorialManager : MonoBehaviour
     public void OnBoosterCollected()
     {
         if (!waitingForBoosterCollect) return;
-        
+
         waitingForBoosterCollect = false;
         BoosterMode.SetActive(false);
         NextStep();
@@ -249,8 +285,68 @@ public class TutorialManager : MonoBehaviour
 
         Time.timeScale = 1f;
         // Save tutorial completion
+
+        MobileControlBtn.SetActive(true);
+        SnapshotBtn.SetActive(true);
+        PowerUpBtn.SetActive(true);
+        FreezeBtn.SetActive(true);
+
         PlayerPrefs.SetInt("TutorialDone", 1);
         PlayerPrefs.Save();
         GameManagerCycle.Instance.CompleteTutorial();
+    }
+
+    public void ForceEndTutorial()
+    {
+        ResetTutorialState();
+
+        isTutorialActive = false;
+
+        tutorialPanel.SetActive(false);
+
+        waitingForBoosterCollect = false;
+        waitingFor2DClick = false;
+        waitingForMovementClick = false;
+        waitingForInvincibleClick = false;
+
+        Time.timeScale = 1f;
+
+        MobileControlBtn.SetActive(true);
+        SnapshotBtn.SetActive(true);
+        PowerUpBtn.SetActive(true);
+        FreezeBtn.SetActive(true);
+    }
+
+    void ResetTutorialState()
+    {
+        StopAllCoroutines();
+
+        currentStep = 0;
+
+        waitingForBoosterCollect = false;
+        waitingFor2DClick = false;
+        waitingForMovementClick = false;
+        waitingForInvincibleClick = false;
+
+        Hand2D.SetActive(false);
+        HandFreeze.SetActive(false);
+        InstructionDrag.SetActive(false);
+        InstructionMove.SetActive(false);
+        InstructionFreeze.SetActive(false);
+        BoosterMode.SetActive(false);
+        ReachedDoor.SetActive(false);
+
+        for (int i = 0; i < tutorialSteps.Length; i++)
+        {
+            tutorialSteps[i].SetActive(false);
+        }
+    }
+    void DisableAllBtn()
+    {
+        PowerUpBtn.SetActive(false);
+        FreezeBtn.SetActive(false);
+        MobileControlBtn.SetActive(false);
+        SnapshotBtn.SetActive(false);
+        PauseBtn.SetActive(false);
     }
 }

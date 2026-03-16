@@ -1804,6 +1804,11 @@ MonoBehaviour:
   InstructionFreeze: {fileID: 2005971972}
   BoosterMode: {fileID: 1314094342}
   ReachedDoor: {fileID: 1815307926}
+  MobileControlBtn: {fileID: 1255695615}
+  SnapshotBtn: {fileID: 701926029}
+  PowerUpBtn: {fileID: 2076829894}
+  FreezeBtn: {fileID: 1610959817}
+  PauseBtn: {fileID: 588716222}
 --- !u!4 &137330804
 Transform:
   m_ObjectHideFlags: 0
