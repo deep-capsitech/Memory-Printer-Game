@@ -235,6 +235,11 @@ public class GameManagerCycle : MonoBehaviour
 
     public void PlayerReachedDoor()
     {
+        if (TutorialManager.Instance != null)
+        {
+            TutorialManager.Instance.OnDoorReached();
+        }
+
         if (gameStateController.CurrentState != GameStateController.GameState.Gameplay)
             return;
         OnLevelCompleted();
@@ -243,6 +248,17 @@ public class GameManagerCycle : MonoBehaviour
 
     void OnLevelCompleted()
     {
+        if (isTutorial && levelIndex == 1)
+        {
+            PlayerPrefs.SetInt("TutorialDone", 1);
+            PlayerPrefs.Save();
+
+            if (TutorialManager.Instance != null)
+                TutorialManager.Instance.ForceEndTutorial();
+
+            isTutorial = false;
+        }
+
         levelTimeController.StopTimer();
         progressionController.ClearLevelFailed(levelIndex);
 
@@ -344,7 +360,7 @@ public class GameManagerCycle : MonoBehaviour
 
     public void Retry()
     {
-        isTutorial = false;
+        //isTutorial = false;
         levelTimeController.StopTimer();
 
         if (!BatteryManager.Instance.HasBattery())
@@ -451,8 +467,6 @@ public class GameManagerCycle : MonoBehaviour
                 {
                     TutorialManager.Instance.ForceEndTutorial();
                 }
-
-                isTutorial = false;
             }
 
             player.SnapToTargetTile();

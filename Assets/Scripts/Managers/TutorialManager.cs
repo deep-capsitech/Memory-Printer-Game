@@ -12,11 +12,14 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Drag Obstacles")]
     public GameObject Hand2D;      
-    public GameObject InstructionDrag; 
+    public GameObject InstructionDrag;
+    public GameObject DragHand1;
+    public GameObject DragHand2;
     private bool waitingFor2DClick = false;
 
     [Header("Move Player")]
     public GameObject InstructionMove;
+    public GameObject CircleMove;
     private bool waitingForMovementClick = false;
 
     [Header("Invincible Mode")]
@@ -98,6 +101,7 @@ public class TutorialManager : MonoBehaviour
         InstructionMove.SetActive(true);
         DisableAllBtn();
         MobileControlBtn.SetActive(true);
+        CircleMove.SetActive(true);
         waitingForMovementClick = true;
         Time.timeScale = 0f;
     }
@@ -108,6 +112,7 @@ public class TutorialManager : MonoBehaviour
         waitingForMovementClick = false;
         InstructionMove.SetActive(false);
         MobileControlBtn.SetActive(false);
+        CircleMove.SetActive(false);
 
         if (GameManagerCycle.Instance.player != null)
             GameManagerCycle.Instance.player.StopAllInput();
@@ -133,6 +138,8 @@ public class TutorialManager : MonoBehaviour
         waitingFor2DClick = false;
         Hand2D.SetActive(false);
         InstructionDrag.SetActive(true);
+        DragHand1.SetActive(true);
+        DragHand2.SetActive(true);
         PowerUpBtn.SetActive(false);
     }
 
@@ -145,6 +152,8 @@ public class TutorialManager : MonoBehaviour
         if (power != null)
             power.ForceEndPowerUp();
         InstructionDrag.SetActive(false);
+        DragHand1.SetActive(false);
+        DragHand2.SetActive(false);
         Time.timeScale = 1f;
         // Next tutorial step
         StartCoroutine(StartNextStepAfterDelay());
@@ -228,9 +237,30 @@ public class TutorialManager : MonoBehaviour
 
         waitingForBoosterCollect = false;
         BoosterMode.SetActive(false);
-        NextStep();
+
+        StartCoroutine(ShowReachDoorAfterDelay());
     }
 
+    IEnumerator ShowReachDoorAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+
+        ShowReachedDoorInstruction();
+    }
+
+    public void ShowReachedDoorInstruction()
+    {
+        if (!isTutorialActive) return;
+
+        DisableAllBtn();
+
+        MobileControlBtn.SetActive(true);
+        SnapshotBtn.SetActive(false);
+        PowerUpBtn.SetActive(false);
+        FreezeBtn.SetActive(false);
+
+        ReachedDoor.SetActive(true);
+    }
     public void OnDoorReached()
     {
         if (!isTutorialActive) return;
@@ -259,7 +289,7 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            EndTutorial();
+            ShowReachedDoorInstruction();
         }
     }
 
@@ -290,10 +320,11 @@ public class TutorialManager : MonoBehaviour
         SnapshotBtn.SetActive(true);
         PowerUpBtn.SetActive(true);
         FreezeBtn.SetActive(true);
+        PauseBtn.SetActive(true);   
 
-        PlayerPrefs.SetInt("TutorialDone", 1);
-        PlayerPrefs.Save();
-        GameManagerCycle.Instance.CompleteTutorial();
+        //PlayerPrefs.SetInt("TutorialDone", 1);
+        //PlayerPrefs.Save();
+        //GameManagerCycle.Instance.CompleteTutorial();
     }
 
     public void ForceEndTutorial()
@@ -315,6 +346,7 @@ public class TutorialManager : MonoBehaviour
         SnapshotBtn.SetActive(true);
         PowerUpBtn.SetActive(true);
         FreezeBtn.SetActive(true);
+        PauseBtn.SetActive(true);
     }
 
     void ResetTutorialState()
@@ -329,6 +361,9 @@ public class TutorialManager : MonoBehaviour
         waitingForInvincibleClick = false;
 
         Hand2D.SetActive(false);
+        CircleMove.SetActive(false);
+        DragHand1.SetActive(false);
+        DragHand2.SetActive(false);
         HandFreeze.SetActive(false);
         InstructionDrag.SetActive(false);
         InstructionMove.SetActive(false);
