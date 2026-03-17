@@ -609,4 +609,10 @@ public class GameManagerCycle : MonoBehaviour
     {
         isTutorial = false;
     }
+
+    public void Privacy()
+    {
+        Application.OpenURL("https://www.thegamewise.com/privacy-policy/");
+    }
+
 }
