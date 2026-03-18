@@ -77,7 +77,8 @@ public class UIFlowController : MonoBehaviour
         menuPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Menu);
         dailyRewardController.UpdateDailyRewardButton();
-        
+        AdManager.Instance.ShowBanner();
+
     }
 
     public void ShowGameOver()
@@ -85,6 +86,7 @@ public class UIFlowController : MonoBehaviour
         DisableAllPanels();
         gameOverPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.GameOver);
+        AdManager.Instance.ShowBanner();
     }
 
     public void PauseGame()
@@ -92,6 +94,7 @@ public class UIFlowController : MonoBehaviour
         DisableAllPanels();
         pausePanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Pause);
+        AdManager.Instance.ShowBanner();
     }
 
     public void ResumeGame()
@@ -153,6 +156,7 @@ public class UIFlowController : MonoBehaviour
         DisableAllPanels();
         levelCompletePanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.LevelComplete);
+        AdManager.Instance.ShowBanner();
     }
     public void ShowPowerUpMode()
     {

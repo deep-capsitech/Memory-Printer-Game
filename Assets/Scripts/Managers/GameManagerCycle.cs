@@ -172,6 +172,7 @@ public class GameManagerCycle : MonoBehaviour
 
     void LoadLevel()
     {
+        AdManager.Instance.HideBanner();
         GameEconomyManager.Instance.ResetLevelCoins();
 
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
@@ -231,6 +232,7 @@ public class GameManagerCycle : MonoBehaviour
         Time.timeScale = 1f;
         gameStateController.SetState(GameStateController.GameState.Gameplay);
         uiFlowController.ResumeGame();
+        AdManager.Instance.HideBanner();
     }
 
     public void PlayerReachedDoor()
