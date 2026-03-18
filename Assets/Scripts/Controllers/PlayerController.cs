@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private bool holdDown = false;
     private bool holdLeft = false;
     private bool holdRight = false;
+    private bool isPassingThroughDoor = false;
 
     public float holdMoveInterval = 0.25f;
     private float holdTimer = 0f;
@@ -154,16 +155,18 @@ public class PlayerController : MonoBehaviour
 
         RaycastHit hit;
 
+        // STEP 1: Check door FIRST with bigger distance
         if (Physics.Raycast(transform.position,
                             dir.normalized,
                             out hit,
-                            moveStep,
+                            doorCheckDistance,
                             doorLayer,
                             QueryTriggerInteraction.Collide))
         {
             if (hit.collider.CompareTag("Door"))
             {
-                // Allow movement to door
+                isPassingThroughDoor = true;
+
                 targetPos = nextPos;
                 isMoving = true;
 
@@ -179,8 +182,9 @@ public class PlayerController : MonoBehaviour
                             wallLayer,
                             QueryTriggerInteraction.Ignore))
         {
-            return; // blocked by wall
+            return; // blocked
         }
+
 
         targetPos = nextPos;
         isMoving = true;
@@ -271,6 +275,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Door"))
         {
+            isPassingThroughDoor = false;
             SoundManager.Instance.PlayWin();
             if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
             {

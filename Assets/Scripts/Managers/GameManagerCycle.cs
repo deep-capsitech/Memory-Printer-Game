@@ -237,13 +237,25 @@ public class GameManagerCycle : MonoBehaviour
 
     public void PlayerReachedDoor()
     {
+        if (gameStateController.CurrentState != GameStateController.GameState.Gameplay)
+            return;
+
         if (TutorialManager.Instance != null)
         {
             TutorialManager.Instance.OnDoorReached();
         }
 
-        if (gameStateController.CurrentState != GameStateController.GameState.Gameplay)
-            return;
+        StartCoroutine(LevelCompleteWithDelay());
+    }
+
+    IEnumerator LevelCompleteWithDelay()
+    {
+        player.canMove = false;
+        player.StopMovementImmediately();
+        player.PlayWinJumpAnimation(); // optional
+
+        yield return new WaitForSeconds(5f);
+
         OnLevelCompleted();
     }
 

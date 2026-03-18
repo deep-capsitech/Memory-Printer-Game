@@ -78,12 +78,12 @@ public class LevelGenerator : MonoBehaviour
             TutorialManager.Instance != null &&
             TutorialManager.Instance.isTutorialActive;
 
-        bool tutorialCompleted = PlayerPrefs.GetInt("TutorialDone", 0) == 1;
+        //bool tutorialCompleted = PlayerPrefs.GetInt("TutorialDone", 0) == 1;
 
         // Spawn Booster
         //StartCoroutine(SpawnBoosterAfterDelay());
         // Spawn Booster ONLY if unlocked (Level 21+)
-        if (!tutorialCompleted || levelNumber >= 21)
+        if (levelNumber >= 21)
         {
             StartCoroutine(SpawnBoosterAfterDelay());
         }
