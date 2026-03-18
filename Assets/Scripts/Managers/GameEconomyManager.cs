@@ -30,7 +30,7 @@ public class GameEconomyManager : MonoBehaviour
         // First install logic
         if (!PlayerPrefs.HasKey(FIRST_LAUNCH_KEY))
         {
-            totalCoins = 100;
+            totalCoins = 0;
             PlayerPrefs.SetInt(COINS_KEY, totalCoins);
             PlayerPrefs.SetInt(FIRST_LAUNCH_KEY, 1);
             PlayerPrefs.Save();

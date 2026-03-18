@@ -178,42 +178,31 @@ public class DailyRewardController : MonoBehaviour
     }
     public DailyReward GetRewardForDay(int day)
     {
-        int world = PlayerPrefs.GetInt("SelectedWorld", 1);
-
         switch (day)
         {
             case 1:
-                return new DailyReward(DailyRewardType.Snapshot, 1);
-
-            case 2:
-                return new DailyReward(DailyRewardType.Coins, 50);
-
-            case 3:
-                return new DailyReward(DailyRewardType.Snapshot, 1);
-
-            case 4:
-                if (world >= 2)
-                    return new DailyReward(DailyRewardType.Invision, 1);
-                else
-                    return new DailyReward(DailyRewardType.Snapshot, 1);
-
-            case 5:
                 return new DailyReward(DailyRewardType.Coins, 100);
 
-            case 6:
+            case 2:
                 return new DailyReward(DailyRewardType.Snapshot, 1);
 
-            case 7:
-                if (world >= 3)
-                    return new DailyReward(DailyRewardType.Freeze, 1);
-                else if (world >= 2)
-                    return new DailyReward(DailyRewardType.Invision, 1);
-                else
-                    return new DailyReward(DailyRewardType.Snapshot, 2);
+            case 3:
+                return new DailyReward(DailyRewardType.Invision, 1);
 
-            default:
-                return new DailyReward(DailyRewardType.Coins, 50);
+            case 4:
+                return new DailyReward(DailyRewardType.Coins, 150);
+
+            case 5:
+                return new DailyReward(DailyRewardType.Invision, 1);
+
+            case 6:
+                return new DailyReward(DailyRewardType.Freeze, 1);
+
+            case 7:
+                return new DailyReward(DailyRewardType.Coins, 0);
         }
+
+        return new DailyReward(DailyRewardType.Coins, 50);
     }
     void GiveReward(DailyReward reward)
     {
@@ -241,8 +230,10 @@ public class DailyRewardController : MonoBehaviour
     }
     void GiveDaySevenBonus()
     {
-        int bonusCoins = 200;
-        GameEconomyManager.Instance.AddCoins(bonusCoins);
+        // Mystery Box Rewards
+        GameEconomyManager.Instance.AddCoins(200);
+        PowerupInventoryManager.Instance.AddInvision(1);
+        PowerupInventoryManager.Instance.AddFreeze(1);
     }
     public void GiveExtraReward(DailyReward reward)
     {

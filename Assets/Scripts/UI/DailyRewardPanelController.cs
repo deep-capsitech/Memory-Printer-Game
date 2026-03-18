@@ -18,13 +18,19 @@ public class DailyRewardPanelController : MonoBehaviour
     public Sprite coinSprite;
     public Sprite invisionSprite;
     public Sprite freezeSprite;
+    public Sprite mysteryBoxSprite;
 
     public UIFlowController uiFlowController;
     public GameObject claimPanel;
     public Image claimRewardIcon;
     public Button claimAdButton;
-    public Button claimCloseButton;
+    // public Button claimCloseButton;
 
+    [Header("Card Sprites")]
+    public Sprite normalCardSprite;
+    public Sprite claimedCardSprite;
+    public Material normalMaterial;
+    public Material outlineMaterial;
     void OnEnable()
     {
         RefreshUI();
@@ -68,9 +74,13 @@ public class DailyRewardPanelController : MonoBehaviour
             {
                 var txt = rewardType.GetComponent<TextMeshProUGUI>();
                 if (txt != null)
-                    txt.text = reward.type.ToString().ToUpper();
+                {
+                    if (dayNumber == 7)
+                        txt.text = "MYSTERY BOX";
+                    else
+                        txt.text = reward.type.ToString().ToUpper();
+                }
             }
-
             // ---------- REWARD VALUE ----------
             Transform rewardValue = dayItems[i].transform.Find("RewardValueText");
             if (rewardValue != null)
@@ -78,10 +88,18 @@ public class DailyRewardPanelController : MonoBehaviour
                 var txt = rewardValue.GetComponent<TextMeshProUGUI>();
                 if (txt != null)
                 {
-                    if (reward.type == DailyRewardController.DailyRewardType.Coins)
+                    if (dayNumber == 7)
+                    {
+                        txt.text = "×1"; // Mystery Box count
+                    }
+                    else if (reward.type == DailyRewardController.DailyRewardType.Coins)
+                    {
                         txt.text = reward.amount.ToString();
+                    }
                     else
+                    {
                         txt.text = "×" + reward.amount;
+                    }
                 }
             }
             // ---------- REWARD ICON ----------
@@ -89,7 +107,11 @@ public class DailyRewardPanelController : MonoBehaviour
             if (rewardIcon != null)
             {
                 Image iconImg = rewardIcon.GetComponent<Image>();
-                if (iconImg != null)
+                if (dayNumber == 7)
+                {
+                    iconImg.sprite = mysteryBoxSprite;
+                }
+                else
                 {
                     switch (reward.type)
                     {
@@ -118,34 +140,33 @@ public class DailyRewardPanelController : MonoBehaviour
                 claimedCheck.gameObject.SetActive(dayNumber < rawDay);
             }
 
-            // ---------- BACKGROUND COLORS ----------
             Image bg = dayItems[i].GetComponent<Image>();
             if (bg != null)
             {
-                if (!claimedToday && dayNumber == rawDay)
+                if (dayNumber < rawDay)
                 {
-                    // Highlight ONLY if not claimed
-                    bg.color = new Color(0.1f, 1f, 0.6f, 1f);
-                }
-                else if (dayNumber < rawDay)
-                {
-                    bg.color = new Color(0.2f, 1f, 0.3f, 1f); // green
+                    bg.sprite = claimedCardSprite; // green card
                 }
                 else
                 {
-                    // Future days
-                    bg.color = new Color(1f, 1f, 1f, 0.85f);
+                    bg.sprite = normalCardSprite; // normal card
                 }
             }
         }
+        var btnText = collectButton.GetComponentInChildren<TextMeshProUGUI>();
 
-        // ---------- BUTTON STATES ----------
-        collectButton.interactable = !claimedToday;
+        collectButton.interactable = true;
 
         if (claimedToday)
-            collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "CLAIMED";
+        {
+            btnText.text = "CLAIMED";
+            btnText.fontMaterial = outlineMaterial;
+        }
         else
-            collectButton.GetComponentInChildren<TextMeshProUGUI>().text = "CLAIM";
+        {
+            btnText.text = "CLAIM";
+            btnText.fontMaterial = normalMaterial;
+        }
         // ---------- TODAY REWARD TEXT ----------
         int displayDay;
 
@@ -172,16 +193,18 @@ public class DailyRewardPanelController : MonoBehaviour
 
         todayRewardText.text = "TODAY'S REWARD: " + rewardText;
 
-        // Show bonus on Day 7
         if (displayDay == 7)
         {
-            todayRewardText.text += " + 200 BONUS COINS";
+            todayRewardText.text = "TODAY'S REWARD: MYSTERY BOX";
         }
     }
     void OnCollectClicked()
     {
-        int day = DailyRewardController.Instance.GetCurrentDay();
+        // 🚫 If already claimed → do nothing
+        if (DailyRewardController.Instance.HasClaimedTodayPublic())
+            return;
 
+        int day = DailyRewardController.Instance.GetCurrentDay();
         var reward = DailyRewardController.Instance.GetRewardForDay(day);
 
         DailyRewardController.Instance.ClaimReward();
@@ -217,8 +240,9 @@ public class DailyRewardPanelController : MonoBehaviour
         claimAdButton.onClick.RemoveAllListeners();
         claimAdButton.onClick.AddListener(() => WatchAdDouble(reward));
 
-        claimCloseButton.onClick.RemoveAllListeners();
-        claimCloseButton.onClick.AddListener(CloseClaimPanel);
+        // 🔥 Auto close after 2 seconds
+        CancelInvoke(nameof(CloseClaimPanel));
+        Invoke(nameof(CloseClaimPanel), 2f);
     }
 
     void WatchAdDouble(DailyRewardController.DailyReward reward)
@@ -232,6 +256,7 @@ public class DailyRewardPanelController : MonoBehaviour
     }
     public void CloseClaimPanel()
     {
+        CancelInvoke(nameof(CloseClaimPanel)); // prevent double call
         GameManagerCycle.Instance.uiFlowController.ShowDailyRewardPanel();
     }
 
