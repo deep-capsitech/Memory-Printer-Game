@@ -5,7 +5,7 @@ public class ShopUIManager : MonoBehaviour
     public GameObject mainShopPanel;
     public GameObject robotSkinPanel;
     public GameObject coinsPanel;
-
+    public UIFlowController uiFlowController;
     void OnEnable()
     {
         ShowMainShop();
@@ -44,6 +44,7 @@ public class ShopUIManager : MonoBehaviour
 
     public void CloseShop()
     {
-        gameObject.SetActive(false);
+        uiFlowController.ShowMenu();
+      
     }
 }
