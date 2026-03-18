@@ -125,7 +125,7 @@ public class PowerUpController : MonoBehaviour
 
         if (PowerupInventoryManager.Instance.GetInvisionCount() <= 0)
         {
-            uiFlowController.ShowPurchasePanel(PurchaseType.Invision);
+            uiFlowController.ShowPurchasePanel(PurchaseType.Invision,PurchaseSource.Gameplay);
             return;
         }
 
@@ -202,7 +202,7 @@ public class PowerUpController : MonoBehaviour
 
         if (PowerupInventoryManager.Instance.GetFreezeCount() <= 0)
         {
-            uiFlowController.ShowPurchasePanel(PurchaseType.Freeze);
+            uiFlowController.ShowPurchasePanel(PurchaseType.Freeze, PurchaseSource.Gameplay);
             return;
         }
 

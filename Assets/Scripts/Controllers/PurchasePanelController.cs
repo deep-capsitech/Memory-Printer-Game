@@ -8,6 +8,14 @@ public enum PurchaseType
     Invision,
     Freeze
 }
+
+public enum PurchaseSource
+{
+    None,
+    GameOver,
+    LevelPanel,
+    Gameplay
+}
 public class PurchasePanelController : MonoBehaviour
 {
     [Header("UI")]
@@ -34,6 +42,7 @@ public class PurchasePanelController : MonoBehaviour
 
     private PurchaseType currentType;
     private int cost = 100;
+    public PurchaseSource source;
 
     void Update()
     {
@@ -44,9 +53,10 @@ public class PurchasePanelController : MonoBehaviour
         RefreshCoinState();
     }
 
-    public void Setup(PurchaseType type)
+    public void Setup(PurchaseType type,PurchaseSource from)
     {
         currentType = type;
+        source = from;
 
         batterySection.SetActive(false);
         powerupSection.SetActive(false);
@@ -54,29 +64,20 @@ public class PurchasePanelController : MonoBehaviour
         switch (type)
         {
             case PurchaseType.Battery:
-
                 titleText.text = "NO BATTERY";
-
                 batterySection.SetActive(true);
-
                 break;
 
             case PurchaseType.Invision:
-
                 titleText.text = "NO POWERUP";
-
                 powerupSection.SetActive(true);
                 powerupIcon.sprite = invisionSprite;
-
                 break;
 
             case PurchaseType.Freeze:
-
                 titleText.text = "NO POWERUP";
-
                 powerupSection.SetActive(true);
                 powerupIcon.sprite = freezeSprite;
-
                 break;
         }
         costText.text = cost.ToString();
@@ -166,6 +167,24 @@ public class PurchasePanelController : MonoBehaviour
     public void Close()
     {
         gameObject.SetActive(false);
-        GameManagerCycle.Instance.uiFlowController.ShowGameplay();
+
+        switch (source)
+        {
+            case PurchaseSource.GameOver:
+                GameManagerCycle.Instance.uiFlowController.ShowGameOver();
+                break;
+
+            case PurchaseSource.LevelPanel:
+                GameManagerCycle.Instance.uiFlowController.ShowLevelSelect();
+                break;
+
+            case PurchaseSource.Gameplay:
+                GameManagerCycle.Instance.uiFlowController.ShowGameplay();
+                break;
+
+            default:
+                GameManagerCycle.Instance.uiFlowController.ShowMenu();
+                break;
+        }
     }
 }

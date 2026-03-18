@@ -188,12 +188,12 @@ public class UIFlowController : MonoBehaviour
         UpdateHUD(HUDVisibilityController.UIState.Menu); 
     }
 
-    public void ShowPurchasePanel(PurchaseType type)
+    public void ShowPurchasePanel(PurchaseType type,PurchaseSource source)
     {
-        DisableAllPanels();
+        DisableAllPanels(); 
 
         purchasePanel.gameObject.SetActive(true);
-        purchasePanel.Setup(type);
+        purchasePanel.Setup(type,source);
 
         UpdateHUD(HUDVisibilityController.UIState.BuyPanel);
     }

@@ -10304,6 +10304,7 @@ MonoBehaviour:
   watchAdButton: {fileID: 608119980}
   invisionSprite: {fileID: 21300000, guid: 39400b57116f44846a18ec8a47860c13, type: 3}
   freezeSprite: {fileID: 21300000, guid: 37e27020417d51745a4f2af68fa3b39a, type: 3}
+  source: 0
 --- !u!1 &762699709
 GameObject:
   m_ObjectHideFlags: 0

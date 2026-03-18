@@ -154,7 +154,7 @@ public class GameManagerCycle : MonoBehaviour
         {
             if (!BatteryManager.Instance.HasBattery())
             {
-                uiFlowController.ShowPurchasePanel(PurchaseType.Battery);
+                uiFlowController.ShowPurchasePanel(PurchaseType.Battery, PurchaseSource.LevelPanel);
                 return;
             }
 
@@ -367,7 +367,7 @@ public class GameManagerCycle : MonoBehaviour
 
         if (!BatteryManager.Instance.HasBattery())
         {
-            uiFlowController.ShowPurchasePanel(PurchaseType.Battery);
+            uiFlowController.ShowPurchasePanel(PurchaseType.Battery,PurchaseSource.GameOver);
             return;
         }
 
