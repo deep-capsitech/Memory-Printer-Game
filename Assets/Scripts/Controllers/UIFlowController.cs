@@ -115,22 +115,7 @@ public class UIFlowController : MonoBehaviour
         levelPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Level);
     }
-    //public void ShowNoBatteryPanel()
-    //{
-    //    DisableAllPanels();
-    //    noBatteryPanel.SetActive(true);
-    //    UpdateHUD(HUDVisibilityController.UIState.Menu);
-    //}
 
-    //public void ReturnFromNoBatteryPanel()
-    //{
-    //    DisableAllPanels();
-
-    //    if (_previousPanelBeforeNoBattery != null)
-    //        _previousPanelBeforeNoBattery.SetActive(true);
-    //    else
-    //        menuPanel.SetActive(true);
-    //}
     public void ShowDailyRewardPanel()
     {
         DisableAllPanels();
