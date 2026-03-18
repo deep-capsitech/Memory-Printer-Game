@@ -4807,6 +4807,8 @@ MonoBehaviour:
   snapshotButton: {fileID: 701926031}
   snapshotCountText: {fileID: 813719826}
   snapshotAdIcon: {fileID: 66100987}
+  pulseScale: 1.2
+  pulseDuration: 0.3
 --- !u!4 &358582718
 Transform:
   m_ObjectHideFlags: 0

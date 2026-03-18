@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections;
 public class PowerUpController : MonoBehaviour
 {
     [Header("Durations")]
@@ -39,6 +39,14 @@ public class PowerUpController : MonoBehaviour
     [Header("Snapshot UI")]
     public TextMeshProUGUI snapshotCountText;
     public GameObject snapshotAdIcon;
+
+    [Header("Animation")]
+    public float pulseScale = 1.0f;
+    public float pulseDuration = 0.2f;
+
+    private Coroutine invisionPulseRoutine;
+    private Coroutine freezePulseRoutine;
+    private Coroutine snapshotPulseRoutine;
 
     void Update()
     {
@@ -280,11 +288,21 @@ public class PowerUpController : MonoBehaviour
                 invisionCountText.text = invisionCount.ToString();
                 invisionCountText.gameObject.SetActive(true);
                 invisionPlusIcon.SetActive(false);
+
+                if (invisionPulseRoutine != null)
+                {
+                    StopCoroutine(invisionPulseRoutine);
+                    invisionPulseRoutine = null;
+                    invisionButton.transform.localScale = Vector3.one;
+                }
             }
             else
             {
                 invisionCountText.gameObject.SetActive(false);
                 invisionPlusIcon.SetActive(true);
+
+                if (invisionPulseRoutine == null)
+                    invisionPulseRoutine = StartCoroutine(PulseButton(invisionButton.transform));
             }
         }
 
@@ -303,27 +321,46 @@ public class PowerUpController : MonoBehaviour
                 freezeCountText.text = freezeCount.ToString();
                 freezeCountText.gameObject.SetActive(true);
                 freezePlusIcon.SetActive(false);
+
+                if (freezePulseRoutine != null)
+                {
+                    StopCoroutine(freezePulseRoutine);
+                    freezePulseRoutine = null;
+                    freezeButton.transform.localScale = Vector3.one;
+                }
             }
             else
             {
                 freezeCountText.gameObject.SetActive(false);
                 freezePlusIcon.SetActive(true);
+
+                if (freezePulseRoutine == null)
+                    freezePulseRoutine = StartCoroutine(PulseButton(freezeButton.transform));
             }
         }
 
         // -------- SNAPSHOT --------
         int snapshotCount = GameManagerCycle.Instance.GetSnapshotUses();
-
         if (snapshotCount > 0)
         {
             snapshotCountText.text = snapshotCount.ToString();
             snapshotCountText.gameObject.SetActive(true);
             snapshotAdIcon.SetActive(false);
+
+            if (snapshotPulseRoutine != null)
+            {
+                StopCoroutine(snapshotPulseRoutine);
+                snapshotPulseRoutine = null;
+                snapshotButton.transform.localScale = Vector3.one;
+            }
         }
         else
         {
             snapshotCountText.gameObject.SetActive(false);
             snapshotAdIcon.SetActive(true);
+
+            if (snapshotPulseRoutine == null)
+                snapshotPulseRoutine = StartCoroutine(PulseButton(snapshotButton.transform));
         }
     }
     public void OnSnapshotButtonPressed()
@@ -346,5 +383,38 @@ public class PowerUpController : MonoBehaviour
 
         GameManagerCycle.Instance.UseManualSnapshot();
         UpdatePowerUpUI();
+    }
+
+    IEnumerator PulseButton(Transform target)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(4f);
+
+            Vector3 originalScale = target.localScale;
+            Vector3 targetScale = originalScale * pulseScale;
+
+            float t = 0f;
+
+            // Scale Up
+            while (t < pulseDuration)
+            {
+                t += Time.unscaledDeltaTime;
+                target.localScale = Vector3.Lerp(originalScale, targetScale, t / pulseDuration);
+                yield return null;
+            }
+
+            t = 0f;
+
+            // Scale Down
+            while (t < pulseDuration)
+            {
+                t += Time.unscaledDeltaTime;
+                target.localScale = Vector3.Lerp(targetScale, originalScale, t / pulseDuration);
+                yield return null;
+            }
+
+            target.localScale = originalScale;
+        }
     }
 }
