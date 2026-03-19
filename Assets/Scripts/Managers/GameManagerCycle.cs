@@ -254,7 +254,7 @@ public class GameManagerCycle : MonoBehaviour
         player.StopMovementImmediately();
         player.PlayWinJumpAnimation(); // optional
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(4f);
 
         OnLevelCompleted();
     }
