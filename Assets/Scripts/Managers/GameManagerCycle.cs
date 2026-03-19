@@ -1,5 +1,4 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,6 +60,9 @@ public class GameManagerCycle : MonoBehaviour
     public bool IsSnapshotActive => snapshotActive;
 
     private const float TUTORIAL_TIME = 30f;
+
+    public CameraFollow cameraFollow;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -212,7 +214,7 @@ public class GameManagerCycle : MonoBehaviour
         player.ResetPosition();
 
         snapshotActive = false;
-
+        cameraFollow.SetDefault();
         gameStateController.SetState(GameStateController.GameState.Gameplay);
         UpdatePlayerMovement();
         StartCoroutine(StartSnapshotNextFrame());
@@ -246,6 +248,7 @@ public class GameManagerCycle : MonoBehaviour
         }
 
         StartCoroutine(LevelCompleteWithDelay());
+        cameraFollow.SetWinView();
     }
 
     IEnumerator LevelCompleteWithDelay()
@@ -379,7 +382,7 @@ public class GameManagerCycle : MonoBehaviour
 
         if (!BatteryManager.Instance.HasBattery())
         {
-            uiFlowController.ShowPurchasePanel(PurchaseType.Battery,PurchaseSource.GameOver);
+            uiFlowController.ShowPurchasePanel(PurchaseType.Battery, PurchaseSource.GameOver);
             return;
         }
 
@@ -396,6 +399,7 @@ public class GameManagerCycle : MonoBehaviour
         LoadLevel();
 
         movementController.ResetState();
+        cameraFollow.SetDefault();
     }
 
     public void StartSnapshot()
@@ -413,8 +417,8 @@ public class GameManagerCycle : MonoBehaviour
         powerUpController.UpdatePowerUpUI();
 
         UpdatePlayerMovement();
-
-       // Debug.Log("Snapshot Time = " + snapshotTimer);
+        cameraFollow.SetSnapshotView();
+        // Debug.Log("Snapshot Time = " + snapshotTimer);
     }
 
     void UpdateSnapshotTimer()
@@ -427,6 +431,7 @@ public class GameManagerCycle : MonoBehaviour
             snapshotActive = false;
 
             movementController.OnSnapshotEnd();
+            cameraFollow.SetGameplayView();
             powerUpController.UpdatePowerUpUI();
             player.SetControlInteraction(true);
             UpdatePlayerMovement();
@@ -525,7 +530,7 @@ public class GameManagerCycle : MonoBehaviour
         Time.timeScale = 1f;
 
         snapshot.ClearSnapshot();
-;
+        ;
         snapshotActive = false;
 
         player.ReviveToLastSafeTile();
@@ -538,6 +543,7 @@ public class GameManagerCycle : MonoBehaviour
         player.canMove = true;
         movementController.ResetState();
         movementController.InitializeLayout(levelIndex);
+        cameraFollow.SetDefault();
     }
 
     public void SetSnapshotInactive()
