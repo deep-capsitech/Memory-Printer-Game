@@ -4,6 +4,11 @@ using UnityEngine.UI;
 
 public class DailyRewardPanelController : MonoBehaviour
 {
+    string L(string key, params object[] args)
+    {
+        return LocalizationManager.Instance.GetText(key, args);
+    }
+
     [Header("Day Items")]
     public GameObject[] dayItems; // Size = 7
 
@@ -31,6 +36,7 @@ public class DailyRewardPanelController : MonoBehaviour
     public Sprite claimedCardSprite;
     public Material normalMaterial;
     public Material outlineMaterial;
+
     void OnEnable()
     {
         RefreshUI();
@@ -60,8 +66,12 @@ public class DailyRewardPanelController : MonoBehaviour
             if (dayLabel != null)
             {
                 var txt = dayLabel.GetComponent<TextMeshProUGUI>();
-                if (txt != null)
-                    txt.text = "DAY " + dayNumber;
+                var localizedDay = txt.GetComponent<LocalizedTMPText>();
+                if (localizedDay != null)
+                {
+                    localizedDay.dynamicValue = dayNumber.ToString();
+                    localizedDay.useDynamicValue = true;
+                }
             }
 
             // ---------- REWARD TYPE ----------
@@ -76,9 +86,9 @@ public class DailyRewardPanelController : MonoBehaviour
                 if (txt != null)
                 {
                     if (dayNumber == 7)
-                        txt.text = "MYSTERY BOX";
+                        txt.text = L("MYSTERY_BOX"); // Layout Switch / Mystery Box
                     else
-                        txt.text = reward.type.ToString().ToUpper();
+                        txt.text = L(reward.type.ToString().ToUpper());
                 }
             }
             // ---------- REWARD VALUE ----------
@@ -159,12 +169,12 @@ public class DailyRewardPanelController : MonoBehaviour
 
         if (claimedToday)
         {
-            btnText.text = "CLAIMED";
+            btnText.text = L("CLAIMED");
             btnText.fontMaterial = outlineMaterial;
         }
         else
         {
-            btnText.text = "CLAIM";
+            btnText.text = L("CLAIM");
             btnText.fontMaterial = normalMaterial;
         }
         // ---------- TODAY REWARD TEXT ----------
@@ -186,16 +196,24 @@ public class DailyRewardPanelController : MonoBehaviour
 
         string rewardText;
 
-        if (todayReward.type == DailyRewardController.DailyRewardType.Coins)
-            rewardText = todayReward.amount.ToString() + " COINS";
-        else
-            rewardText = "×" + todayReward.amount + " " + todayReward.type.ToString().ToUpper();
-
-        todayRewardText.text = "TODAY'S REWARD: " + rewardText;
-
         if (displayDay == 7)
         {
-            todayRewardText.text = "TODAY'S REWARD: MYSTERY BOX";
+            rewardText = L("32"); // Layout Switch / Mystery Box
+        }
+        else if (todayReward.type == DailyRewardController.DailyRewardType.Coins)
+        {
+            rewardText = L("COINS", todayReward.amount);
+        }
+        else
+        {
+            rewardText = "×" + todayReward.amount + " " + L(todayReward.type.ToString().ToUpper());
+        }
+
+        var localized = todayRewardText.GetComponent<LocalizedTMPText>();
+        if (localized != null)
+        {
+            localized.useDynamicValue = true;
+            localized.dynamicValue = rewardText;
         }
     }
     void OnCollectClicked()

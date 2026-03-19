@@ -34,7 +34,10 @@ public class LevelPanelController : MonoBehaviour
         if (world == null) return;
 
         // WORLD TITLE
-        worldNameText.text = world.worldName;
+        string worldLabel = LocalizationManager.Instance.GetText("WORLD_LABEL", worldId.ToString());
+        string worldName = LocalizationManager.Instance.GetText(world.worldNameKey);
+
+        worldNameText.text = worldName;
         worldNameText.color = world.primaryColor;
 
         // PANEL FRAME COLOR

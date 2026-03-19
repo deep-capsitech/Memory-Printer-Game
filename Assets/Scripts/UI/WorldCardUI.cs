@@ -12,7 +12,7 @@ public class WorldCardUI : MonoBehaviour
     public void Setup(WorldData data, int totalStars)
     {
         worldId = data.worldId;
-        worldNameText.text = data.worldName;
+        worldNameText.text = LocalizationManager.Instance.GetText(data.worldNameKey);
 
         bool unlocked;
 

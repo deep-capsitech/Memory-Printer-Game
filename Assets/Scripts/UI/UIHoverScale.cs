@@ -44,13 +44,17 @@ using DG.Tweening;
         void Hover()
         {
             tween?.Kill();
-            tween = transform.DOScale(normalScale * hoverScale, duration).SetEase(ease);
+            tween = transform.DOScale(normalScale * hoverScale, duration)
+               .SetEase(ease)
+               .SetUpdate(true);
         }
 
         void ResetScale()
         {
             tween?.Kill();
-            tween = transform.DOScale(normalScale, duration).SetEase(Ease.OutQuad);
+            tween = transform.DOScale(normalScale, duration)
+                .SetEase(Ease.OutQuad)
+                .SetUpdate(true);
         }
     }
 

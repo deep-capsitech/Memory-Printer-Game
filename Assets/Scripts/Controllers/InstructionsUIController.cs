@@ -16,7 +16,7 @@ public class InstructionsUIController : MonoBehaviour
     public class Powerup
     {
         [TextArea(3, 5)]
-        public string description;
+        public string descriptionKey;
         public Sprite icon;
     }
 
@@ -42,7 +42,8 @@ public class InstructionsUIController : MonoBehaviour
             TextMeshProUGUI descText = obj.transform.Find("DescriptionText").GetComponent<TextMeshProUGUI>();
 
             icon.sprite = data.icon;
-            descText.text = FormatText(data.description);
+            string localized = LocalizationManager.Instance.GetText(data.descriptionKey);
+            descText.text = FormatText(localized);
         }
     }
 

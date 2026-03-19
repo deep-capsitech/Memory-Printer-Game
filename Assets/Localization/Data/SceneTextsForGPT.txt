@@ -1,0 +1,75 @@
+Generate ONLY valid JSON for a game localization file.
+
+Constraints:
+- No markdown
+- No comments
+- No explanations
+- No trailing commas
+- Preserve key order
+- Use uppercase keys
+
+Structure:
+{
+  "KEY": {
+    "en": "English",
+    "pt-BR": "Portuguese (Brazil)",
+    "ru": "Russian",
+    "sp": "Spanish",
+    "fr": "French",
+    "ar": "Arabic"
+  }
+}
+
+Entries:
+
+PLAY = PLAY
+SETTINGS = SETTINGS
+1 = Privacy Policy
+INSTRUCTIONS = INSTRUCTIONS
+2 = Objective :
+3 = • Memorize the room during Snapshot.
+• Layout shifts periodically.
+• Move tile by tile.
+• Avoid obstacles.
+• Reach the door before time runs out.
+4 = Powerups :
+LANGUAGES = LANGUAGES
+ENGLISH = English
+SPANISH = Spanish
+PORTUGUESE = Portuguese
+FRENCH = French
+RUSSIAN = Russian
+WORLDS = WORLDS
+5 = Neon City
+6 = Green City
+7 = Orange City
+8 = Purple City
+9 = Red City
+10 = MISSION FAILED
+11 = LEVEL COMPLETE
+PAUSE = PAUSE
+14 = NO BATTERY
+17 = NEW WORLD UNLOCKED
+18 = Do you want to go to WORLD 2 now?
+YES = YES
+NO = NO
+19 = DAILY REWARD
+20 = Day 1
+COINS = Coins
+BATTERY = Battery
+POWER_UP = Power-up
+27 = Today's Reward: 75 Coins
+CLAIM = CLAIM
+CLAIMED = CLAIMED
+28 = ROBOT SKINS
+SHOP = SHOP
+30 = DAILY COINS
+31 = 100 Coins
+32 = Layout Switch
+33 = LEVEL 1
+35 = Observe the obstacles and avoid collisions during gameplay
+36 = Tap to move
+37 = Drag obstacle to change its position
+38 = Time is frozen. Move and cross the obstacles
+39 = Collect booster to destroy obstacles
+40 = Reach the door to win

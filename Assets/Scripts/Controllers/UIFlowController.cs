@@ -148,8 +148,8 @@ public class UIFlowController : MonoBehaviour
     {
         DisableAllPanels();
         newWorldPanel.SetActive(true);
-
-        newWorldQuestionText.text = $"Do you want to go to {world.worldName}?";
+        string worldName = LocalizationManager.Instance.GetText(world.worldNameKey);
+        newWorldQuestionText.text = LocalizationManager.Instance.GetText("18", worldName);
     }
     public void ShowLevelComplete()
     {

@@ -18,7 +18,7 @@ public class BatteryUI : MonoBehaviour
 
         if (current >= max)
         {
-            timerText.text = "FULL";
+            timerText.text = LocalizationManager.Instance.GetText("FULL");
         }
         else
         {

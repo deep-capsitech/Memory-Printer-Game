@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewSkin", menuName = "Shop/Skin")]
 public class SkinData : ScriptableObject
 {
-    public string skinName;
+    public string skinNameKey;
 
     public Sprite skinIcon;
 

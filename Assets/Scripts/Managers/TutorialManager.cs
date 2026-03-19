@@ -13,8 +13,7 @@ public class TutorialManager : MonoBehaviour
     [Header("Drag Obstacles")]
     public GameObject Hand2D;      
     public GameObject InstructionDrag;
-    public GameObject DragHand1;
-    public GameObject DragHand2;
+    public GameObject DragHand;
     private bool waitingFor2DClick = false;
 
     [Header("Move Player")]
@@ -138,8 +137,7 @@ public class TutorialManager : MonoBehaviour
         waitingFor2DClick = false;
         Hand2D.SetActive(false);
         InstructionDrag.SetActive(true);
-        DragHand1.SetActive(true);
-        DragHand2.SetActive(true);
+        DragHand.SetActive(true);
         PowerUpBtn.SetActive(false);
     }
 
@@ -152,8 +150,7 @@ public class TutorialManager : MonoBehaviour
         if (power != null)
             power.ForceEndPowerUp();
         InstructionDrag.SetActive(false);
-        DragHand1.SetActive(false);
-        DragHand2.SetActive(false);
+        DragHand.SetActive(false);
         Time.timeScale = 1f;
         // Next tutorial step
         StartCoroutine(StartNextStepAfterDelay());
@@ -362,8 +359,7 @@ public class TutorialManager : MonoBehaviour
 
         Hand2D.SetActive(false);
         CircleMove.SetActive(false);
-        DragHand1.SetActive(false);
-        DragHand2.SetActive(false);
+        DragHand.SetActive(false);
         HandFreeze.SetActive(false);
         InstructionDrag.SetActive(false);
         InstructionMove.SetActive(false);

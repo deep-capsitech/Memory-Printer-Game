@@ -1,0 +1,506 @@
+{
+  "PLAY": {
+    "en": "PLAY",
+    "pt-BR": "JOGAR",
+    "ru": "ИГРАТЬ",
+    "sp": "JUGAR",
+    "fr": "JOUER",
+    "ar": "العب"
+  },
+  "SETTINGS": {
+    "en": "SETTINGS",
+    "pt-BR": "CONFIGURAÇÕES",
+    "ru": "НАСТРОЙКИ",
+    "sp": "CONFIGURACIÓN",
+    "fr": "PARAMÈTRES",
+    "ar": "الإعدادات"
+  },
+  "1": {
+    "en": "Privacy Policy",
+    "pt-BR": "Política de Privacidade",
+    "ru": "Политика конфиденциальности",
+    "sp": "Política de privacidad",
+    "fr": "Politique de confidentialité",
+    "ar": "سياسة الخصوصية"
+  },
+  "INSTRUCTIONS": {
+    "en": "INSTRUCTIONS",
+    "pt-BR": "INSTRUÇÕES",
+    "ru": "ИНСТРУКЦИИ",
+    "sp": "INSTRUCCIONES",
+    "fr": "INSTRUCTIONS",
+    "ar": "التعليمات"
+  },
+  "2": {
+    "en": "Objective :",
+    "pt-BR": "Objetivo :",
+    "ru": "Цель :",
+    "sp": "Objetivo :",
+    "fr": "Objectif :",
+    "ar": "الهدف :"
+  },
+  "3": {
+    "en": "• Memorize the room during Snapshot.\n• Layout shifts periodically.\n• Move tile by tile.\n• Avoid obstacles.\n• Reach the door before time runs out.",
+    "pt-BR": "• Memorize a sala durante o Snapshot.\n• O layout muda periodicamente.\n• Mova-se bloco por bloco.\n• Evite obstáculos.\n• Alcance a porta antes que o tempo acabe.",
+    "ru": "• Запомните комнату во время снимка.\n• Расположение периодически меняется.\n• Двигайтесь по клеткам.\n• Избегайте препятствий.\n• Достигните двери до истечения времени.",
+    "sp": "• Memoriza la habitación durante Snapshot.\n• El diseño cambia periódicamente.\n• Muévete casilla por casilla.\n• Evita obstáculos.\n• Llega a la puerta antes de que se acabe el tiempo.",
+    "fr": "• Mémorisez la pièce pendant le Snapshot.\n• La disposition change périodiquement.\n• Déplacez-vous case par case.\n• Évitez les obstacles.\n• Atteignez la porte avant la fin du temps.",
+    "ar": "• احفظ الغرفة أثناء اللقطة.\n• يتغير التخطيط بشكل دوري.\n• تحرك خطوة بخطوة.\n• تجنب العوائق.\n• وصل إلى الباب قبل انتهاء الوقت."
+  },
+  "4": {
+    "en": "Powerups :",
+    "pt-BR": "Power-ups :",
+    "ru": "Усиления :",
+    "sp": "Potenciadores :",
+    "fr": "Bonus :",
+    "ar": "العناصر المعززة :"
+  },
+  "LANGUAGES": {
+    "en": "LANGUAGES",
+    "pt-BR": "IDIOMAS",
+    "ru": "ЯЗЫКИ",
+    "sp": "IDIOMAS",
+    "fr": "LANGUES",
+    "ar": "اللغات"
+  },
+  "ENGLISH": {
+    "en": "English",
+    "pt-BR": "Inglês",
+    "ru": "Английский",
+    "sp": "Inglés",
+    "fr": "Anglais",
+    "ar": "الإنجليزية"
+  },
+  "SPANISH": {
+    "en": "Spanish",
+    "pt-BR": "Espanhol",
+    "ru": "Испанский",
+    "sp": "Español",
+    "fr": "Espagnol",
+    "ar": "الإسبانية"
+  },
+  "PORTUGUESE": {
+    "en": "Portuguese",
+    "pt-BR": "Português",
+    "ru": "Португальский",
+    "sp": "Portugués",
+    "fr": "Portugais",
+    "ar": "البرتغالية"
+  },
+  "FRENCH": {
+    "en": "French",
+    "pt-BR": "Francês",
+    "ru": "Французский",
+    "sp": "Francés",
+    "fr": "Français",
+    "ar": "الفرنسية"
+  },
+  "RUSSIAN": {
+    "en": "Russian",
+    "pt-BR": "Russo",
+    "ru": "Русский",
+    "sp": "Ruso",
+    "fr": "Russe",
+    "ar": "الروسية"
+  },
+  "WORLDS": {
+    "en": "WORLDS",
+    "pt-BR": "MUNDOS",
+    "ru": "МИРЫ",
+    "sp": "MUNDOS",
+    "fr": "MONDES",
+    "ar": "العوالم"
+  },
+  "5": {
+    "en": "Neon City",
+    "pt-BR": "Cidade Neon",
+    "ru": "Неоновый город",
+    "sp": "Ciudad Neón",
+    "fr": "Ville Néon",
+    "ar": "مدينة النيون"
+  },
+  "6": {
+    "en": "Green City",
+    "pt-BR": "Cidade Verde",
+    "ru": "Зелёный город",
+    "sp": "Ciudad Verde",
+    "fr": "Ville Verte",
+    "ar": "المدينة الخضراء"
+  },
+  "7": {
+    "en": "Orange City",
+    "pt-BR": "Cidade Laranja",
+    "ru": "Оранжевый город",
+    "sp": "Ciudad Naranja",
+    "fr": "Ville Orange",
+    "ar": "المدينة البرتقالية"
+  },
+  "8": {
+    "en": "Purple City",
+    "pt-BR": "Cidade Roxa",
+    "ru": "Фиолетовый город",
+    "sp": "Ciudad Púrpura",
+    "fr": "Ville Violette",
+    "ar": "المدينة البنفسجية"
+  },
+  "9": {
+    "en": "Red City",
+    "pt-BR": "Cidade Vermelha",
+    "ru": "Красный город",
+    "sp": "Ciudad Roja",
+    "fr": "Ville Rouge",
+    "ar": "المدينة الحمراء"
+  },
+  "10": {
+    "en": "MISSION FAILED",
+    "pt-BR": "MISSÃO FALHOU",
+    "ru": "МИССИЯ ПРОВАЛЕНА",
+    "sp": "MISIÓN FALLIDA",
+    "fr": "MISSION ÉCHOUÉE",
+    "ar": "فشلت المهمة"
+  },
+  "11": {
+    "en": "LEVEL COMPLETE",
+    "pt-BR": "NÍVEL COMPLETO",
+    "ru": "УРОВЕНЬ ПРОЙДЕН",
+    "sp": "NIVEL COMPLETADO",
+    "fr": "NIVEAU TERMINÉ",
+    "ar": "تم إنهاء المستوى"
+  },
+  "PAUSE": {
+    "en": "PAUSE",
+    "pt-BR": "PAUSA",
+    "ru": "ПАУЗА",
+    "sp": "PAUSA",
+    "fr": "PAUSE",
+    "ar": "إيقاف مؤقت"
+  },
+  "NO_POWERUP": {
+    "en": "NO-POWERUP",
+    "pt-BR": "SEM-POWERUP",
+    "ru": "НЕТ-УСИЛЕНИЯ",
+    "sp": "SIN-POTENCIADOR",
+    "fr": "PAS-DE-BONUS",
+    "ar": "لا-يوجد-تعزيز"
+  },
+  "NO_BATTERY": {
+    "en": "NO-BATTERY",
+    "pt-BR": "SEM-BATERIA",
+    "ru": "НЕТ-БАТАРЕИ",
+    "sp": "SIN-BATERÍA",
+    "fr": "PAS-DE-BATTERIE",
+    "ar": "لا-بطارية"
+  },
+  "17": {
+    "en": "NEW WORLD UNLOCKED",
+    "pt-BR": "NOVO MUNDO DESBLOQUEADO",
+    "ru": "НОВЫЙ МИР ОТКРЫТ",
+    "sp": "NUEVO MUNDO DESBLOQUEADO",
+    "fr": "NOUVEAU MONDE DÉBLOQUÉ",
+    "ar": "تم فتح عالم جديد"
+  },
+  "18": {
+    "en": "Do you want to go to {0} now?",
+    "pt-BR": "Deseja ir para o {0} agora?",
+    "ru": "Хотите перейти в {0} сейчас?",
+    "sp": "¿Quieres ir al {0} ahora?",
+    "fr": "Voulez-vous aller au {0} maintenant ?",
+    "ar": "هل تريد الذهاب إلى {0} الآن؟"
+  },
+  "YES": {
+    "en": "YES",
+    "pt-BR": "SIM",
+    "ru": "ДА",
+    "sp": "SÍ",
+    "fr": "OUI",
+    "ar": "نعم"
+  },
+  "NO": {
+    "en": "NO",
+    "pt-BR": "NÃO",
+    "ru": "НЕТ",
+    "sp": "NO",
+    "fr": "NON",
+    "ar": "لا"
+  },
+  "19": {
+    "en": "DAILY REWARD",
+    "pt-BR": "RECOMPENSA DIÁRIA",
+    "ru": "ЕЖЕДНЕВНАЯ НАГРАДА",
+    "sp": "RECOMPENSA DIARIA",
+    "fr": "RÉCOMPENSE QUOTIDIENNE",
+    "ar": "مكافأة يومية"
+  },
+  "20": {
+    "en": "Day {0}",
+    "pt-BR": "Dia {0}",
+    "ru": "День {0}",
+    "sp": "Día {0}",
+    "fr": "Jour {0}",
+    "ar": "اليوم {0}"
+  },
+  "COINS": {
+    "en": "Coins",
+    "pt-BR": "Moedas",
+    "ru": "Монеты",
+    "sp": "Monedas",
+    "fr": "Pièces",
+    "ar": "عملات"
+  },
+  "BATTERY": {
+    "en": "Battery",
+    "pt-BR": "Bateria",
+    "ru": "Батарея",
+    "sp": "Batería",
+    "fr": "Batterie",
+    "ar": "بطارية"
+  },
+  "POWER_UP": {
+    "en": "Power-up",
+    "pt-BR": "Power-up",
+    "ru": "Усиление",
+    "sp": "Potenciador",
+    "fr": "Bonus",
+    "ar": "تعزيز"
+  },
+  "27": {
+    "en": "Today's Reward: {0}",
+    "pt-BR": "Recompensa de hoje: {0}",
+    "ru": "Награда сегодня: {0}",
+    "sp": "Recompensa de hoy: {0}",
+    "fr": "Récompense du jour : {0}",
+    "ar": "مكافأة اليوم: {0}"
+  },
+  "CLAIM": {
+    "en": "CLAIM",
+    "pt-BR": "REIVINDICAR",
+    "ru": "ПОЛУЧИТЬ",
+    "sp": "RECLAMAR",
+    "fr": "RÉCLAMER",
+    "ar": "استلام"
+  },
+  "CLAIMED": {
+    "en": "CLAIMED",
+    "pt-BR": "REIVINDICADO",
+    "ru": "ПОЛУЧЕНО",
+    "sp": "RECLAMADO",
+    "fr": "RÉCLAMÉ",
+    "ar": "تم الاستلام"
+  },
+  "28": {
+    "en": "ROBOT SKINS",
+    "pt-BR": "SKINS DE ROBÔ",
+    "ru": "СКИНЫ РОБОТА",
+    "sp": "SKINS DE ROBOT",
+    "fr": "SKINS ROBOT",
+    "ar": "أشكال الروبوت"
+  },
+  "SHOP": {
+    "en": "SHOP",
+    "pt-BR": "LOJA",
+    "ru": "МАГАЗИН",
+    "sp": "TIENDA",
+    "fr": "BOUTIQUE",
+    "ar": "المتجر"
+  },
+  "30": {
+    "en": "DAILY COINS",
+    "pt-BR": "MOEDAS DIÁRIAS",
+    "ru": "ЕЖЕДНЕВНЫЕ МОНЕТЫ",
+    "sp": "MONEDAS DIARIAS",
+    "fr": "PIÈCES QUOTIDIENNES",
+    "ar": "عملات يومية"
+  },
+  "31": {
+    "en": "{0} Coins",
+    "pt-BR": "{0} moedas",
+    "ru": "{0} монет",
+    "sp": "{0} monedas",
+    "fr": "{0} pièces",
+    "ar": "{0} عملة"
+  },
+  "32": {
+    "en": "Layout Switch",
+    "pt-BR": "Mudança de layout",
+    "ru": "Смена расположения",
+    "sp": "Cambio de diseño",
+    "fr": "Changement de disposition",
+    "ar": "تغيير التخطيط"
+  },
+  "LEVEL_LABEL": {
+    "en": "LEVEL {0}",
+    "pt-BR": "NÍVEL {0}",
+    "ru": "УРОВЕНЬ {0}",
+    "sp": "NIVEL {0}",
+    "fr": "NIVEAU {0}",
+    "ar": "المستوى {0}"
+  },
+  "FULL": {
+    "en": "FULL",
+    "pt-BR": "CHEIO",
+    "ru": "ПОЛНО",
+    "sp": "LLENO",
+    "fr": "PLEIN",
+    "ar": "ممتلئ"
+  },
+  "35": {
+    "en": "Observe the obstacles and avoid collisions during gameplay",
+    "pt-BR": "Observe os obstáculos e evite colisões durante o jogo",
+    "ru": "Наблюдайте за препятствиями и избегайте столкновений во время игры",
+    "sp": "Observa los obstáculos y evita colisiones durante el juego",
+    "fr": "Observez les obstacles et évitez les collisions pendant le jeu",
+    "ar": "راقب العوائق وتجنب الاصطدام أثناء اللعب"
+  },
+  "36": {
+    "en": "Tap to move",
+    "pt-BR": "Toque para mover",
+    "ru": "Нажмите, чтобы двигаться",
+    "sp": "Toca para moverte",
+    "fr": "Touchez pour bouger",
+    "ar": "اضغط للتحرك"
+  },
+  "37": {
+    "en": "Drag obstacle to change its position",
+    "pt-BR": "Arraste o obstáculo para mudar sua posição",
+    "ru": "Перетащите препятствие, чтобы изменить его положение",
+    "sp": "Arrastra el obstáculo para cambiar su posición",
+    "fr": "Faites glisser l'obstacle pour changer sa position",
+    "ar": "اسحب العائق لتغيير موقعه"
+  },
+  "38": {
+    "en": "Time is frozen. Move and cross the obstacles",
+    "pt-BR": "O tempo está congelado. Mova-se e atravesse os obstáculos",
+    "ru": "Время остановлено. Двигайтесь и проходите препятствия",
+    "sp": "El tiempo está congelado. Muévete y cruza los obstáculos",
+    "fr": "Le temps est figé. Déplacez-vous et franchissez les obstacles",
+    "ar": "الوقت متوقف. تحرك وتجاوز العوائق"
+  },
+  "39": {
+    "en": "Collect booster to destroy obstacles",
+    "pt-BR": "Colete o booster para destruir obstáculos",
+    "ru": "Соберите усилитель, чтобы уничтожать препятствия",
+    "sp": "Recoge el potenciador para destruir obstáculos",
+    "fr": "Collectez le bonus pour détruire les obstacles",
+    "ar": "اجمع المعزز لتدمير العوائق"
+  },
+  "40": {
+    "en": "Reach the door to win",
+    "pt-BR": "Alcance a porta para vencer",
+    "ru": "Достигните двери, чтобы победить",
+    "sp": "Llega a la puerta para ganar",
+    "fr": "Atteignez la porte pour gagner",
+    "ar": "وصل إلى الباب للفوز"
+  },
+  "MYSTERY_BOX": {
+    "en": "MYSTERY BOX",
+    "pt-BR": "CAIXA MISTERIOSA",
+    "ru": "ТАЙНАЯ КОРОБКА",
+    "sp": "CAJA MISTERIOSA",
+    "fr": "BOÎTE MYSTÈRE",
+    "ar": "صندوق غامض"
+  },
+  "SNAPSHOT": {
+    "en": "SNAPSHOT",
+    "pt-BR": "FOTO",
+    "ru": "СНИМОК",
+    "sp": "FOTO",
+    "fr": "PHOTO",
+    "ar": "لقطة"
+  },
+  "FREEZE": {
+    "en": "FREEZE",
+    "pt-BR": "CONGELAR",
+    "ru": "ЗАМОРОЗКА",
+    "sp": "CONGELAR",
+    "fr": "GEL",
+    "ar": "تجميد"
+  },
+  "BUY": {
+    "en": "BUY",
+    "pt-BR": "COMPRAR",
+    "ru": "КУПИТЬ",
+    "sp": "COMPRAR",
+    "fr": "ACHETER",
+    "ar": "شراء"
+  },
+  "APPLY": {
+    "en": "APPLY",
+    "pt-BR": "APLICAR",
+    "ru": "ПРИМЕНИТЬ",
+    "sp": "APLICAR",
+    "fr": "APPLIQUER",
+    "ar": "تطبيق"
+  },
+  "SELECTED": {
+    "en": "SELECTED",
+    "pt-BR": "SELECIONADO",
+    "ru": "ВЫБРАНО",
+    "sp": "SELECCIONADO",
+    "fr": "SÉLECTIONNÉ",
+    "ar": "محدد"
+  },
+  "WHITE_SKIN": {
+    "en": "White Skin",
+    "pt-BR": "Pele Branca",
+    "ru": "Белый скин",
+    "sp": "Piel Blanca",
+    "fr": "Peau Blanche",
+    "ar": "الجلد الأبيض"
+  },
+  "BLUE_SKIN": {
+    "en": "Blue Skin",
+    "pt-BR": "Pele Azul",
+    "ru": "Синий скин",
+    "sp": "Piel Azul",
+    "fr": "Peau Bleue",
+    "ar": "الجلد الأزرق"
+  },
+  "RED_SKIN": {
+    "en": "Red Skin",
+    "pt-BR": "Pele Vermelha",
+    "ru": "Красный скин",
+    "sp": "Piel Roja",
+    "fr": "Peau Rouge",
+    "ar": "الجلد الأحمر"
+  },
+  "GREEN_SKIN": {
+    "en": "Green Skin",
+    "pt-BR": "Pele Verde",
+    "ru": "Зелёный скин",
+    "sp": "Piel Verde",
+    "fr": "Peau Verte",
+    "ar": "الجلد الأخضر"
+  },
+  "FREEZE_DESC": {
+    "en": "Freezes obstacles for 2 seconds.\nMove safely through obstacles.",
+    "pt-BR": "Congela obstáculos por 2 segundos.\nMova-se com segurança.",
+    "ru": "Замораживает препятствия на 2 секунды.\nДвигайтесь безопасно.",
+    "sp": "Congela obstáculos por 2 segundos.\nMuévete con seguridad.",
+    "fr": "Gèle les obstacles pendant 2 secondes.\nDéplacez-vous en toute sécurité.",
+    "ar": "يجمد العقبات لمدة ثانيتين.\nتحرك بأمان."
+  },
+  "DESTROY_DESC": {
+    "en": "Visible for 3 seconds.\nCollect to destroy all obstacles.",
+    "pt-BR": "Visível por 3 segundos.\nColete para destruir todos os obstáculos.",
+    "ru": "Виден в течение 3 секунд.\nСоберите, чтобы уничтожить все препятствия.",
+    "sp": "Visible durante 3 segundos.\nRecoge para destruir todos los obstáculos.",
+    "fr": "Visible pendant 3 secondes.\nCollectez pour détruire tous les obstacles.",
+    "ar": "يظهر لمدة 3 ثوانٍ.\nاجمعه لتدمير جميع العقبات."
+  },
+  "REVEAL_DESC": {
+    "en": "Reveals layout for 5 seconds.\nObserve all obstacles and move.",
+    "pt-BR": "Revela o layout por 5 segundos.\nObserve todos os obstáculos e mova-se.",
+    "ru": "Показывает расположение на 5 секунд.\nОсмотрите все препятствия и двигайтесь.",
+    "sp": "Revela el diseño durante 5 segundos.\nObserva todos los obstáculos y muévete en.",
+    "fr": "Révèle la disposition pendant 5 secondes.\nObservez tous les obstacles et déplacez-vous en.",
+    "ar": "يكشف التخطيط لمدة 5 ثوانٍ.\nراقب جميع العقبات وتحرك وفقًا لذلك."
+  },
+  "GRID_DESC": {
+    "en": "Shows full grid for 3 seconds.\nDrag the obstacle to change its position.",
+    "pt-BR": "Mostra a grade completa por 3 segundos.\nArraste o obstáculo para mudar sua posição.",
+    "ru": "Показывает всю сетку на 3 секунды.\nПеретащите препятствие, чтобы изменить его положение.",
+    "sp": "Muestra la cuadrícula completa durante 3 segundos.\nArrastra el obstáculo para cambiar su posición.",
+    "fr": "Affiche la grille complète pendant 3 secondes.\nFaites glisser l'obstacle pour changer sa position.",
+    "ar": "يعرض الشبكة كاملة لمدة 3 ثوانٍ (عرض ثنائي .\nاسحب العقبة لتغيير موقعها."
+  }
+}

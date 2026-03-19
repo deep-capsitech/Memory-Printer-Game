@@ -64,18 +64,18 @@ public class PurchasePanelController : MonoBehaviour
         switch (type)
         {
             case PurchaseType.Battery:
-                titleText.text = "NO BATTERY";
+                titleText.text = LocalizationManager.Instance.GetText("NO_BATTERY");
                 batterySection.SetActive(true);
                 break;
 
             case PurchaseType.Invision:
-                titleText.text = "NO POWERUP";
+                titleText.text = LocalizationManager.Instance.GetText("NO_POWERUP");
                 powerupSection.SetActive(true);
                 powerupIcon.sprite = invisionSprite;
                 break;
 
             case PurchaseType.Freeze:
-                titleText.text = "NO POWERUP";
+                titleText.text = LocalizationManager.Instance.GetText("NO_POWERUP");
                 powerupSection.SetActive(true);
                 powerupIcon.sprite = freezeSprite;
                 break;
@@ -186,5 +186,33 @@ public class PurchasePanelController : MonoBehaviour
                 GameManagerCycle.Instance.uiFlowController.ShowMenu();
                 break;
         }
+    }
+    void RefreshUI()
+    {
+        switch (currentType)
+        {
+            case PurchaseType.Battery:
+                titleText.text = LocalizationManager.Instance.GetText("NO_BATTERY");
+                break;
+
+            case PurchaseType.Invision:
+            case PurchaseType.Freeze:
+                titleText.text = LocalizationManager.Instance.GetText("NO_POWERUP");
+                break;
+        }
+    }
+    void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+            RefreshUI();
+        }
+    }
+
+    void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
     }
 }

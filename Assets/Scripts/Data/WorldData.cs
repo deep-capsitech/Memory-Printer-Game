@@ -5,7 +5,7 @@ public class WorldData : ScriptableObject
 {
     [Header("Identity")]
     public int worldId;
-    public string worldName;
+    public string worldNameKey;
 
     [Header("Progression")]
     public int starsRequired;

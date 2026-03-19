@@ -25,7 +25,7 @@ public class SkinCardUI : MonoBehaviour
         skinIndex = index;
 
         skinImage.sprite = data.skinIcon;
-        skinName.text = data.skinName;
+        skinName.text = LocalizationManager.Instance.GetText(data.skinNameKey);
 
         int unlocked = PlayerPrefs.GetInt("SkinUnlocked_" + index, index == 0 ? 1 : 0);
         int selected = PlayerPrefs.GetInt("SelectedSkin", 0);
@@ -33,7 +33,7 @@ public class SkinCardUI : MonoBehaviour
         if (unlocked == 0)
         {
             // LOCKED
-            buttonText.text = "BUY";
+            buttonText.text = LocalizationManager.Instance.GetText("BUY");
 
             priceText.text = data.price.ToString();
 
@@ -48,12 +48,12 @@ public class SkinCardUI : MonoBehaviour
 
             if (selected == index)
             {
-                buttonText.text = "SELECTED";
+                buttonText.text = LocalizationManager.Instance.GetText("SELECTED");
                 cardBackground.sprite = selectedCard;
             }
             else
             {
-                buttonText.text = "APPLY";
+                buttonText.text = LocalizationManager.Instance.GetText("APPLY");
                 cardBackground.sprite = normalCard;
             }
         }
@@ -74,5 +74,42 @@ public class SkinCardUI : MonoBehaviour
         {
             RobotSkinManager.Instance.ApplySkin(skinIndex);
         }
+    }
+    void RefreshUI()
+    {
+        if (skinData == null) return;
+
+        // Update name
+        skinName.text = LocalizationManager.Instance.GetText(skinData.skinNameKey);
+
+        int unlocked = PlayerPrefs.GetInt("SkinUnlocked_" + skinIndex, skinIndex == 0 ? 1 : 0);
+        int selected = PlayerPrefs.GetInt("SelectedSkin", 0);
+
+        // Update button text only
+        if (unlocked == 0)
+        {
+            buttonText.text = LocalizationManager.Instance.GetText("BUY");
+        }
+        else
+        {
+            if (selected == skinIndex)
+                buttonText.text = LocalizationManager.Instance.GetText("SELECTED");
+            else
+                buttonText.text = LocalizationManager.Instance.GetText("APPLY");
+        }
+    }
+    void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+            RefreshUI(); // 🔥 VERY IMPORTANT
+        }
+    }
+
+    void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
     }
 }

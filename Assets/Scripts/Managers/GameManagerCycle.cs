@@ -47,6 +47,7 @@ public class GameManagerCycle : MonoBehaviour
 
     private float mapTimer;
     private float snapshotTimer;
+    private bool stopMapTimer = false;
 
     private bool snapshotActive;
     private int levelsSinceLastAd = 0;
@@ -108,7 +109,7 @@ public class GameManagerCycle : MonoBehaviour
 
     void Update()
     {
-        if (!gameStateController.IsGameplayActive()) return;
+        if (!gameStateController.IsGameplayActive() || stopMapTimer) return;
 
         if (snapshotActive && !powerUpController.IsAnyPowerUpActive())
             UpdateSnapshotTimer();
@@ -174,6 +175,7 @@ public class GameManagerCycle : MonoBehaviour
 
     void LoadLevel()
     {
+        stopMapTimer = false;
         AdManager.Instance.HideBanner();
         GameEconomyManager.Instance.ResetLevelCoins();
 
@@ -199,7 +201,7 @@ public class GameManagerCycle : MonoBehaviour
 
         layoutIndex = 0;
 
-        levelText.text = "LEVEL " + (levelIndex);
+        levelText.text = LocalizationManager.Instance.GetText("LEVEL_LABEL", levelIndex.ToString());
 
         int minutes = Mathf.FloorToInt(mapTimer / 60f);
         int seconds = Mathf.FloorToInt(mapTimer % 60f);
@@ -241,6 +243,9 @@ public class GameManagerCycle : MonoBehaviour
     {
         if (gameStateController.CurrentState != GameStateController.GameState.Gameplay)
             return;
+
+        levelTimeController.StopTimer();
+        stopMapTimer = true;
 
         if (TutorialManager.Instance != null)
         {
@@ -466,6 +471,7 @@ public class GameManagerCycle : MonoBehaviour
         snapshotActive = true;
 
         movementController.OnSnapshotStart();
+        cameraFollow.SetSnapshotView();
         powerUpController.UpdatePowerUpUI();
         UpdatePlayerMovement();
     }
@@ -537,7 +543,7 @@ public class GameManagerCycle : MonoBehaviour
         player.StopMovementImmediately();
 
         uiFlowController.ShowGameplay();
-        levelText.text = "LEVEL " + levelIndex;
+        levelText.text = LocalizationManager.Instance.GetText("LEVEL_LABEL", levelIndex.ToString());
 
         gameStateController.SetState(GameStateController.GameState.Gameplay);
         player.canMove = true;
