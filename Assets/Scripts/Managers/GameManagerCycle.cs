@@ -62,8 +62,12 @@ public class GameManagerCycle : MonoBehaviour
 
     private const float TUTORIAL_TIME = 30f;
 
+
+    [Header("Camera")]
     public CameraFollow cameraFollow;
 
+    [Header("DiscoLight")]
+    public DiscoLightController[] discoLights;
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -260,8 +264,12 @@ public class GameManagerCycle : MonoBehaviour
     {
         player.canMove = false;
         player.StopMovementImmediately();
-        player.PlayWinJumpAnimation(); // optional
-
+        player.PlayWinJumpAnimation();
+        foreach (var light in discoLights)
+        {
+            if (light != null)
+                light.StartDisco();
+        }
         yield return new WaitForSeconds(4f);
 
         OnLevelCompleted();
@@ -291,6 +299,14 @@ public class GameManagerCycle : MonoBehaviour
         progressionController.GiveCoinsForStars();
 
         progressionController.UnlockNextLevel(levelIndex, totalLevels);
+
+        foreach (var light in discoLights)
+        {
+            if (light != null)
+                light.StopDisco();
+        }
+
+        DiscoLightManager.Instance.SetDiscoMode(false);
         uiFlowController.ShowLevelComplete();
 
         progressionController.CheckForNewWorldUnlock();

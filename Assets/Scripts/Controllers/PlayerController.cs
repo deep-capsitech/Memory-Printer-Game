@@ -276,6 +276,9 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Door"))
         {
             isPassingThroughDoor = false;
+            if (DiscoLightManager.Instance != null)
+                DiscoLightManager.Instance.SetDiscoMode(true);
+
             SoundManager.Instance.PlayWin();
             if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
             {
