@@ -312,12 +312,12 @@
     "ar": "عملات يومية"
   },
   "31": {
-    "en": "{0} Coins",
-    "pt-BR": "{0} moedas",
-    "ru": "{0} монет",
-    "sp": "{0} monedas",
-    "fr": "{0} pièces",
-    "ar": "{0} عملة"
+    "en": "100 Coins",
+    "pt-BR": "100 moedas",
+    "ru": "100 монет",
+    "sp": "100 monedas",
+    "fr": "100 pièces",
+    "ar": "100 عملة"
   },
   "32": {
     "en": "Layout Switch",

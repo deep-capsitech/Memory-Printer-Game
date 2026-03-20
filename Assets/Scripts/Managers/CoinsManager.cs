@@ -5,6 +5,10 @@ using System;
 
 public class CoinsManager : MonoBehaviour
 {
+    string L(string key, params object[] args)
+    {
+        return LocalizationManager.Instance.GetText(key, args);
+    }
     public int rewardCoins = 100;
 
     public TMP_Text buttonText;
@@ -58,7 +62,7 @@ public class CoinsManager : MonoBehaviour
 
     void SetClaimedState()
     {
-        buttonText.text = "CLAIMED";
+        buttonText.text = L("CLAIMED");
         cardImage.sprite = claimedCard;
 
         if (adIcon != null)
@@ -67,7 +71,7 @@ public class CoinsManager : MonoBehaviour
 
     void SetAvailableState()
     {
-        buttonText.text = "CLAIM";
+        buttonText.text = L("CLAIMED");
         cardImage.sprite = normalCard;
 
         if (adIcon != null)
