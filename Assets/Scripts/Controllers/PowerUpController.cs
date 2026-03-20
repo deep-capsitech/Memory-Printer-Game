@@ -48,6 +48,8 @@ public class PowerUpController : MonoBehaviour
     private Coroutine freezePulseRoutine;
     private Coroutine snapshotPulseRoutine;
 
+    [Header("Camera")]
+    public CameraFollow cameraFollow;
     void Update()
     {
         if (!GameManagerCycle.Instance.gameStateController.IsGameplayActive())
@@ -226,6 +228,7 @@ public class PowerUpController : MonoBehaviour
         player.EnableUnscaledAnimation(true);
 
         movementController.OnFreezeStart();
+        cameraFollow.SetSnapshotView();
         UpdateCountUI();
     }
 
@@ -243,6 +246,7 @@ public class PowerUpController : MonoBehaviour
         player.EnableUnscaledAnimation(false);
 
         movementController.OnFreezeEnd();
+        cameraFollow.SetGameplayView();
         UpdatePowerUpUI();
     }
 

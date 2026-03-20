@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SettingController : MonoBehaviour
@@ -17,19 +18,51 @@ public class SettingController : MonoBehaviour
     public Sprite soundOnSprite;
     public Sprite soundOffSprite;
 
+    [Header("Language Texts")]
+    public TMP_Text[] languageTexts;
+
+    [Header("Text Materials")]
+    public Material defaultMaterial;
+    public Material outlineMaterial;
+
     private bool isSoundOn;
+    private int selectedLanguageIndex = -1;
 
     // ---------- INIT ----------
     void Start()
     {
-        // Load saved sound state (default = ON)
         isSoundOn = PlayerPrefs.GetInt("sound", 1) == 1;
 
-        ApplySoundState();
+        // Load saved language
+        selectedLanguageIndex = PlayerPrefs.GetInt("language", 0);
 
-        // Ensure only menu is open at start
+        ApplySoundState();
+        ApplyLanguageSelection();
+
         HideAll();
         menuPanel.SetActive(true);
+    }
+
+    // ---------- LANGUAGE ----------
+    public void SelectLanguage(int index)
+    {
+        selectedLanguageIndex = index;
+
+        // Save selection
+        PlayerPrefs.SetInt("language", index);
+
+        ApplyLanguageSelection();
+    }
+
+    void ApplyLanguageSelection()
+    {
+        for (int i = 0; i < languageTexts.Length; i++)
+        {
+            if (i == selectedLanguageIndex)
+                languageTexts[i].fontMaterial = outlineMaterial;
+            else
+                languageTexts[i].fontMaterial = defaultMaterial;
+        }
     }
 
     // ---------- PANEL CONTROL ----------
