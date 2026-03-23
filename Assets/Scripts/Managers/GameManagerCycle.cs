@@ -68,6 +68,10 @@ public class GameManagerCycle : MonoBehaviour
 
     [Header("DiscoLight")]
     public DiscoLightController[] discoLights;
+
+    public TileGrid tileGrid;
+    public WorldThemeController themeController;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -213,7 +217,21 @@ public class GameManagerCycle : MonoBehaviour
         mapTimerText.text = $"{minutes:00}:{seconds:00}";
 
         generator.GenerateFromJson(levelIndex, layoutIndex);
+        // 👉 Get selected world
+        int selectedWorld = PlayerPrefs.GetInt("SelectedWorld", 1) - 1;
+        WorldData world = WorldDatabase.Instance.GetWorlds()[selectedWorld];
 
+        // 👉 Apply room + door
+        if (themeController != null)
+        {
+            themeController.ApplyWorldTheme(world);
+        }
+
+        // 👉 Apply hologram (snapshot)
+        snapshot.SetWorldMaterial(world);
+
+        // 👉 Apply tiles (DELAYED - IMPORTANT)
+        StartCoroutine(ApplyTileMaterialNextFrame(world));
         movementController.InitializeLayout(levelIndex);
 
         snapshot.ClearSnapshot();
@@ -226,6 +244,12 @@ public class GameManagerCycle : MonoBehaviour
         StartCoroutine(StartSnapshotNextFrame());
         powerUpController.UpdatePowerUpUI();
 
+    }
+    IEnumerator ApplyTileMaterialNextFrame(WorldData world)
+    {
+        yield return null; // wait 1 frame
+
+        tileGrid.ApplyTileMaterial(world.hologramMaterial);
     }
 
     public void PauseGame()

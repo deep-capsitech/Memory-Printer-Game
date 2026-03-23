@@ -12,4 +12,7 @@ public class WorldData : ScriptableObject
 
     [Header("Theme")]
     public Color primaryColor;
+    public Material roomMaterial;
+    public Material hologramMaterial;
+    public Material floorMaterial;
 }

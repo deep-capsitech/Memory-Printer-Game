@@ -6,11 +6,14 @@ public class SnapshotManager : MonoBehaviour
 {
     public LevelGenerator generator;
     public TileGrid tileGrid;
-    public Material hologramMaterial;
-
+    // public Material hologramMaterial;
+    private Material currentHologramMaterial;
     private readonly List<GameObject> ghosts = new List<GameObject>();
 
-
+    public void SetWorldMaterial(WorldData world)
+    {
+        currentHologramMaterial = world.hologramMaterial;
+    }
     public void TakeSnapshot()
     {
         ClearSnapshot();
@@ -35,7 +38,7 @@ public class SnapshotManager : MonoBehaviour
             mf.sharedMesh = srcMesh.sharedMesh;
 
             MeshRenderer mr = ghost.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = hologramMaterial;
+            mr.sharedMaterial = currentHologramMaterial;
 
             ghosts.Add(ghost);
         }

@@ -99,4 +99,25 @@ public class TileGrid : MonoBehaviour
     {
         return x >= 0 && x < gridSize && z >= 0 && z < gridSize;
     }
+
+    public void ApplyTileMaterial(Material mat)
+    {
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int z = 0; z < gridSize; z++)
+            {
+                GameObject tile = tiles[x, z];
+                if (tile == null) continue;
+
+                LineRenderer lr = tile.GetComponent<LineRenderer>();
+
+                if (lr != null)
+                {
+                    lr.enabled = false;
+                    lr.material = mat;
+                    lr.enabled = true;
+                }
+            }
+        }
+    }
 }

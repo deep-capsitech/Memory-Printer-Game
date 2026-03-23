@@ -71,7 +71,7 @@ public class CoinsManager : MonoBehaviour
 
     void SetAvailableState()
     {
-        buttonText.text = L("CLAIMED");
+        buttonText.text = L("CLAIM");
         cardImage.sprite = normalCard;
 
         if (adIcon != null)
