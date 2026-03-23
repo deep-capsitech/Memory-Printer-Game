@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: WhiteSkin
   m_EditorClassIdentifier: 
   skinNameKey: WHITE_SKIN
-  skinIcon: {fileID: 21300000, guid: f94e3420b1b5feb4590cf0ab697a340b, type: 3}
+  skinIcon: {fileID: 21300000, guid: e4b981de90b67bc40b6dc3baec6a2fdc, type: 3}
   skinMaterial: {fileID: 2100000, guid: 9db7e5b658960d646945c024db68def5, type: 2}
   price: 900

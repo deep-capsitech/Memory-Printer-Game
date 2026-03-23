@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BlueSkin
   m_EditorClassIdentifier: 
   skinNameKey: BLUE_SKIN
-  skinIcon: {fileID: 21300000, guid: 04d1be5b9f606c44d98789f1cefd4b8e, type: 3}
+  skinIcon: {fileID: 21300000, guid: 9a63bce60723ec04188c03e1bfd23cee, type: 3}
   skinMaterial: {fileID: 2100000, guid: fb2b050b7ca859448b612a9b1b1bb3ab, type: 2}
   price: 300
