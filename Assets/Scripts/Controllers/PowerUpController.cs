@@ -61,7 +61,10 @@ public class PowerUpController : MonoBehaviour
         if (freezeTimeActive)
             UpdateFreezeTimer();
     }
-
+    bool IsTutorial()
+    {
+        return TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive;
+    }
     int GetCurrentWorld()
     {
         return PlayerPrefs.GetInt("SelectedWorld", 1);
@@ -125,13 +128,16 @@ public class PowerUpController : MonoBehaviour
         if (freezeTimeActive)
             EndFreezeTime();
 
-        if (PowerupInventoryManager.Instance.GetInvisionCount() <= 0)
+        if (!IsTutorial())
         {
-            uiFlowController.ShowPurchasePanel(PurchaseType.Invision,PurchaseSource.Gameplay);
-            return;
-        }
+            if (PowerupInventoryManager.Instance.GetInvisionCount() <= 0)
+            {
+                uiFlowController.ShowPurchasePanel(PurchaseType.Invision, PurchaseSource.Gameplay);
+                return;
+            }
 
-        PowerupInventoryManager.Instance.ConsumeInvision();
+            PowerupInventoryManager.Instance.ConsumeInvision();
+        }
 
         if (GameManagerCycle.Instance.IsSnapshotActive)
         {
@@ -202,13 +208,16 @@ public class PowerUpController : MonoBehaviour
         if (freezeTimeActive)
             return;
 
-        if (PowerupInventoryManager.Instance.GetFreezeCount() <= 0)
+        if (!IsTutorial())
         {
-            uiFlowController.ShowPurchasePanel(PurchaseType.Freeze, PurchaseSource.Gameplay);
-            return;
-        }
+            if (PowerupInventoryManager.Instance.GetFreezeCount() <= 0)
+            {
+                uiFlowController.ShowPurchasePanel(PurchaseType.Freeze, PurchaseSource.Gameplay);
+                return;
+            }
 
-        PowerupInventoryManager.Instance.ConsumeFreeze();
+            PowerupInventoryManager.Instance.ConsumeFreeze();
+        }
 
         if (GameManagerCycle.Instance.IsSnapshotActive)
         {
@@ -274,6 +283,19 @@ public class PowerUpController : MonoBehaviour
 
     void UpdateCountUI()
     {
+        if (IsTutorial())
+        {
+            invisionCountText.gameObject.SetActive(false);
+            invisionPlusIcon.SetActive(false);
+
+            freezeCountText.gameObject.SetActive(false);
+            freezePlusIcon.SetActive(false);
+
+            snapshotCountText.gameObject.SetActive(false);
+            snapshotAdIcon.SetActive(false);
+
+            return;
+        }
         bool invisionUnlocked = IsInvisionUnlocked();
         bool freezeUnlocked = IsFreezeUnlocked();
 
@@ -376,6 +398,13 @@ public class PowerUpController : MonoBehaviour
 
         if (snapshotCount <= 0)
         {
+            if (IsTutorial())
+            {
+                GameManagerCycle.Instance.UseManualSnapshot();
+                UpdatePowerUpUI();
+                return;
+            }
+
             AdManager.Instance.ShowRewarded(() =>
             {
                 GameManagerCycle.Instance.AddSnapshotUse();

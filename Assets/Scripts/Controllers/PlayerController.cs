@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
     public Button downButton;
     public Button leftButton;
     public Button rightButton;
+
+    private bool tutorialOnlyUp = false;
     void Start()
     {
         startPos = transform.position;
@@ -119,6 +121,25 @@ public class PlayerController : MonoBehaviour
         if (downButton) downButton.interactable = enable;
         if (leftButton) leftButton.interactable = enable;
         if (rightButton) rightButton.interactable = enable;
+    }
+
+    public void SetTutorialOnlyUpControl()
+    {
+        tutorialOnlyUp = true;
+        if (upButton) upButton.interactable = true;
+
+        if (downButton) downButton.interactable = false;
+        if (leftButton) leftButton.interactable = false;
+        if (rightButton) rightButton.interactable = false;
+    }
+
+    public void SetAllControlsActive()
+    {
+        tutorialOnlyUp = false;
+        if (upButton) upButton.interactable = true;
+        if (downButton) downButton.interactable = true;
+        if (leftButton) leftButton.interactable = true;
+        if (rightButton) rightButton.interactable = true;
     }
     void HandleMobileHoldMovement()
     {
@@ -202,9 +223,9 @@ public class PlayerController : MonoBehaviour
     }
  
     public void HoldUpStart() { holdUp = true; holdTimer = 0f; }
-    public void HoldDownStart() { holdDown = true; holdTimer = 0f; }
-    public void HoldLeftStart() { holdLeft = true; holdTimer = 0f; }
-    public void HoldRightStart() { holdRight = true; holdTimer = 0f; }
+    public void HoldDownStart() { if (tutorialOnlyUp) return; holdDown = true; holdTimer = 0f; }
+    public void HoldLeftStart() { if (tutorialOnlyUp) return; holdLeft = true; holdTimer = 0f; }
+    public void HoldRightStart() { if (tutorialOnlyUp) return; holdRight = true; holdTimer = 0f; }
 
     public void HoldUpStop() { holdUp = false; }
     public void HoldDownStop() { holdDown = false; }
@@ -275,11 +296,10 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Door"))
         {
+            UIFlowController.Instance.gameplayPanel.SetActive(false);
             isPassingThroughDoor = false;
             if (DiscoLightManager.Instance != null)
                 DiscoLightManager.Instance.SetDiscoMode(true);
-
-            SoundManager.Instance.PlayWin();
             if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
             {
                 TutorialManager.Instance.OnDoorReached();
@@ -297,6 +317,11 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("Obstacle"))
         {
+
+            if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
+            {
+                TutorialManager.Instance.ForceEndTutorial();
+            }
             if (freezeMode)
                 return;
             SoundManager.Instance.PlayDeath();

@@ -100,6 +100,10 @@ public class TutorialManager : MonoBehaviour
         InstructionMove.SetActive(true);
         DisableAllBtn();
         MobileControlBtn.SetActive(true);
+        if (GameManagerCycle.Instance.player != null)
+        {
+            GameManagerCycle.Instance.player.SetTutorialOnlyUpControl();
+        }
         CircleMove.SetActive(true);
         waitingForMovementClick = true;
         Time.timeScale = 0f;
@@ -180,6 +184,10 @@ public class TutorialManager : MonoBehaviour
         waitingForInvincibleClick = false;
         HandFreeze.SetActive(false);
         MobileControlBtn.SetActive(true);
+        if (GameManagerCycle.Instance.player != null)
+        {
+            GameManagerCycle.Instance.player.SetTutorialOnlyUpControl();
+        }
         InstructionFreeze.SetActive(true);
 
         if (GameManagerCycle.Instance.player != null)
@@ -223,6 +231,10 @@ public class TutorialManager : MonoBehaviour
     {
         if (!isTutorialActive) return;
         MobileControlBtn.SetActive(true);
+        if (GameManagerCycle.Instance.player != null)
+        {
+            GameManagerCycle.Instance.player.SetTutorialOnlyUpControl();
+        }
         if (currentStep == 3)
             NextStep();
         waitingForBoosterCollect = true;
@@ -252,6 +264,10 @@ public class TutorialManager : MonoBehaviour
         DisableAllBtn();
 
         MobileControlBtn.SetActive(true);
+        if (GameManagerCycle.Instance.player != null)
+        {
+            GameManagerCycle.Instance.player.SetTutorialOnlyUpControl();
+        }
         SnapshotBtn.SetActive(false);
         PowerUpBtn.SetActive(false);
         FreezeBtn.SetActive(false);
@@ -317,7 +333,12 @@ public class TutorialManager : MonoBehaviour
         SnapshotBtn.SetActive(true);
         PowerUpBtn.SetActive(true);
         FreezeBtn.SetActive(true);
-        PauseBtn.SetActive(true);   
+        PauseBtn.SetActive(true);
+
+        if (GameManagerCycle.Instance.player != null)
+        {
+            GameManagerCycle.Instance.player.SetAllControlsActive();
+        }
 
         //PlayerPrefs.SetInt("TutorialDone", 1);
         //PlayerPrefs.Save();
@@ -344,6 +365,11 @@ public class TutorialManager : MonoBehaviour
         PowerUpBtn.SetActive(true);
         FreezeBtn.SetActive(true);
         PauseBtn.SetActive(true);
+
+        if (GameManagerCycle.Instance.player != null)
+        {
+            GameManagerCycle.Instance.player.SetAllControlsActive();
+        }
     }
 
     void ResetTutorialState()

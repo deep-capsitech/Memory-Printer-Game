@@ -32,6 +32,14 @@ public class UIFlowController : MonoBehaviour
   //  private GameObject _previousPanelBeforeNoBattery;
     
     public DailyRewardController dailyRewardController;
+    public static UIFlowController Instance;
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     public void DisableAllPanels()
     {

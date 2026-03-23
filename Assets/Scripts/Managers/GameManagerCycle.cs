@@ -307,6 +307,7 @@ public class GameManagerCycle : MonoBehaviour
         }
 
         DiscoLightManager.Instance.SetDiscoMode(false);
+        SoundManager.Instance.PlayWin();
         uiFlowController.ShowLevelComplete();
 
         progressionController.CheckForNewWorldUnlock();
