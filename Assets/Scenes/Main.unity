@@ -8731,7 +8731,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8bc2344507819bb4aae9d663aeda1da1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8e95e093d64009143bb83c752309af91, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9633,7 +9633,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8bc2344507819bb4aae9d663aeda1da1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8e95e093d64009143bb83c752309af91, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20388,7 +20388,7 @@ MonoBehaviour:
   star1: {fileID: 618368323}
   star2: {fileID: 570020716}
   star3: {fileID: 1600606966}
-  filledStar: {fileID: 21300000, guid: 8bc2344507819bb4aae9d663aeda1da1, type: 3}
+  filledStar: {fileID: 21300000, guid: 8e95e093d64009143bb83c752309af91, type: 3}
   emptyStar: {fileID: 21300000, guid: b2896269de699574b83f8de12c249666, type: 3}
   uiFlowController: {fileID: 327556129}
 --- !u!4 &1312646692
@@ -24900,7 +24900,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8bc2344507819bb4aae9d663aeda1da1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8e95e093d64009143bb83c752309af91, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
