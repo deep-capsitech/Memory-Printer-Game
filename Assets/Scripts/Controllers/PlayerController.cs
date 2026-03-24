@@ -46,6 +46,10 @@ public class PlayerController : MonoBehaviour
     public Button rightButton;
 
     private bool tutorialOnlyUp = false;
+    private bool isInsideObstacle = false;
+    private Transform currentObstacle = null;
+
+    Vector3 previousPos;
     void Start()
     {
         startPos = transform.position;
@@ -161,6 +165,7 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer(Vector3 dir)
     {
+        previousPos = transform.position;
         if (TutorialManager.Instance != null)
         {
             TutorialManager.Instance.OnMovementButtonPressed();
@@ -296,14 +301,19 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Door"))
         {
+            DoorGlow.Instance?.ApplyWorldMaterial();
+
             UIFlowController.Instance.gameplayPanel.SetActive(false);
             isPassingThroughDoor = false;
+
             if (DiscoLightManager.Instance != null)
                 DiscoLightManager.Instance.SetDiscoMode(true);
+            
             if (TutorialManager.Instance != null && TutorialManager.Instance.isTutorialActive)
             {
                 TutorialManager.Instance.OnDoorReached();
             }
+
             GameManagerCycle.Instance.PlayerReachedDoor();
         }
         else if (other.CompareTag("Booster"))
@@ -333,22 +343,32 @@ public class PlayerController : MonoBehaviour
     {
         if (!freezeMode) return;
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, 1.2f);
+        Collider[] hits = Physics.OverlapSphere(transform.position, 0.3f);
+
+        bool currentlyInside = false;
 
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Obstacle"))
             {
-                Vector3 dirToObstacle = hit.transform.position - transform.position;
+                currentlyInside = true;
 
-                // obstacle player ke piche reh gaya
-                if (Vector3.Dot(transform.forward, dirToObstacle) < 0)
+                if (!isInsideObstacle)
                 {
-                    if (TutorialManager.Instance != null)
-                    {
-                        TutorialManager.Instance.OnObstacleCrossed();
-                    }
+                    isInsideObstacle = true;
+                    currentObstacle = hit.transform;
                 }
+                break;
+            }
+        }
+
+        if (isInsideObstacle && !currentlyInside)
+        {
+            isInsideObstacle = false;
+
+            if (TutorialManager.Instance != null)
+            {
+                TutorialManager.Instance.OnObstacleCrossed();
             }
         }
     }

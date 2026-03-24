@@ -189,10 +189,6 @@ public class GameManagerCycle : MonoBehaviour
 
         JsonLevel level = JsonLevelLoader.Instance.GetLevel(levelIndex);
 
-        //levelTimeController.StartTimer(level.levelTime);
-        //mapTimer = level.mapChangeTime;
-        //snapshotTimer = level.snapshotTime;
-
         if (isTutorial && levelIndex == 1)
         {
             levelTimeController.StartTimer(TUTORIAL_TIME);
@@ -204,7 +200,7 @@ public class GameManagerCycle : MonoBehaviour
             levelTimeController.StartTimer(level.levelTime);
             mapTimer = level.mapChangeTime;
         }
-
+        
         snapshotTimer = level.snapshotTime;
 
         layoutIndex = 0;
@@ -216,21 +212,27 @@ public class GameManagerCycle : MonoBehaviour
 
         mapTimerText.text = $"{minutes:00}:{seconds:00}";
 
+        // Generate level
         generator.GenerateFromJson(levelIndex, layoutIndex);
-        // 👉 Get selected world
-        int selectedWorld = PlayerPrefs.GetInt("SelectedWorld", 1) - 1;
-        WorldData world = WorldDatabase.Instance.GetWorlds()[selectedWorld];
+        int worldIndex = (levelIndex - 1) / 10;
+        worldIndex = Mathf.Clamp(worldIndex, 0, WorldDatabase.Instance.GetWorlds().Count - 1);
 
-        // 👉 Apply room + door
+        WorldData world = WorldDatabase.Instance.GetWorlds()[worldIndex];
+        WorldDatabase.Instance.currentWorldIndex = worldIndex;
+
         if (themeController != null)
         {
             themeController.ApplyWorldTheme(world);
         }
-
-        // 👉 Apply hologram (snapshot)
         snapshot.SetWorldMaterial(world);
 
-        // 👉 Apply tiles (DELAYED - IMPORTANT)
+        if (DoorGlow.Instance != null)
+        {
+            DoorGlow.Instance.ApplyDefault();
+        }
+
+
+        // Apply tiles (delayed)
         StartCoroutine(ApplyTileMaterialNextFrame(world));
         movementController.InitializeLayout(levelIndex);
 
