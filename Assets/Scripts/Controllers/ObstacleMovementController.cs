@@ -159,10 +159,10 @@ public class ObstacleMovementController : MonoBehaviour
         if (levelIndex >= 21 && levelIndex <= 30)
             return MovingObstacle.MoveType.LeftRight;
 
-        if (levelIndex >= 31 && levelIndex <= 40)
+        if (levelIndex >= 41 && levelIndex <= 50)
             return MovingObstacle.MoveType.Both;
 
-        if (levelIndex >= 41 && levelIndex <= 50)
+        if (levelIndex >= 31 && levelIndex <= 40)
             return MovingObstacle.MoveType.Square;
 
         return MovingObstacle.MoveType.None;
