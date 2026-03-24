@@ -268,7 +268,27 @@ public class GameManagerCycle : MonoBehaviour
         uiFlowController.ResumeGame();
         AdManager.Instance.HideBanner();
     }
+    public void Restart()
+    {
+        levelTimeController.StopTimer();
+        Time.timeScale = 1f;
+        StopAllCoroutines();
 
+        snapshot.ClearSnapshot();
+        snapshotActive = false;
+
+        player.ResetPosition();
+        player.StopMovementImmediately();
+
+        layoutIndex = 0;
+
+        movementController.ResetState();
+
+        cameraFollow.SetDefault();
+
+        uiFlowController.ShowGameplay();
+        LoadLevel();
+    }
     public void PlayerReachedDoor()
     {
         if (gameStateController.CurrentState != GameStateController.GameState.Gameplay)

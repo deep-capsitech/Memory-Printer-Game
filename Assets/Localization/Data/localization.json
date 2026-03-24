@@ -502,5 +502,21 @@
     "sp": "Muestra la cuadrícula completa durante 3 segundos.\nArrastra el obstáculo para cambiar su posición.",
     "fr": "Affiche la grille complète pendant 3 secondes.\nFaites glisser l'obstacle pour changer sa position.",
     "ar": "يعرض الشبكة كاملة لمدة 3 ثوانٍ (عرض ثنائي .\nاسحب العقبة لتغيير موقعها."
+  },
+  "QUIT_CONFIRM": {
+    "en": "Are you sure you want to quit?",
+    "pt-BR": "Tem certeza de que deseja sair?",
+    "ru": "Вы уверены, что хотите выйти?",
+    "sp": "¿Estás seguro de que quieres salir?",
+    "fr": "Êtes-vous sûr de vouloir quitter ?",
+    "ar": "هل أنت متأكد أنك تريد الخروج؟"
+  },
+  "QUIT_GAME": {
+    "en": "Quit Game",
+    "pt-BR": "Sair do Jogo",
+    "ru": "Выйти из игры",
+    "sp": "Salir del juego",
+    "fr": "Quitter le jeu",
+    "ar": "الخروج من اللعبة"
   }
 }
