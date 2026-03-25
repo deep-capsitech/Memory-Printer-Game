@@ -24,7 +24,9 @@ public class DailyRewardController : MonoBehaviour
     private const string DATE_KEY = "DailyRewardLastClaimDate";
     private const string DAILY_POPUP_DATE = "DailyRewardPopupDate";
 
-    private int currentDay; // 1–7
+    private int currentDay;
+    private string today;
+    private string lastClaimDate;
 
     void Awake()
     {
@@ -41,53 +43,41 @@ public class DailyRewardController : MonoBehaviour
     }
     void LoadState()
     {
+        today = DateTime.UtcNow.ToString("yyyyMMdd");
         currentDay = PlayerPrefs.GetInt(DAY_KEY, 1);
 
         if (currentDay < 1 || currentDay > 7)
             currentDay = 1;
 
-        string lastDate = PlayerPrefs.GetString(DATE_KEY, "");
+        lastClaimDate = PlayerPrefs.GetString(DATE_KEY, "");
 
-        if (!string.IsNullOrEmpty(lastDate))
+        if (!string.IsNullOrEmpty(lastClaimDate))
         {
-            int diff = GetDaysDifference(lastDate);
+            int diff = GetDaysDifference(lastClaimDate);
 
             if (diff > 1)
             {
-                // 🔥 Missed day → reset streak
                 currentDay = 1;
                 PlayerPrefs.SetInt(DAY_KEY, currentDay);
                 PlayerPrefs.Save();
             }
         }
     }
-    // ----------------------------
-    // INITIALIZE UI
-    // ----------------------------
+
     public void Initialize()
     {
         UpdateDailyRewardButton();
     }
-    bool HasClaimedToday()
+    public bool HasClaimedTodayPublic()
     {
-        string lastDate = PlayerPrefs.GetString(DATE_KEY, "");
-        string today = DateTime.Now.ToString("yyyyMMdd");
-        return lastDate == today;
+        return lastClaimDate == today;
     }
 
     public bool CanShowDailyReward()
     {
-        return !HasClaimedToday();
+        return !HasClaimedTodayPublic();
     }
-    public bool HasClaimedTodayPublic()
-    {
-        string lastDate = PlayerPrefs.GetString(DATE_KEY, "");
-        string today = DateTime.Now.ToString("yyyyMMdd");
-        return lastDate == today;
-    }
-    // ----------------------------
-    // AUTO POPUP LOGIC
-    // ----------------------------
+
     public bool ShouldAutoShowDailyReward()
     {
         if (!CanShowDailyReward())
@@ -119,8 +109,9 @@ public class DailyRewardController : MonoBehaviour
             GiveDaySevenBonus();
         }
 
-        string today = DateTime.Now.ToString("yyyyMMdd");
+        string today = this.today;
         PlayerPrefs.SetString(DATE_KEY, today);
+        lastClaimDate = today;
 
         currentDay++;
         if (currentDay > 7)
@@ -140,9 +131,6 @@ public class DailyRewardController : MonoBehaviour
         uiFlowController.ShowDailyRewardPanel();
     }
 
-    // ----------------------------
-    // GETTERS
-    // ----------------------------
     public int GetCurrentDay()
     {
         return currentDay;
@@ -230,7 +218,6 @@ public class DailyRewardController : MonoBehaviour
     }
     void GiveDaySevenBonus()
     {
-        // Mystery Box Rewards
         GameEconomyManager.Instance.AddCoins(200);
         PowerupInventoryManager.Instance.AddInvision(1);
         PowerupInventoryManager.Instance.AddFreeze(1);

@@ -136,32 +136,39 @@ public class PurchasePanelController : MonoBehaviour
         if (success)
         {
             GameManagerCycle.Instance.powerUpController.UpdatePowerUpUI();
-            Close();
+            HandlePostPurchaseFlow();
         }
     }
 
     public void OnWatchAd()
     {
-        AdManager.Instance.ShowRewarded(() =>
+        AdManager.Instance.ShowRewarded(
+    onRewardEarned: () =>
+    {
+        // ONLY reward here
+        switch (currentType)
         {
-            switch (currentType)
-            {
-                case PurchaseType.Battery:
-                    BatteryManager.Instance.AddBatteryInstant(1);
-                    break;
+            case PurchaseType.Battery:
+                BatteryManager.Instance.AddBatteryInstant(1);
+                break;
 
-                case PurchaseType.Invision:
-                    PowerupInventoryManager.Instance.RefillViaAdInvision();
-                    break;
+            case PurchaseType.Invision:
+                PowerupInventoryManager.Instance.RefillViaAdInvision();
+                break;
 
-                case PurchaseType.Freeze:
-                    PowerupInventoryManager.Instance.RefillViaAdFreeze();
-                    break;
-            }
+            case PurchaseType.Freeze:
+                PowerupInventoryManager.Instance.RefillViaAdFreeze();
+                break;
+        }
 
-            GameManagerCycle.Instance.powerUpController.UpdatePowerUpUI();
-            Close();
-        });
+        GameManagerCycle.Instance.powerUpController.UpdatePowerUpUI();
+    },
+    onAdClosed: () =>
+    {
+        // ONLY navigation here
+        HandlePostPurchaseFlow();
+    }
+);
     }
 
     public void Close()
@@ -184,6 +191,29 @@ public class PurchasePanelController : MonoBehaviour
 
             default:
                 GameManagerCycle.Instance.uiFlowController.ShowMenu();
+                break;
+        }
+    }
+    void HandlePostPurchaseFlow()
+    {
+        gameObject.SetActive(false);
+
+        switch (source)
+        {
+            case PurchaseSource.LevelPanel:
+                // Directly start selected level
+                GameManagerCycle.Instance.OnLevelSelected(
+                    GameManagerCycle.Instance.CurrentLevelNumber
+                );
+                break;
+
+            case PurchaseSource.GameOver:
+                // Retry level directly
+                GameManagerCycle.Instance.Retry();
+                break;
+
+            default:
+                Close(); // fallback (unchanged behavior)
                 break;
         }
     }

@@ -72,6 +72,8 @@ public class GameManagerCycle : MonoBehaviour
     public TileGrid tileGrid;
     public WorldThemeController themeController;
 
+    private bool levelEnded = false; // completed OR failed
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -113,6 +115,7 @@ public class GameManagerCycle : MonoBehaviour
             return;
         }
         CheckTutorial();
+        levelEnded = false;
     }
 
     void Update()
@@ -157,11 +160,10 @@ public class GameManagerCycle : MonoBehaviour
     {
         levelIndex = levelNumber;
         layoutIndex = 0;
+        int lastLevel = GetLastLevel();
+        int lastResult = GetLastResult();
 
-        bool alreadyCompleted =
-      PlayerPrefs.GetInt("LevelStars" + levelIndex, 0) > 0;
-
-        if (alreadyCompleted)
+        if (lastLevel == levelIndex && (lastResult == 1 || lastResult == 2))
         {
             if (!BatteryManager.Instance.HasBattery())
             {
@@ -179,6 +181,9 @@ public class GameManagerCycle : MonoBehaviour
         player.ResetPosition();
         uiFlowController.ShowGameplay();
         LoadLevel();
+        SetLastLevel(levelIndex);
+        SetLastResult(0);
+        levelEnded = false;
     }
 
     void LoadLevel()
@@ -324,6 +329,9 @@ public class GameManagerCycle : MonoBehaviour
 
     void OnLevelCompleted()
     {
+        SetLastLevel(levelIndex);
+        SetLastResult(2);
+        levelEnded = true;
         if (isTutorial && levelIndex == 1)
         {
             PlayerPrefs.SetInt("TutorialDone", 1);
@@ -415,13 +423,18 @@ public class GameManagerCycle : MonoBehaviour
         }
 
         layoutIndex = 0;
-
+        SetLastLevel(-1);
+        SetLastResult(0);
+        levelEnded = false; 
         uiFlowController.ShowGameplay();
         LoadLevel();
     }
 
     public void PlayerHitObstacle()
     {
+        SetLastLevel(levelIndex);
+        SetLastResult(1);
+        levelEnded = true;
         if (!gameStateController.IsGameplayActive()) return;
 
         gameStateController.SetState(GameStateController.GameState.GameOver);
@@ -591,29 +604,29 @@ public class GameManagerCycle : MonoBehaviour
         }
     }
 
-    public void RevivePlayer()
-    {
-        levelTimeController.StopTimer();
-        StopAllCoroutines();
+    //public void RevivePlayer()
+    //{
+    //    levelTimeController.StopTimer();
+    //    StopAllCoroutines();
 
-        Time.timeScale = 1f;
+    //    Time.timeScale = 1f;
 
-        snapshot.ClearSnapshot();
-        ;
-        snapshotActive = false;
+    //    snapshot.ClearSnapshot();
+    //    ;
+    //    snapshotActive = false;
 
-        player.ReviveToLastSafeTile();
-        player.StopMovementImmediately();
+    //    player.ReviveToLastSafeTile();
+    //    player.StopMovementImmediately();
 
-        uiFlowController.ShowGameplay();
-        levelText.text = LocalizationManager.Instance.GetText("LEVEL_LABEL", levelIndex.ToString());
+    //    uiFlowController.ShowGameplay();
+    //    levelText.text = LocalizationManager.Instance.GetText("LEVEL_LABEL", levelIndex.ToString());
 
-        gameStateController.SetState(GameStateController.GameState.Gameplay);
-        player.canMove = true;
-        movementController.ResetState();
-        movementController.InitializeLayout(levelIndex);
-        cameraFollow.SetDefault();
-    }
+    //    gameStateController.SetState(GameStateController.GameState.Gameplay);
+    //    player.canMove = true;
+    //    movementController.ResetState();
+    //    movementController.InitializeLayout(levelIndex);
+    //    cameraFollow.SetDefault();
+    //}
 
     public void SetSnapshotInactive()
     {
@@ -663,6 +676,9 @@ public class GameManagerCycle : MonoBehaviour
     }
     public void HandleTimeOut()
     {
+        SetLastLevel(levelIndex);
+        SetLastResult(1);
+        levelEnded = true;
         gameStateController.SetState(GameStateController.GameState.GameOver);
 
         player.canMove = false;
@@ -672,6 +688,11 @@ public class GameManagerCycle : MonoBehaviour
         levelTimeController.StopTimer();
 
         uiFlowController.ShowGameOver();
+    }
+    public void OnExitMidGame()
+    {
+        levelEnded = false;
+        SetLastResult(0);
     }
     public void AddSnapshotUse()
     {
@@ -702,6 +723,26 @@ public class GameManagerCycle : MonoBehaviour
     public void Privacy()
     {
         Application.OpenURL("https://www.thegamewise.com/privacy-policy/");
+    }
+
+    int GetLastLevel()
+    {
+        return PlayerPrefs.GetInt("LAST_LEVEL", -1);
+    }
+
+    void SetLastLevel(int level)
+    {
+        PlayerPrefs.SetInt("LAST_LEVEL", level);
+    }
+
+    int GetLastResult()
+    {
+        return PlayerPrefs.GetInt("LAST_RESULT", 0);
+    }
+
+    void SetLastResult(int result)
+    {
+        PlayerPrefs.SetInt("LAST_RESULT", result);
     }
 
 }

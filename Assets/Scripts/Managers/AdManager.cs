@@ -1,4 +1,4 @@
-using GoogleMobileAds.Api;
+﻿using GoogleMobileAds.Api;
 using System;
 using System.Drawing;
 using UnityEngine;
@@ -125,15 +125,23 @@ public class AdManager : MonoBehaviour
             });
     }
 
-    public void ShowRewarded(Action onRewardEarned = null)
+    public void ShowRewarded(Action onRewardEarned = null, Action onAdClosed = null)
     {
         if (rewardedAd != null && rewardedAd.CanShowAd())
         {
+            // 🔹 Reward callback
             rewardedAd.Show((Reward reward) =>
             {
                 Debug.Log("Reward Earned: " + reward.Amount);
                 onRewardEarned?.Invoke();
             });
+
+            // 🔹 Ad closed callback
+            rewardedAd.OnAdFullScreenContentClosed += () =>
+            {
+                Debug.Log("Rewarded Ad Closed");
+                onAdClosed?.Invoke();
+            };
 
             LoadRewardedAd(); // preload next
         }

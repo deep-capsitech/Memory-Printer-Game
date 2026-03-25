@@ -10,7 +10,7 @@ public class DailyRewardPanelController : MonoBehaviour
     }
 
     [Header("Day Items")]
-    public GameObject[] dayItems; // Size = 7
+    public GameObject[] dayItems;
 
     [Header("Texts")]
     public TextMeshProUGUI todayRewardText;
@@ -29,7 +29,6 @@ public class DailyRewardPanelController : MonoBehaviour
     public GameObject claimPanel;
     public Image claimRewardIcon;
     public Button claimAdButton;
-    // public Button claimCloseButton;
 
     [Header("Card Sprites")]
     public Sprite normalCardSprite;
@@ -37,22 +36,23 @@ public class DailyRewardPanelController : MonoBehaviour
     public Material normalMaterial;
     public Material outlineMaterial;
 
-    void OnEnable()
+    void Start()
     {
-        RefreshUI();
-
-        collectButton.onClick.RemoveAllListeners();
-        closeButton.onClick.RemoveAllListeners();
         collectButton.onClick.AddListener(OnCollectClicked);
         closeButton.onClick.AddListener(OnCloseClicked);
     }
+    void OnEnable()
+    {
+        RefreshUI();
+    }
     void RefreshUI()
     {
-        if (DailyRewardController.Instance == null)
+        var controller = DailyRewardController.Instance;
+        if (controller == null)
             return;
 
-        int rawDay = DailyRewardController.Instance.GetCurrentDay();
-        bool claimedToday = DailyRewardController.Instance.HasClaimedTodayPublic();
+        int rawDay = controller.GetCurrentDay();
+        bool claimedToday = controller.HasClaimedTodayPublic();
 
         for (int i = 0; i < dayItems.Length; i++)
         {
@@ -60,9 +60,8 @@ public class DailyRewardPanelController : MonoBehaviour
                 continue;
 
             int dayNumber = i + 1;
-
-            // ---------- DAY LABEL ----------
-            Transform dayLabel = dayItems[i].transform.Find("DayLabel");
+            var t = dayItems[i].transform;
+            Transform dayLabel = t.Find("DayLabel");
             if (dayLabel != null)
             {
                 var txt = dayLabel.GetComponent<TextMeshProUGUI>();
@@ -74,12 +73,10 @@ public class DailyRewardPanelController : MonoBehaviour
                 }
             }
 
-            // ---------- REWARD TYPE ----------
-            DailyRewardController.DailyReward reward =
-     DailyRewardController.Instance.GetRewardForDay(dayNumber);
+            var reward = controller.GetRewardForDay(dayNumber);
 
             // ---------- REWARD TYPE ----------
-            Transform rewardType = dayItems[i].transform.Find("RewardTypeText");
+            Transform rewardType = t.Find("RewardTypeText");
             if (rewardType != null)
             {
                 var txt = rewardType.GetComponent<TextMeshProUGUI>();
@@ -92,7 +89,7 @@ public class DailyRewardPanelController : MonoBehaviour
                 }
             }
             // ---------- REWARD VALUE ----------
-            Transform rewardValue = dayItems[i].transform.Find("RewardValueText");
+            Transform rewardValue = t.Find("RewardValueText");
             if (rewardValue != null)
             {
                 var txt = rewardValue.GetComponent<TextMeshProUGUI>();
@@ -108,12 +105,12 @@ public class DailyRewardPanelController : MonoBehaviour
                     }
                     else
                     {
-                        txt.text = "×" + reward.amount;
+                        txt.text = string.Concat("×", reward.amount);
                     }
                 }
             }
             // ---------- REWARD ICON ----------
-            Transform rewardIcon = dayItems[i].transform.Find("RewardIcon");
+            Transform rewardIcon = t.Find("RewardIcon");
             if (rewardIcon != null)
             {
                 Image iconImg = rewardIcon.GetComponent<Image>();
@@ -144,7 +141,7 @@ public class DailyRewardPanelController : MonoBehaviour
                 }
             }
             // ---------- CLAIMED CHECK ----------
-            Transform claimedCheck = dayItems[i].transform.Find("ClaimedCheck");
+            Transform claimedCheck = t.Find("ClaimedCheck");
             if (claimedCheck != null)
             {
                 claimedCheck.gameObject.SetActive(dayNumber < rawDay);
@@ -191,8 +188,7 @@ public class DailyRewardPanelController : MonoBehaviour
         {
             displayDay = rawDay;
         }
-        DailyRewardController.DailyReward todayReward =
-    DailyRewardController.Instance.GetRewardForDay(displayDay);
+        var todayReward = controller.GetRewardForDay(displayDay);
 
         string rewardText;
 
@@ -218,14 +214,15 @@ public class DailyRewardPanelController : MonoBehaviour
     }
     void OnCollectClicked()
     {
-        // 🚫 If already claimed → do nothing
-        if (DailyRewardController.Instance.HasClaimedTodayPublic())
+        var controller = DailyRewardController.Instance;
+
+        if (controller.HasClaimedTodayPublic())
             return;
 
-        int day = DailyRewardController.Instance.GetCurrentDay();
-        var reward = DailyRewardController.Instance.GetRewardForDay(day);
+        int day = controller.GetCurrentDay();
+        var reward = controller.GetRewardForDay(day);
 
-        DailyRewardController.Instance.ClaimReward();
+        controller.ClaimReward();
 
         ShowClaimPanel(reward);
 

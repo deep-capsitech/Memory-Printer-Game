@@ -81,6 +81,11 @@ public class UIFlowController : MonoBehaviour
 
     public void ShowMenu()
     {
+        if (GameManagerCycle.Instance != null &&
+        GameManagerCycle.Instance.gameStateController.IsGameplayActive())
+        {
+            GameManagerCycle.Instance.OnExitMidGame();
+        }
         DisableAllPanels();
         menuPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Menu);
@@ -142,12 +147,22 @@ public class UIFlowController : MonoBehaviour
     }
     public void ShowWorldSelect()
     {
+        if (GameManagerCycle.Instance != null &&
+        GameManagerCycle.Instance.gameStateController.IsGameplayActive())
+        {
+            GameManagerCycle.Instance.OnExitMidGame();
+        }
         DisableAllPanels();
         worldPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.World);
     }
     public void ShowLevelSelect()
     {
+        if (GameManagerCycle.Instance != null &&
+        GameManagerCycle.Instance.gameStateController.IsGameplayActive())
+        {
+            GameManagerCycle.Instance.OnExitMidGame();
+        }
         DisableAllPanels();
         levelPanel.SetActive(true);
         UpdateHUD(HUDVisibilityController.UIState.Level);
