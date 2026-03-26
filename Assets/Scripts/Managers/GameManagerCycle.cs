@@ -160,36 +160,29 @@ public class GameManagerCycle : MonoBehaviour
     {
         levelIndex = levelNumber;
         layoutIndex = 0;
-
         int lastLevel = GetLastLevel();
         int lastResult = GetLastResult();
 
-        // ✅ ALWAYS check battery first
-        if (!BatteryManager.Instance.HasBattery())
-        {
-            uiFlowController.ShowPurchasePanel(PurchaseType.Battery, PurchaseSource.LevelPanel);
-            return;
-        }
-
-        // ✅ Consume ONLY for replay or retry
         if (lastLevel == levelIndex && (lastResult == 1 || lastResult == 2))
         {
+            if (!BatteryManager.Instance.HasBattery())
+            {
+                uiFlowController.ShowPurchasePanel(PurchaseType.Battery, PurchaseSource.LevelPanel);
+                return;
+            }
+
             BatteryManager.Instance.ConsumeBattery();
         }
 
-        // --- existing flow ---
         Time.timeScale = 1f;
         StopAllCoroutines();
 
         snapshot.ClearSnapshot();
         player.ResetPosition();
         uiFlowController.ShowGameplay();
-
         LoadLevel();
-
         SetLastLevel(levelIndex);
         SetLastResult(0);
-
         levelEnded = false;
     }
 
@@ -432,7 +425,7 @@ public class GameManagerCycle : MonoBehaviour
         }
 
         layoutIndex = 0;
-        SetLastLevel(levelIndex);
+        SetLastLevel(-1);
         SetLastResult(0);
         levelEnded = false; 
         uiFlowController.ShowGameplay();
