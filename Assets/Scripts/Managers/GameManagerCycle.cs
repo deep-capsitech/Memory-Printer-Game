@@ -76,6 +76,7 @@ public class GameManagerCycle : MonoBehaviour
 
     void Awake()
     {
+        Application.targetFrameRate = 60;
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
@@ -442,6 +443,12 @@ public class GameManagerCycle : MonoBehaviour
         if (!gameStateController.IsGameplayActive()) return;
 
         gameStateController.SetState(GameStateController.GameState.GameOver);
+
+        generator.DestroyAllObstacles();
+        generator.DestroyBooster();
+        generator.StopBoosterSpawn();
+        movementController.StopAll();
+
         player.canMove = false;
 
         player.PlayHitAnimation();
@@ -558,8 +565,9 @@ public class GameManagerCycle : MonoBehaviour
     void UpdateMapTimer()
     {
         mapTimer -= Time.deltaTime;
-        int minutes = Mathf.FloorToInt(mapTimer / 60f);
-        int seconds = Mathf.FloorToInt(mapTimer % 60f);
+        float displayTime = Mathf.Max(mapTimer, 0f);
+        int minutes = Mathf.FloorToInt(displayTime / 60f);
+        int seconds = Mathf.FloorToInt(displayTime % 60f);
 
         mapTimerText.text = $"{minutes:00}:{seconds:00}";
 

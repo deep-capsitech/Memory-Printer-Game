@@ -11,6 +11,7 @@ public class LevelGenerator : MonoBehaviour
     public Transform obstaclesParent;
     public Transform boosterParent;
     public TileGrid tileGrid;
+    public GameStateController gameStateController;
 
     public float obstacleYOffset = 0.6f;
     public float boosterYOffset = 0.6f;
@@ -92,11 +93,17 @@ public class LevelGenerator : MonoBehaviour
     IEnumerator SpawnBoosterAfterDelay()
     {
         yield return new WaitForSeconds(boosterSpawnDelay);
+        if (!gameStateController.IsGameplayActive())
+            yield break;
         SpawnBoosterNow();
     }
    
     public void SpawnBoosterNow()
     {
+        if (!gameStateController.IsGameplayActive())
+        {
+            return;
+        }
         if (boosterParent.childCount > 0)
             return;
 
@@ -132,15 +139,24 @@ public class LevelGenerator : MonoBehaviour
     public void DestroyAllObstacles()
     {
         foreach (Transform t in obstaclesParent)
+        {
+            t.gameObject.SetActive(false); 
             Destroy(t.gameObject);
+        }
     }
 
-    public void DestroyBooster() { 
+    public void DestroyBooster() {
         foreach (Transform t in boosterParent)
-            Destroy(t.gameObject);
+        {
+            t.gameObject.SetActive(false); 
+            Destroy(t.gameObject);         
+        }
     }
 
-
+    public void StopBoosterSpawn()
+    {
+        StopAllCoroutines();
+    }
     public void EnableDragMode(bool enable)
     {
         foreach (Transform ob in obstaclesParent)
