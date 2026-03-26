@@ -93,14 +93,23 @@ public class LevelGenerator : MonoBehaviour
     IEnumerator SpawnBoosterAfterDelay()
     {
         yield return new WaitForSeconds(boosterSpawnDelay);
-        if (!gameStateController.IsGameplayActive())
+
+        bool isTutorial =
+            TutorialManager.Instance != null &&
+            TutorialManager.Instance.isTutorialActive;
+
+        if (!gameStateController.IsGameplayActive() && !isTutorial)
             yield break;
         SpawnBoosterNow();
     }
    
     public void SpawnBoosterNow()
     {
-        if (!gameStateController.IsGameplayActive())
+        bool isTutorial =
+            TutorialManager.Instance != null &&
+            TutorialManager.Instance.isTutorialActive;
+
+        if (!gameStateController.IsGameplayActive() && !isTutorial)
         {
             return;
         }
@@ -123,11 +132,7 @@ public class LevelGenerator : MonoBehaviour
             boosterParent
         );
 
-        bool tutorialActive =
-            TutorialManager.Instance != null &&
-            TutorialManager.Instance.isTutorialActive;
-
-        if (tutorialActive)
+        if (isTutorial)
         {
             TutorialManager.Instance.OnBoosterAppeared();
         }
