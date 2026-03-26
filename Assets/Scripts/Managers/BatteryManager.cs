@@ -31,11 +31,16 @@ public class BatteryManager : MonoBehaviour
 
     void LoadData()
     {
-        currentBatteries = PlayerPrefs.GetInt(BATTERY_KEY, maxBatteries);
-
+        currentBatteries = Mathf.Clamp(
+     PlayerPrefs.GetInt(BATTERY_KEY, maxBatteries),
+     0,
+     maxBatteries
+ );
         if (PlayerPrefs.HasKey(NEXT_TIME_KEY))
         {
-            nextBatteryTime = DateTime.Parse(PlayerPrefs.GetString(NEXT_TIME_KEY));
+            nextBatteryTime = DateTime.FromBinary(
+    Convert.ToInt64(PlayerPrefs.GetString(NEXT_TIME_KEY))
+);
         }
         else
         {
@@ -48,7 +53,7 @@ public class BatteryManager : MonoBehaviour
         PlayerPrefs.SetInt(BATTERY_KEY, currentBatteries);
 
         if (currentBatteries < maxBatteries)
-            PlayerPrefs.SetString(NEXT_TIME_KEY, nextBatteryTime.ToString());
+            PlayerPrefs.SetString(NEXT_TIME_KEY, nextBatteryTime.ToBinary().ToString());
         else
             PlayerPrefs.DeleteKey(NEXT_TIME_KEY);
 
@@ -60,18 +65,32 @@ public class BatteryManager : MonoBehaviour
         if (currentBatteries >= maxBatteries)
             return;
 
+        if (nextBatteryTime == DateTime.MinValue)
+        {
+            nextBatteryTime = DateTime.UtcNow.AddMinutes(refillMinutes);
+            SaveData();
+            return;
+        }
+
         DateTime now = DateTime.UtcNow;
+
+        bool changed = false;
 
         while (currentBatteries < maxBatteries && now >= nextBatteryTime)
         {
             currentBatteries++;
             nextBatteryTime = nextBatteryTime.AddMinutes(refillMinutes);
+            changed = true;
         }
 
         if (currentBatteries >= maxBatteries)
+        {
             nextBatteryTime = DateTime.MinValue;
+            changed = true;
+        }
 
-        SaveData();
+        if (changed)
+            SaveData();
     }
 
     public bool HasBattery()
@@ -82,7 +101,6 @@ public class BatteryManager : MonoBehaviour
 
     public void ConsumeBattery()
     {
-        RefillIfNeeded();
 
         if (currentBatteries <= 0)
             return;
@@ -110,10 +128,8 @@ public class BatteryManager : MonoBehaviour
         if (currentBatteries >= maxBatteries)
             return 0f;
 
-        return Mathf.Max(
-            0f,
-            (float)(nextBatteryTime - DateTime.UtcNow).TotalSeconds
-        );
+        TimeSpan remaining = nextBatteryTime - DateTime.UtcNow;
+        return Mathf.Max(0f, (float)remaining.TotalSeconds);
     }
 
     public void AddBatteryInstant(int amount = 1)
