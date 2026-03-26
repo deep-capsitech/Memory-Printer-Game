@@ -331,6 +331,8 @@ public class GameManagerCycle : MonoBehaviour
     {
         SetLastLevel(levelIndex);
         SetLastResult(2);
+       // PlayerPrefs.DeleteKey("RETRY_REQUIRED_" + levelIndex); // ✅ ADD
+        PlayerPrefs.Save();
         levelEnded = true;
         if (isTutorial && levelIndex == 1)
         {
@@ -434,6 +436,8 @@ public class GameManagerCycle : MonoBehaviour
     {
         SetLastLevel(levelIndex);
         SetLastResult(1);
+       // PlayerPrefs.SetInt("RETRY_REQUIRED_" + levelIndex, 1); // ✅ ADD
+        PlayerPrefs.Save();
         levelEnded = true;
         if (!gameStateController.IsGameplayActive()) return;
 
@@ -733,6 +737,7 @@ public class GameManagerCycle : MonoBehaviour
     void SetLastLevel(int level)
     {
         PlayerPrefs.SetInt("LAST_LEVEL", level);
+        PlayerPrefs.Save();
     }
 
     int GetLastResult()
@@ -743,6 +748,7 @@ public class GameManagerCycle : MonoBehaviour
     void SetLastResult(int result)
     {
         PlayerPrefs.SetInt("LAST_RESULT", result);
+        PlayerPrefs.Save();
     }
 
 }
