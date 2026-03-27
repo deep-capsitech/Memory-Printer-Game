@@ -15,7 +15,7 @@ MonoBehaviour:
   worldId: 4
   worldNameKey: 8
   starsRequired: 7
-  primaryColor: {r: 0.6627451, g: 0.43137255, b: 0.92156863, a: 1}
+  primaryColor: {r: 0.74509805, g: 0.54901963, b: 0.35686275, a: 1}
   roomMaterial: {fileID: 2100000, guid: 079b9f567d84aed40bc7e362186ee891, type: 2}
   hologramMaterial: {fileID: 2100000, guid: 7beb85c8b5e074d4385ca09c243074ac, type: 2}
   floorMaterial: {fileID: 2100000, guid: bf219b0cb6d684e4da184e5986f5196b, type: 2}
