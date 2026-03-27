@@ -43,9 +43,12 @@ public class BackButtonManager : MonoBehaviour
             gm.uiFlowController.ShowWorldSelect();
         }
 
-        // 🎮 GAMEPLAY → PAUSE
         else if (gameplayPanel.activeInHierarchy)
         {
+            // 🚫 Disable back during tutorial
+            if (gm != null && gm.CurrentLevelNumber == 1 && PlayerPrefs.GetInt("TutorialDone", 0) == 0)
+                return;
+
             gm.PauseGame();
         }
 
