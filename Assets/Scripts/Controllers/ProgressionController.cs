@@ -328,10 +328,8 @@ public class ProgressionController : MonoBehaviour
                 AnalyticsManager.LogEvent("world_unlock_popup_shown",
     ("world_id", world.worldId));
 
-                MarkWorldUnlockPopupShown(world.worldId);
-
                 GameManagerCycle.Instance.ShowNewWorldUnlockedPanel(world);
-
+                MarkWorldUnlockPopupShown(world.worldId);
             }
 
             break;

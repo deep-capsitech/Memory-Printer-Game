@@ -365,9 +365,16 @@ public class GameManagerCycle : MonoBehaviour
         player.StopMovementImmediately();
         progressionController.CalculateStars(levelTimeController.GetRemainingTime());
         progressionController.GiveCoinsForStars();
-
         progressionController.UnlockNextLevel(levelIndex, totalLevels);
 
+        // ✅ CHECK WORLD UNLOCK
+        progressionController.CheckForNewWorldUnlock();
+
+        // ✅ ONLY CONTROL UI (DO NOT STOP FLOW)
+        if (pendingUnlockedWorld == null)
+        {
+            uiFlowController.ShowLevelComplete();
+        }
         foreach (var light in discoLights)
         {
             if (light != null)
@@ -376,8 +383,12 @@ public class GameManagerCycle : MonoBehaviour
 
         DiscoLightManager.Instance.SetDiscoMode(false);
         SoundManager.Instance.PlayWin();
-        uiFlowController.ShowLevelComplete();
+        if (pendingUnlockedWorld != null)
+        {
+            return;
+        }
 
+        uiFlowController.ShowLevelComplete(); // ✅ only runs if NO unlock
         progressionController.CalculateStars(levelTimeController.GetRemainingTime());
 
         int stars = progressionController.GetEarnedStars(); // ✅ FIX
@@ -413,6 +424,10 @@ public class GameManagerCycle : MonoBehaviour
 
     public void OnNextLevelButton()
     {
+        if (pendingUnlockedWorld != null)
+        {
+            return; // 🚫 wait until user clicks Yes/No
+        }
         int levelsPerWorld = 10;
 
         bool isLastLevelOfWorld = (levelIndex % levelsPerWorld == 0);
