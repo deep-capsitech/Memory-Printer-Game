@@ -137,6 +137,7 @@ public class PowerUpController : MonoBehaviour
             }
 
             PowerupInventoryManager.Instance.ConsumeInvision();
+            AnalyticsManager.LogPowerUpUsed("invision");
         }
 
         if (GameManagerCycle.Instance.IsSnapshotActive)
@@ -217,6 +218,7 @@ public class PowerUpController : MonoBehaviour
             }
 
             PowerupInventoryManager.Instance.ConsumeFreeze();
+            AnalyticsManager.LogPowerUpUsed("freeze");
         }
 
         if (GameManagerCycle.Instance.IsSnapshotActive)
@@ -408,6 +410,8 @@ public class PowerUpController : MonoBehaviour
             AdManager.Instance.ShowRewarded(() =>
             {
                 GameManagerCycle.Instance.AddSnapshotUse();
+                AnalyticsManager.LogEvent("powerup_rewarded",
+       ("type", "snapshot"));
                 UpdatePowerUpUI();
             });
 

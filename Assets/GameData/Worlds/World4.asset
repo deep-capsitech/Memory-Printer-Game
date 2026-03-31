@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldId: 4
   worldNameKey: 8
-  starsRequired: 7
+  starsRequired: 75
   primaryColor: {r: 0.74509805, g: 0.54901963, b: 0.35686275, a: 1}
   roomMaterial: {fileID: 2100000, guid: 079b9f567d84aed40bc7e362186ee891, type: 2}
   hologramMaterial: {fileID: 2100000, guid: 7beb85c8b5e074d4385ca09c243074ac, type: 2}

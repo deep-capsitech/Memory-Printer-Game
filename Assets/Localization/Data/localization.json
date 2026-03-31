@@ -128,28 +128,28 @@
     "ar": "المدينة الخضراء"
   },
   "7": {
-    "en": "Orange City",
-    "pt-BR": "Cidade Laranja",
-    "ru": "Оранжевый город",
-    "sp": "Ciudad Naranja",
-    "fr": "Ville Orange",
-    "ar": "المدينة البرتقالية"
-  },
-  "8": {
-    "en": "Purple City",
-    "pt-BR": "Cidade Roxa",
-    "ru": "Фиолетовый город",
-    "sp": "Ciudad Púrpura",
-    "fr": "Ville Violette",
-    "ar": "المدينة البنفسجية"
-  },
-  "9": {
     "en": "Red City",
     "pt-BR": "Cidade Vermelha",
     "ru": "Красный город",
     "sp": "Ciudad Roja",
     "fr": "Ville Rouge",
     "ar": "المدينة الحمراء"
+  },
+  "8": {
+    "en": "Lava City",
+    "pt-BR": "Cidade de Lava",
+    "ru": "Лавовый город",
+    "sp": "Ciudad de Lava",
+    "fr": "Ville de Lave",
+    "ar": "مدينة الحمم"
+  },
+  "9": {
+    "en": "Ice City",
+    "pt-BR": "Cidade de Gelo",
+    "ru": "Ледяной город",
+    "sp": "Ciudad de Hielo",
+    "fr": "Ville de Glace",
+    "ar": "مدينة الجليد"
   },
   "10": {
     "en": "MISSION FAILED",

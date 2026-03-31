@@ -45,6 +45,7 @@ public class ProgressionController : MonoBehaviour
         {
 
             _earnedStars = 3;
+            AnalyticsManager.LogStarsEarned(_earnedStars);
 
             SaveLevelStars();
 
@@ -301,6 +302,11 @@ public class ProgressionController : MonoBehaviour
             if (_totalStars < world.starsRequired) continue;
 
             UnlockWorld(world.worldId);
+            AnalyticsManager.LogEvent("world_unlocked",
+    ("world_id", world.worldId),
+    ("stars_required", world.starsRequired),
+    ("total_stars", _totalStars),
+    ("level_reached", GameManagerCycle.Instance.CurrentLevelNumber));
 
             int firstLevel = (world.worldId - 1) * 10 + 1;
 
@@ -319,6 +325,8 @@ public class ProgressionController : MonoBehaviour
             if (!IsWorldUnlockPopupShown(world.worldId))
 
             {
+                AnalyticsManager.LogEvent("world_unlock_popup_shown",
+    ("world_id", world.worldId));
 
                 MarkWorldUnlockPopupShown(world.worldId);
 
@@ -348,6 +356,10 @@ public class ProgressionController : MonoBehaviour
 
         }
 
+    }
+    public int GetEarnedStars()
+    {
+        return _earnedStars;
     }
 
 }

@@ -83,6 +83,7 @@ public class GameManagerCycle : MonoBehaviour
 
     void Start()
     {
+        AnalyticsManager.LogGameStart();
         if (!PlayerPrefs.HasKey("GameInitialized"))
         {
             PlayerPrefs.SetInt("UnlockedLevel", 1);
@@ -108,13 +109,6 @@ public class GameManagerCycle : MonoBehaviour
 
         dailyRewardController.Initialize();
 
-        if (dailyRewardController.ShouldAutoShowDailyReward())
-        {
-            uiFlowController.DisableAllPanels();
-            dailyRewardController.dailyRewardPanel.SetActive(true);
-            uiFlowController.UpdateHUD(HUDVisibilityController.UIState.Menu);
-            return;
-        }
         CheckTutorial();
         levelEnded = false;
     }
@@ -152,6 +146,13 @@ public class GameManagerCycle : MonoBehaviour
 
         snapshot.ClearSnapshot();
         player.ResetPosition();
+        if (dailyRewardController.ShouldAutoShowDailyReward())
+        {
+            uiFlowController.DisableAllPanels();
+            dailyRewardController.dailyRewardPanel.SetActive(true);
+            uiFlowController.UpdateHUD(HUDVisibilityController.UIState.Menu);
+            return;
+        }
         uiFlowController.ShowWorldSelect();
         gameStateController.SetState(GameStateController.GameState.WorldSelect);
         player.canMove = false;
@@ -160,6 +161,7 @@ public class GameManagerCycle : MonoBehaviour
     public void OnLevelSelected(int levelNumber)
     {
         levelIndex = levelNumber;
+        AnalyticsManager.LogLevelStart(levelIndex);
         layoutIndex = 0;
 
         int lastLevel = GetLastLevel();
@@ -329,6 +331,7 @@ public class GameManagerCycle : MonoBehaviour
             if (light != null)
                 light.StartDisco();
         }
+        SoundManager.Instance.PlayDance(4f);
         yield return new WaitForSeconds(4f);
 
         OnLevelCompleted();
@@ -337,6 +340,7 @@ public class GameManagerCycle : MonoBehaviour
 
     void OnLevelCompleted()
     {
+
         SetLastLevel(levelIndex);
         SetLastResult(2);
         // PlayerPrefs.DeleteKey("RETRY_REQUIRED_" + levelIndex); // ✅ ADD
@@ -374,11 +378,14 @@ public class GameManagerCycle : MonoBehaviour
         SoundManager.Instance.PlayWin();
         uiFlowController.ShowLevelComplete();
 
-        progressionController.CheckForNewWorldUnlock();
-        int earnedCoins = GameEconomyManager.Instance.GetLevelCoins();
-        coinsEarnedText.text = "COINS EARNED :    " + earnedCoins;
+        progressionController.CalculateStars(levelTimeController.GetRemainingTime());
 
-        Debug.Log("Coins Earned: " + earnedCoins);
+        int stars = progressionController.GetEarnedStars(); // ✅ FIX
+        int coins = GameEconomyManager.Instance.GetLevelCoins();
+
+        AnalyticsManager.LogLevelComplete(levelIndex, coins, stars); // ✅ CORRECT
+
+        AnalyticsManager.LogStarsEarned(stars);
         // -------- Interstitial Logic --------
         if (levelIndex > 10)
         {
@@ -394,6 +401,7 @@ public class GameManagerCycle : MonoBehaviour
 
     public void ShowMenuWithAd()
     {
+        AnalyticsManager.CheckRageQuit(levelIndex);
         if (levelIndex > 10)
         {
             AdManager.Instance.ShowInterstitial();
@@ -442,6 +450,7 @@ public class GameManagerCycle : MonoBehaviour
 
     public void PlayerHitObstacle()
     {
+        AnalyticsManager.RegisterLevelFail(levelIndex);
         SetLastLevel(levelIndex);
         SetLastResult(1);
         // PlayerPrefs.SetInt("RETRY_REQUIRED_" + levelIndex, 1); // ✅ ADD
@@ -466,7 +475,7 @@ public class GameManagerCycle : MonoBehaviour
     IEnumerator GameOverAfterDeathSequence()
     {
         yield return new WaitForSeconds(2.5f);
-
+        AnalyticsManager.LogGameOver(levelIndex);
         movementController.OnGameOver();
 
         yield return new WaitForSeconds(0.3f);
@@ -476,6 +485,7 @@ public class GameManagerCycle : MonoBehaviour
 
     public void Retry()
     {
+        AnalyticsManager.LogLevelRetry(levelIndex);
         //isTutorial = false;
         levelTimeController.StopTimer();
 
@@ -552,6 +562,7 @@ public class GameManagerCycle : MonoBehaviour
     }
     public void UseManualSnapshot()
     {
+        AnalyticsManager.LogPowerUpUsed("snapshot");
         if (snapshotActive || powerUpController.IsAnyPowerUpActive())
             return;
 
@@ -623,30 +634,6 @@ public class GameManagerCycle : MonoBehaviour
         }
     }
 
-    //public void RevivePlayer()
-    //{
-    //    levelTimeController.StopTimer();
-    //    StopAllCoroutines();
-
-    //    Time.timeScale = 1f;
-
-    //    snapshot.ClearSnapshot();
-    //    ;
-    //    snapshotActive = false;
-
-    //    player.ReviveToLastSafeTile();
-    //    player.StopMovementImmediately();
-
-    //    uiFlowController.ShowGameplay();
-    //    levelText.text = LocalizationManager.Instance.GetText("LEVEL_LABEL", levelIndex.ToString());
-
-    //    gameStateController.SetState(GameStateController.GameState.Gameplay);
-    //    player.canMove = true;
-    //    movementController.ResetState();
-    //    movementController.InitializeLayout(levelIndex);
-    //    cameraFollow.SetDefault();
-    //}
-
     public void SetSnapshotInactive()
     {
         snapshotActive = false;
@@ -695,6 +682,7 @@ public class GameManagerCycle : MonoBehaviour
     }
     public void HandleTimeOut()
     {
+        AnalyticsManager.RegisterLevelFail(levelIndex);
         SetLastLevel(levelIndex);
         SetLastResult(1);
         levelEnded = true;

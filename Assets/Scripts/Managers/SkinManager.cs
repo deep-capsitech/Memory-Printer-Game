@@ -34,13 +34,28 @@ public class SkinManager : MonoBehaviour
                 robotRenderer.material = whiteMat;
                 break;
         }
+       
 
-        PlayerPrefs.SetInt("SelectedSkin", skinID);
+    PlayerPrefs.SetInt("SelectedSkin", skinID);
+        AnalyticsManager.LogEvent("skin_selected",
+      ("skin_id", skinID),
+      ("skin_name", GetSkinName(skinID)));
     }
 
     void ApplySavedSkin()
     {
         int skin = PlayerPrefs.GetInt("SelectedSkin", 0);
         ApplySkin(skin);
+    }
+    string GetSkinName(int skinID)
+    {
+        switch (skinID)
+        {
+            case 0: return "blue";
+            case 1: return "red";
+            case 2: return "green";
+            case 3: return "white";
+            default: return "unknown";
+        }
     }
 }

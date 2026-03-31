@@ -52,6 +52,10 @@ public class GameEconomyManager : MonoBehaviour
         totalCoins += amount;
         PlayerPrefs.SetInt(COINS_KEY, totalCoins);
         PlayerPrefs.Save();
+        AnalyticsManager.LogEvent("coins_earned",
+      ("amount", amount),
+      ("total_coins", totalCoins),
+      ("level_coins", levelCoinsEarned));
     }
 
     public bool SpendCoins(int amount)
@@ -62,11 +66,16 @@ public class GameEconomyManager : MonoBehaviour
         totalCoins -= amount;
         PlayerPrefs.SetInt("TOTAL_COINS", totalCoins);
         PlayerPrefs.Save();
+        AnalyticsManager.LogEvent("coins_spent",
+        ("amount", amount),
+        ("total_coins", totalCoins));
+
         return true;
     }
     public void ResetLevelCoins()
     {
         levelCoinsEarned = 0;
+        AnalyticsManager.LogEvent("level_coin_reset");
     }
 
     public int GetLevelCoins()

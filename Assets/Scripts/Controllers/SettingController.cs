@@ -10,9 +10,6 @@ public class SettingController : MonoBehaviour
     public GameObject languagePanel;
     public GameObject infoPanel;
 
-    [Header("Audio")]
-    public AudioSource musicSource;
-
     [Header("Sound UI")]
     public Image soundIcon;
     public Sprite soundOnSprite;
@@ -31,12 +28,11 @@ public class SettingController : MonoBehaviour
     // ---------- INIT ----------
     void Start()
     {
-        isSoundOn = PlayerPrefs.GetInt("sound", 1) == 1;
+        isSoundOn = SoundManager.Instance.IsSoundEnabled();
 
-        // Load saved language
         selectedLanguageIndex = PlayerPrefs.GetInt("language", 0);
 
-        ApplySoundState();
+        UpdateIcon();
         ApplyLanguageSelection();
 
         HideAll();
@@ -118,21 +114,17 @@ public class SettingController : MonoBehaviour
     // ---------- SOUND ----------
     public void ToggleSound()
     {
-        isSoundOn = !isSoundOn;
+        SoundManager.Instance.ToggleSound(); // 🔥 CALL MAIN SYSTEM
 
-        ApplySoundState();
+        isSoundOn = SoundManager.Instance.IsSoundEnabled();
 
-        // Save state
         PlayerPrefs.SetInt("sound", isSoundOn ? 1 : 0);
+
+        UpdateIcon();
     }
 
-    void ApplySoundState()
+    void UpdateIcon()
     {
-        // Apply audio
-        if (musicSource != null)
-            musicSource.mute = !isSoundOn;
-
-        // Update icon
         if (soundIcon != null)
             soundIcon.sprite = isSoundOn ? soundOnSprite : soundOffSprite;
     }

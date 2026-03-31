@@ -48,6 +48,11 @@ public class RobotSkinManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("SkinUnlocked_" + index, 1);
             PlayerPrefs.Save();
+            AnalyticsManager.LogEvent("skin_purchased",
+           ("skin_id", index),
+           ("price", price),
+           ("remaining_coins", GameEconomyManager.Instance.GetCoins()));
+
 
             GenerateShop();
         }

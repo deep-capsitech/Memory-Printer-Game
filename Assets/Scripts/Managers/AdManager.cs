@@ -125,30 +125,38 @@ public class AdManager : MonoBehaviour
             });
     }
 
+    bool IsInternetAvailable()
+    {
+        return Application.internetReachability != NetworkReachability.NotReachable;
+    }
     public void ShowRewarded(Action onRewardEarned = null, Action onAdClosed = null)
     {
-        if (rewardedAd != null && rewardedAd.CanShowAd())
+        if (!IsInternetAvailable())
         {
-            // 🔹 Reward callback
-            rewardedAd.Show((Reward reward) =>
-            {
-                Debug.Log("Reward Earned: " + reward.Amount);
-                onRewardEarned?.Invoke();
-            });
-
-            // 🔹 Ad closed callback
-            rewardedAd.OnAdFullScreenContentClosed += () =>
-            {
-                Debug.Log("Rewarded Ad Closed");
-                onAdClosed?.Invoke();
-            };
-
-            LoadRewardedAd(); // preload next
+            Handheld.Vibrate();
+            ToastMessage.Instance.Show("No Internet Connection");
+            return;
         }
-        else
+
+        if (rewardedAd == null || !rewardedAd.CanShowAd())
         {
-            Debug.Log("Rewarded not ready");
+            ToastMessage.Instance.Show("Ad is loading...");
+            return;
         }
+
+        rewardedAd.Show((Reward reward) =>
+        {
+            //Debug.Log("Reward Earned: " + reward.Amount);
+            onRewardEarned?.Invoke();
+        });
+
+        rewardedAd.OnAdFullScreenContentClosed += () =>
+        {
+            //Debug.Log("Rewarded Ad Closed");
+            onAdClosed?.Invoke();
+        };
+
+        LoadRewardedAd();
     }
 
     #endregion

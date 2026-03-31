@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "756740371150",
+    "project_id": "null-zone-5e403",
+    "storage_bucket": "null-zone-5e403.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756740371150:android:71791c6dc5309b11d1969f",
+        "android_client_info": {
+          "package_name": "com.TheGameWise.Nullzone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY7NIQAIkcF6rSQ-8O2__EP1hzfpYHiME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
